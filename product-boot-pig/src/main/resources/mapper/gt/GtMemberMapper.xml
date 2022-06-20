@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pig.modules.gt.mapper.GtMemberMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.pig.modules.gt.entity.GtMember">
+        <id column="id" property="id" />
+        <result column="code" property="code" />
+        <result column="account" property="account" />
+        <result column="token" property="token" />
+        <result column="name" property="name" />
+        <result column="real_name" property="realName" />
+        <result column="avatar" property="avatar" />
+        <result column="email" property="email" />
+        <result column="phone" property="phone" />
+        <result column="birthday" property="birthday" />
+        <result column="sex" property="sex" />
+        <result column="role_id" property="roleId" />
+        <result column="dept_id" property="deptId" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+        <result column="is_deleted" property="isDeleted" />
+    </resultMap>
+
+
+    <update id="doupdateById" parameterType="map">
+        update rd_gt_member set code = #{params.code},token = #{params.token},email=#{params.email},`name`=#{params.name},update_user=#{params.updateUser},update_time=#{params.updateTime}
+        <where>
+            `is_deleted` = 0  and id = #{params.id}
+        </where>
+    </update>
+
+    <update id="doroleupdateById" parameterType="map">
+        update rd_gt_member set role_id = #{params.roleId},update_user=#{params.updateUser},update_time=#{params.updateTime}
+        <where>
+            `is_deleted` = 0  and id = #{params.id}
+        </where>
+    </update>
+    <insert id="doinsert" parameterType="map">
+        insert into rd_gt_member (account,`code`,`name`,email,token,role_id,create_user,create_time) value (#{params.account},#{params.code},#{params.name},#{params.email},#{params.token},'0',#{params.createUser},#{params.createTime})
+    </insert>
+</mapper>
