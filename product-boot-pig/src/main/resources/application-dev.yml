@@ -1,0 +1,90 @@
+server:
+  port: 12080
+spring:
+  resources:
+    static-locations: file:/data/workspaces/esswes/analysis/run/
+  freemarker:
+    allow-request-override: false
+    #    开发过程建议关闭缓存
+    cache: false
+    check-template-location: false
+    charset: UTF-8
+    content-type: text/html; charset=utf-8
+    expose-request-attributes: false
+    expose-session-attributes: false
+    expose-spring-macro-helpers: false
+    request-context-attribute:
+    # 默认后缀就是.ftl
+    suffix: .ftl
+    template-loader-path: classpath:/templates/
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        max-wait:  -1
+        min-idle: 0
+    timeout: 100000
+  quartz:
+    #持久化到数据库方式
+    job-store-type: jdbc
+    initialize-schema: embedded
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: MyScheduler
+            instanceId: AUTO
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            tablePrefix: QRTZ_
+            isClustered: true
+            clusterCheckinInterval: 10000
+            useProperties: false
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 10
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+  datasource:
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+    minIdle: 1
+    validationQuery: select 'x'
+    initialSize: 1
+    maxWait: 60000
+    poolPreparedStatements: true
+#    filters: stat
+    driver-class-name: com.mysql.jdbc.Driver
+    maxActive: 20
+    username: root
+    url: jdbc:mysql://rm-bp1ukh6tc93ip5nn13o.mysql.rds.aliyuncs.com:3306/hangxin0618?serverTimezone=GMT%2B8&useUnicode=true&amp;characterEncoding=utf-8&useSSL=false&useAffectedRows=true&rewriteBatchedStatements=true
+    password: XinHang220618
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      filter:
+        config:
+          enabled: true
+#      connection-properties: config.decrypt=true;config.decrypt.key=${spring.datasource.publickey}
+    testOnBorrow: false
+    maxOpenPreparedStatements: 20
+    testWhileIdle: true
+    minEvictableIdleTimeMillis: 300000
+    timeBetweenEvictionRunsMillis: 60000
+    testOnReturn: false
+    name: test
+  servlet:
+    multipart:
+      max-request-size: 1800MB
+      max-file-size: 300MB
+logging:
+  config: classpath:logback-local-spring.xml
+  level:
+    com:
+      berryproduct:
+        modules:
+          wes:
+            mapper: debug

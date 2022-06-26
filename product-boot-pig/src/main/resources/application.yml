@@ -1,0 +1,10 @@
+# 激活 prod
+spring:
+  profiles:
+   active : dev
+# 也可以同时激活多个 profile
+# spring.profiles.active: prod,proddb,prodlog
+---
+# dev 配置
+#spring:
+#  profiles: pro
