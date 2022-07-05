@@ -60,7 +60,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         InterceptorRegistration permission = registry.addInterceptor(new InterceptorPermission());
         permission.addPathPatterns("/**");
-
     }
 
 

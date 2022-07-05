@@ -19,8 +19,8 @@ import java.util.Date;
  * @since 2020-04-24
  */
 @Data
-  @EqualsAndHashCode(callSuper = false)
-  @Accessors(chain = true)
+@EqualsAndHashCode(callSuper = false)
+@Accessors(chain = true)
 @TableName("rd_gt_member")
 public class GtMember implements Serializable {
 
@@ -29,7 +29,7 @@ public class GtMember implements Serializable {
       /**
      * 主键
      */
-        @TableId(value = "id", type = IdType.AUTO)
+      @TableId(value = "id", type = IdType.AUTO)
       private String id;
 
       /**
@@ -51,6 +51,11 @@ public class GtMember implements Serializable {
      * 昵称
      */
       private String name;
+
+  /**
+   * 1 普通会员，2钻石会员
+   */
+  private String accountLevel;
 
       /**
      * 真名

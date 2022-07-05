@@ -9,6 +9,7 @@
         <result column="account" property="account" />
         <result column="token" property="token" />
         <result column="name" property="name" />
+        <result column="account_level" property="accountLevel" />
         <result column="real_name" property="realName" />
         <result column="avatar" property="avatar" />
         <result column="email" property="email" />

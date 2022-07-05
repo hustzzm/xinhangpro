@@ -12,7 +12,7 @@ public class CommonQuery extends LinkedHashMap<String, Object> {
 	// 当前页码
 	private int current = 1;
 	// 每页条数
-	private int size = 20;
+	private int size = 10;
 	// 排序列
 	public String sortName;
 	// 排序方式

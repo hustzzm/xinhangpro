@@ -8,3 +8,7 @@ spring:
 # dev 配置
 #spring:
 #  profiles: pro
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
