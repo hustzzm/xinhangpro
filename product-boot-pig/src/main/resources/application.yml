@@ -1,14 +1,17 @@
-# 激活 prod
+#自动生成数据库表（关键）
 spring:
+#关闭Thymeleaf的缓存
+  thymeleaf:
+    cache: false
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  # 激活 prod
   profiles:
-   active : dev
+    active: dev
 # 也可以同时激活多个 profile
 # spring.profiles.active: prod,proddb,prodlog
----
 # dev 配置
 #spring:
 #  profiles: pro
-
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

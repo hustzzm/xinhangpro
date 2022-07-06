@@ -289,6 +289,11 @@
             <version>4.5.13</version>
         </dependency>
 
+        <!-- Spring Data JPA 依赖（重要） -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
     </dependencies>
 
 

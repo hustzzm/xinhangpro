@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
-@MapperScan("com.pig.modules.*.mapper")
+@MapperScan("com.pig.modules.*.mapper,com.pig.modules.*.dao")
 @EnableScheduling
 @EnableTransactionManagement
 public class ProductApplication {
