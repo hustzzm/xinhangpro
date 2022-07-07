@@ -9,6 +9,7 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -87,4 +88,30 @@ public class CommonUtil {
         return false;
     }
 
+    /**
+     * 判断对象中属性值是否全为空
+     *
+     * @param object
+     * @return
+     */
+    public static boolean checkObjAllFieldsIsNull(Object object) {
+        if (null == object) {
+            return true;
+        }
+        try {
+            for (Field f : object.getClass().getDeclaredFields()) {
+                f.setAccessible(true);
+                // 过滤序列化字段
+                if (f.getName().equals("serialVersionUID")){
+                    continue;
+                }
+                if (f.get(object) != null && org.apache.commons.lang.StringUtils.isNotBlank(f.get(object).toString())) {
+                    return false;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
 }

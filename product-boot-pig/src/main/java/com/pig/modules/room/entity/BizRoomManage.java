@@ -1,12 +1,11 @@
 package com.pig.modules.room.entity;
 
+import com.pig.basic.entity.AbstractBaseTimeEntity;
 import com.pig.modules.role.entity.RdRole;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
 
 /**
  * 房间管理(BizRoomManage)实体类
@@ -16,13 +15,13 @@ import java.util.List;
  */
 @Entity
 @Data
-public class BizRoomManage implements Serializable {
+public class BizRoomManage extends AbstractBaseTimeEntity implements Serializable {
     private static final long serialVersionUID = -43096791350669929L;
     /**
      * 主键
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     /**
      * 房间名称
@@ -36,22 +35,6 @@ public class BizRoomManage implements Serializable {
      * 1 普通会员，2普通+钻石
      */
     private Integer roleType;
-    /**
-     * 创建者
-     */
-    private String createBy;
-    /**
-     * 修改者
-     */
-    private String updateBy;
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-    /**
-     * 修改时间
-     */
-    private Date updateTime;
     /**
      * 房间编号1001，1002...，不可重复
      */

@@ -1,13 +1,16 @@
 package com.pig.modules.room.controller;
 
 import com.pig.basic.util.CommonResult;
+import com.pig.basic.util.CommonUtil;
 import com.pig.modules.room.dao.RoomManageDao;
 import com.pig.modules.room.entity.BizRoomManage;
 import com.pig.modules.room.service.BizRoomManageService;
 import org.springframework.data.domain.Page;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,57 +35,28 @@ public class RoomManageController {
         return CommonResult.ok(usersPage);
     }
 
-//
-//
-//    /**
-//     * 通过主键查询单条数据
-//     *
-//     * @param id 主键
-//     * @return 单条数据
-//     */
-//    @GetMapping("{id}")
-//    public ResponseEntity<RoomManage> queryById(@PathVariable("id") Integer id) {
-//        return ResponseEntity.ok(this.roomManageService.queryById(id));
-//    }
-//
-//    /**
-//     * 新增数据
-//     *
-//     * @param roomManage 实体
-//     * @return 新增结果
-//     */
-//    @PostMapping
-//    public ResponseEntity<RoomManage> add(RoomManage roomManage) {
-//        return ResponseEntity.ok(this.roomManageService.insert(roomManage));
-//    }
-//
-//    @PostMapping("/update")
-//    public CommonResult update(@RequestBody RoomManage roomManage) {
-//        if (StringUtils.isEmpty(roomManage.getId())) {
-//            CommonResult commonResult = CommonResult.failed();
-//            commonResult.setMsg("id不能为空，请检查！");
-//            return commonResult;
-//        }
-//        UserVo userVo = CommonUtil.getUserVoFormToken();
-//        roomManage.setCreateBy(userVo.getUserCode());
-//
-//        roomManageService.update(roomManage);
-//
-//        return CommonResult.ok("修改成功");
-//
-//    }
-//
-//
-//    /**
-//     * 删除数据
-//     *
-//     * @param id 主键
-//     * @return 删除是否成功
-//     */
-//    @DeleteMapping
-//    public ResponseEntity<Boolean> deleteById(Integer id) {
-//        return ResponseEntity.ok(this.roomManageService.deleteById(id));
-//    }
 
+    @PostMapping("/insertOrUpdate")
+    public CommonResult update(@RequestBody BizRoomManage roomManage) {
+        if (CommonUtil.checkObjAllFieldsIsNull(roomManage)) {
+            return CommonResult.ok();
+        }
+
+        String msg = StringUtils.isEmpty(roomManage.getId()) ? "新增成功" : "修改成功";
+        roomManageDao.save(roomManage);
+
+        return CommonResult.ok(msg);
+    }
+
+    /**
+     * 删除
+     */
+    @DeleteMapping("/remove")
+    public CommonResult remove(@RequestBody List<Integer> ids) {
+
+        roomManageDao.deleteByIds(ids);
+
+        return CommonResult.ok("删除成功");
+    }
 }
 
