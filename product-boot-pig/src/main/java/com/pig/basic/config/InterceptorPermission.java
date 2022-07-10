@@ -1,11 +1,15 @@
 package com.pig.basic.config;
 
 
+import com.pig.basic.exception.MessageException;
+import com.pig.modules.system.entity.User;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Method;
 
 public class InterceptorPermission implements HandlerInterceptor {
 
@@ -16,24 +20,23 @@ public class InterceptorPermission implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         //如果是SpringMVC请求
-//        if (handler instanceof HandlerMethod) {
-//            HandlerMethod handlerMethod = (HandlerMethod) handler;
-//            Method method = handlerMethod.getMethod();
-//            PublicInterface publicInterface = method.getAnnotation(PublicInterface.class);
-//            if (publicInterface != null) {
-//                return true;
-//            }
-//            User user = (User) request.getSession().getAttribute("currentUser");
-//            if (user == null) {
-//                response.setStatus(999);
-//                throw new MessageException("请求超时，请进入登录页面重新登录系统.");
-//            }
-//            if (user.getIsAdmin()) {
-//                return true;
-//            }
-//            throw new MessageException("缺少访问权限，请进入登录页面重新登录系统.");
-//        }
-//        return false;
+        if (handler instanceof HandlerMethod) {
+            HandlerMethod handlerMethod = (HandlerMethod) handler;
+            Method method = handlerMethod.getMethod();
+            PublicInterface publicInterface = method.getAnnotation(PublicInterface.class);
+            if (publicInterface != null) {
+                return true;
+            }
+            User user = (User) request.getSession().getAttribute("currentUser");
+            if (user == null) {
+                response.setStatus(999);
+                throw new MessageException("请求超时，请进入登录页面重新登录系统.");
+            }
+            if (user.getIsAdmin()) {
+                return true;
+            }
+            throw new MessageException("缺少访问权限，请进入登录页面重新登录系统.");
+        }
         return true;
     }
 

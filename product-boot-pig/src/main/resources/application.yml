@@ -1,6 +1,6 @@
 #自动生成数据库表（关键）
 spring:
-#关闭Thymeleaf的缓存
+  #关闭Thymeleaf的缓存
   thymeleaf:
     cache: false
   jpa:
@@ -15,3 +15,8 @@ spring:
 # dev 配置
 #spring:
 #  profiles: pro
+
+# 图片上传地址
+upload:
+  file:
+    path: /home/publish/html/img/

@@ -1,5 +1,6 @@
 package com.pig.basic.util.utils;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,12 +14,17 @@ public abstract class DateUtils {
 
     public static final String DATE_TIME = "yyyy-MM-dd HH:mm:ss";
     public static final String DATE = "yyyy-MM-dd";
+
+    public static final String MONTH_DATE = "yyyyMM";
     public static final String DATE_TIME_MILLI = "yyyy-MM-dd HH:mm:ss:SSS";
     public static final String DATE_YYMMDDHHMM = "yyyyMMddHHmm";
     public static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern(DATE_TIME);
     public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern(DATE);
     public static final DateTimeFormatter DATE_TIME_MILLI_FORMAT = DateTimeFormatter.ofPattern(DATE_TIME_MILLI);
     public static final DateTimeFormatter DATE_YYMMDDHHMM_FORMAT = DateTimeFormatter.ofPattern(DATE_YYMMDDHHMM);
+
+    public static final SimpleDateFormat SDF_MONTH = new SimpleDateFormat(MONTH_DATE);
+
 
     public static final Map<String, DateTimeFormatter> datetimeFormatterMap = new HashMap() {{
         put(DATE_TIME, DATE_TIME_FORMAT);
@@ -73,11 +79,11 @@ public abstract class DateUtils {
     }
 
 
-    public static String toString(LocalDate date,String str) {
+    public static String toString(LocalDate date, String str) {
         return DateTimeFormatter.ofPattern(str).format(date);
     }
 
-    public static String toString(LocalDateTime time,String str) {
+    public static String toString(LocalDateTime time, String str) {
         return DateTimeFormatter.ofPattern(str).format(time);
     }
 
@@ -171,8 +177,12 @@ public abstract class DateUtils {
         return toString(toLocalDateTime(d).minusHours(8));
     }
 
-    public static String format(Date date,String pattern){
+    public static String format(Date date, String pattern) {
         return datetimeFormatterMap.get(pattern).format(toLocalDateTime(date));
+    }
+
+    public static String getMonthDate() {
+        return SDF_MONTH.format(new Date());
     }
 
 }
