@@ -1,9 +1,10 @@
-package com.pig.modules.room.service.impl;
+package com.pig.modules.gt.service.impl;
 
 import com.pig.basic.util.CommonQuery;
-import com.pig.modules.room.dao.RoomManageDao;
-import com.pig.modules.room.entity.BizRoomManage;
-import com.pig.modules.room.service.BizRoomManageService;
+import com.pig.basic.util.CommonResult;
+import com.pig.modules.gt.dao.RoomManageDao;
+import com.pig.modules.gt.entity.BizRoomManage;
+import com.pig.modules.gt.service.BizRoomManageService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,8 +29,8 @@ public class BizRoomManageServiceImpl implements BizRoomManageService {
         //分页，以及排序方式
         //注意点：pageNo 是从0开始的，pageSize是当前页查询个数
         CommonQuery commonQuery = new CommonQuery(params);
-        Pageable pageable = PageRequest.of(commonQuery.getCurrent() - 1, commonQuery.getSize(), Sort.by(Sort.Direction.DESC,
-                "createTime"));
+        Pageable pageable = PageRequest.of(commonQuery.getCurrent() - 1, commonQuery.getSize(),
+                Sort.by(Sort.Direction.ASC, "createTime"));
         Specification<BizRoomManage> specification = (root, criteriaQuery, criteriaBuilder) -> {
             //增加筛选条件
             Predicate predicate = criteriaBuilder.conjunction();
@@ -43,5 +44,31 @@ public class BizRoomManageServiceImpl implements BizRoomManageService {
             return predicate;
         };
         return roomManageDao.findAll(specification, pageable);
+    }
+
+    @Override
+    public CommonResult save(BizRoomManage roomManage) {
+        String msg = "修改成功";
+        if (StringUtils.isEmpty(roomManage.getId())) {
+            msg = "新增成功";
+            roomManage.setRoomCode(getRoomCode());
+            roomManage.setStatus(-1);
+        }
+        roomManageDao.save(roomManage);
+
+        return CommonResult.ok(msg);
+    }
+
+    /**
+     * 生成房间编号，默认1001
+     *
+     * @return int
+     */
+    private int getRoomCode() {
+        Integer maxRoomCode = roomManageDao.getMaxRoomCode();
+        if (StringUtils.isEmpty(maxRoomCode)) {
+            return 1001;
+        }
+        return maxRoomCode + 1;
     }
 }

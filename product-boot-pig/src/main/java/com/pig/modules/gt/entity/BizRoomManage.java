@@ -1,7 +1,5 @@
-package com.pig.modules.room.entity;
+package com.pig.modules.gt.entity;
 
-import com.pig.basic.entity.AbstractBaseTimeEntity;
-import com.pig.modules.role.entity.RdRole;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -38,7 +36,7 @@ public class BizRoomManage extends AbstractBaseTimeEntity implements Serializabl
     /**
      * 房间编号1001，1002...，不可重复
      */
-    private String roomCode;
+    private int roomCode;
     /**
      * 状态，-1可用,0作废
      */

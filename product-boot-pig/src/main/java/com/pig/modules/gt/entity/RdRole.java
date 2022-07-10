@@ -1,4 +1,4 @@
-package com.pig.modules.role.entity;
+package com.pig.modules.gt.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

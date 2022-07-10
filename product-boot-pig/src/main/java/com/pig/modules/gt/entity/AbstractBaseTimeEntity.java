@@ -1,4 +1,4 @@
-package com.pig.basic.entity;
+package com.pig.modules.gt.entity;
 
 import lombok.Data;
 import org.springframework.data.annotation.CreatedBy;
@@ -21,11 +21,11 @@ import java.time.LocalDateTime;
 public abstract class AbstractBaseTimeEntity {
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createTime;
+    private String createTime;
 
     @LastModifiedDate
     @Column()
-    private LocalDateTime updateTime;
+    private String updateTime;
 
     @Column(name = "create_by", length = 50)
     @CreatedBy

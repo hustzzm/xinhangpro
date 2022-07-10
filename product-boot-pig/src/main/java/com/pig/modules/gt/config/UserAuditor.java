@@ -1,4 +1,4 @@
-package com.pig.basic.configuration;
+package com.pig.modules.gt.config;
 
 import com.pig.basic.shiro.UserVo;
 import com.pig.basic.util.CommonUtil;
