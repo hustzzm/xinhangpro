@@ -2,7 +2,7 @@ server:
   port: 12080
 spring:
   resources:
-    static-locations: file:/data/workspaces/esswes/analysis/run/
+    static-locations: file:/home/publish/
   freemarker:
     allow-request-override: false
     #    开发过程建议关闭缓存
@@ -16,7 +16,7 @@ spring:
     request-context-attribute:
     # 默认后缀就是.ftl
     suffix: .ftl
-    template-loader-path: classpath:/templates/
+    template-loader-path: classpath:/home/publish/
   redis:
     database: 0
     host: 127.0.0.1
@@ -61,8 +61,10 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     maxActive: 20
     username: root
-    url: jdbc:mysql://rm-bp1ukh6tc93ip5nn13o.mysql.rds.aliyuncs.com:3306/hangxin0618?serverTimezone=GMT%2B8&useUnicode=true&amp;characterEncoding=utf-8&useSSL=false&useAffectedRows=true&rewriteBatchedStatements=true
+    url: jdbc:mysql://39.101.203.127:3306/hangxin618?serverTimezone=GMT%2B8&useUnicode=true&amp;characterEncoding=utf-8&useSSL=false&useAffectedRows=true&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true&useSSL=false
+#    url: jdbc:mysql://rm-bp1ukh6tc93ip5nn13o.mysql.rds.aliyuncs.com:3306/hangxin0618?serverTimezone=GMT%2B8&useUnicode=true&amp;characterEncoding=utf-8&useSSL=false&useAffectedRows=true&rewriteBatchedStatements=true
     password: XinHang220618
+    #    password: test223
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       filter:

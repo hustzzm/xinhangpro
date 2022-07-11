@@ -2,7 +2,7 @@ server:
   port: 12080
 spring:
   resources:
-    static-locations: file:/home/happytkfy/publish/gt/
+    static-locations: file:/home/publish/
   freemarker:
     allow-request-override: false
     #    开发过程建议关闭缓存
@@ -16,7 +16,7 @@ spring:
     request-context-attribute:
     # 默认后缀就是.ftl
     suffix: .ftl
-    template-loader-path: classpath:/home/happytkfy/publish/
+    template-loader-path: classpath:/home/publish/
   redis:
     database: 0
     host: 127.0.0.1
@@ -61,8 +61,10 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     maxActive: 20
     username: root
-    url: jdbc:mysql://localhost:3306/pg_220421?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false&useAffectedRows=true&rewriteBatchedStatements=true
-    password: test223
+    url: jdbc:mysql://39.101.203.127:3306/hangxin618?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false&useAffectedRows=true&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true&useSSL=false
+    password: XinHang220618
+#    url: jdbc:mysql://localhost:3306/pg_220421?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false&useAffectedRows=true&rewriteBatchedStatements=true
+#    password: test223
 #    password: JxB9TzsqsOG7IxWqNiRoMG5PsZx3PG4mdxI+4Efk+tneUThYyzyRboCOU7stRYkwGs9yDT54Gpp68S2T7MIKJQ==
     type: com.alibaba.druid.pool.DruidDataSource
 #    publickey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJjqQ6qWrFGQi4Uk+UWNw4MnzRSxWW8J3cdl1H3Jgskm926FxzzvGTsj2DzQLzxZv2s4T3knFmeRxOgIKMeLFikCAwEAAQ==

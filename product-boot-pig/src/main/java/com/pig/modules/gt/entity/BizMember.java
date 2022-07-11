@@ -1,11 +1,11 @@
 package com.pig.modules.gt.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.experimental.Accessors;
+import org.springframework.data.annotation.CreatedDate;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -16,9 +16,10 @@ import java.util.Date;
  * @author makejava
  * @since 2022-07-10 13:36:52
  */
-@Entity
 @Data
-public class BizMember extends AbstractBaseTimeEntity implements Serializable {
+@Accessors(chain = true)
+@TableName("biz_member")
+public class BizMember implements Serializable {
     private static final long serialVersionUID = -91245255578607013L;
 
     /**
@@ -107,6 +108,13 @@ public class BizMember extends AbstractBaseTimeEntity implements Serializable {
      * 状态，-1可用,1拉黑，0作废
      */
     private Integer status;
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+    private String createBy;
+    private Date updateTime;
+    private String updateBy;
 
 }
 
