@@ -21,9 +21,9 @@ import java.util.List;
  */
 public interface BizBookingDao extends JpaRepository<BizBooking, Integer> {
 
-    Page<BizOrder> findAll(Specification<BizBooking> specification, Pageable pageable);
+    Page<BizBooking> findAll(Specification<BizBooking> specification, Pageable pageable);
 
-    List<BizOrder> findAll(Specification<BizBooking> specification);
+    List<BizBooking> findAll(Specification<BizBooking> specification);
 
     @Transactional(rollbackFor = Exception.class)
     @Modifying

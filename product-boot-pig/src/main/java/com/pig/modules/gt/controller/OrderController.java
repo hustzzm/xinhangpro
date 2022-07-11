@@ -10,6 +10,7 @@ import com.pig.modules.gt.entity.BizOrderExportVO;
 import com.pig.modules.gt.service.BizOrderService;
 import org.springframework.data.domain.Page;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -41,7 +42,9 @@ public class OrderController {
         if (!ObjectUtils.isEmpty(usersPage.getContent())) {
             List<BizOrder> content = usersPage.getContent();
             content.stream().forEach(x -> {
-                x.setCreateTime(x.getCreateTime().substring(0, 19));
+                if (!StringUtils.isEmpty(x.getCreateTime())) {
+                    x.setCreateTime(x.getCreateTime().substring(0, 19));
+                }
             });
         }
         return CommonResult.ok(usersPage);

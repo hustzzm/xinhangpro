@@ -2,10 +2,7 @@ package com.pig.modules.gt.entity;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 import java.io.Serializable;
 
@@ -32,6 +29,10 @@ public class BizBooking extends AbstractBaseTimeEntity implements Serializable {
      */
     private String booksNo;
     /**
+     * 微信openid，个人公开信息获得
+     */
+    private String openid;
+    /**
      * 微信号
      */
     private String account;
@@ -54,7 +55,7 @@ public class BizBooking extends AbstractBaseTimeEntity implements Serializable {
      * 19：19:00-20:00;
      * 20：20:00-21:00;
      */
-    private Integer bookTimes;
+    private String bookTimes;
     /**
      * 房间编号
      */
@@ -74,10 +75,14 @@ public class BizBooking extends AbstractBaseTimeEntity implements Serializable {
     /**
      * 房间类型
      */
-    private Integer roomType;
+    private String roomType;
     /**
      * 房间名称
      */
     private String roomName;
+
+    @ManyToOne
+    @JoinColumn(name = "openid", referencedColumnName = "openid", insertable = false, updatable = false)
+    private BizMember bizMember;
 }
 

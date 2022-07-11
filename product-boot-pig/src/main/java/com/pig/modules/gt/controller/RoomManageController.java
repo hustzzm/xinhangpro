@@ -37,8 +37,12 @@ public class RoomManageController {
         if (!ObjectUtils.isEmpty(usersPage.getContent())) {
             List<BizRoomManage> content = usersPage.getContent();
             content.stream().forEach(x -> {
-                x.setCreateTime(x.getCreateTime().substring(0, 19));
-                x.setUpdateTime(x.getUpdateTime().substring(0, 19));
+                if (!StringUtils.isEmpty(x.getCreateTime())) {
+                    x.setCreateTime(x.getCreateTime().substring(0, 19));
+                }
+                if (!StringUtils.isEmpty(x.getUpdateTime())) {
+                    x.setUpdateTime(x.getUpdateTime().substring(0, 19));
+                }
             });
         }
         return CommonResult.ok(usersPage);
