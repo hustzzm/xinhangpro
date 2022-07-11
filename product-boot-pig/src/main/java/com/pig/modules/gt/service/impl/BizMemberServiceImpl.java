@@ -2,7 +2,6 @@ package com.pig.modules.gt.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.pig.modules.gt.entity.BizMember;
-import com.pig.modules.gt.mapper.BizMemberMapper;
 import com.pig.modules.gt.service.BizMemberService;
 import org.springframework.stereotype.Service;
 
@@ -14,5 +13,5 @@ import org.springframework.stereotype.Service;
  * @since 2022-07-10 13:36:52
  */
 @Service("bizMemberService")
-public class BizMemberServiceImpl extends ServiceImpl<BizMemberMapper, BizMember> implements BizMemberService {
+public class BizMemberServiceImpl implements BizMemberService {
 }

@@ -1,18 +1,20 @@
 package com.pig.modules.gt.api;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.pig.basic.util.CommonResult;
+import com.pig.modules.gt.dao.BizMemberDao;
 import com.pig.modules.gt.entity.BizMember;
-import com.pig.modules.gt.service.BizMemberService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 
 @RestController
 @RequestMapping("/wx/member")
 public class MemberInfoApi {
 
-    @Autowired
-    private BizMemberService bizMemberService;
+    @Resource
+    private BizMemberDao bizMemberDao;
 
     /**
      * 详情
@@ -20,15 +22,9 @@ public class MemberInfoApi {
     @GetMapping("/getbyaccount")
     public CommonResult getbyaccount(String openid) {
 
-        QueryWrapper<BizMember> queryWrapper = new QueryWrapper<>();
+        BizMember bizMember = bizMemberDao.findByOpenidAndStatus(openid, -1);
 
-        queryWrapper.eq("openid", openid);
-        queryWrapper.eq("status", -1);
-
-        //User detail = userService.getById(user.getId());
-        BizMember member = bizMemberService.getOne(queryWrapper);
-
-        return CommonResult.ok(member);
+        return CommonResult.ok(bizMember);
     }
 
 

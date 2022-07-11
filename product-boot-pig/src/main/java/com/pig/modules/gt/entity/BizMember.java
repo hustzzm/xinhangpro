@@ -16,10 +16,9 @@ import java.util.Date;
  * @author makejava
  * @since 2022-07-10 13:36:52
  */
+@Entity
 @Data
-@Accessors(chain = true)
-@TableName("biz_member")
-public class BizMember implements Serializable {
+public class BizMember extends AbstractBaseTimeEntity implements Serializable {
     private static final long serialVersionUID = -91245255578607013L;
 
     /**
@@ -51,7 +50,7 @@ public class BizMember implements Serializable {
     /**
      * 微信openid，个人公开信息获得
      */
-    private Integer openid;
+    private String openid;
     /**
      * 添加日期
      */
@@ -108,13 +107,5 @@ public class BizMember implements Serializable {
      * 状态，-1可用,1拉黑，0作废
      */
     private Integer status;
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-    private String createBy;
-    private Date updateTime;
-    private String updateBy;
-
 }
 

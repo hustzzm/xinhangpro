@@ -1,6 +1,6 @@
 package com.pig.modules.gt.dao;
 
-import com.pig.modules.gt.entity.BizOrder;
+import com.pig.modules.gt.entity.BizMember;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author makejava
  * @since 2022-07-10 13:36:52
  */
-public interface BizMemberDao extends JpaRepository<BizOrder, Integer> {
+public interface BizMemberDao extends JpaRepository<BizMember, Integer> {
+
+    BizMember findByOpenidAndStatus(String openid, Integer status);
 }
 
