@@ -19,4 +19,4 @@ spring:
 # 图片上传地址
 upload:
   file:
-    path: /home/publish/html/img/
+    path: /home/publish/html/img

@@ -25,9 +25,6 @@ import java.util.UUID;
 @RequestMapping(value = "/base")
 public class CommonController {
 
-    @Resource
-    private BizMemberDao bizMemberDao;
-
     @Value("${upload.file.path:}")
     private String uploadFilePath;
 
@@ -49,7 +46,7 @@ public class CommonController {
         }
         String monthDate = DateUtils.getMonthDate(); // 年月
         fileName = UUID.randomUUID() + suffixName; // 新文件名
-        File dest = new File(uploadFilePath + monthDate + "/" + fileName);
+        File dest = new File(uploadFilePath + "/" + monthDate + "/" + fileName);
         if (!dest.getParentFile().exists()) {
             dest.getParentFile().mkdirs();
         }
@@ -59,7 +56,7 @@ public class CommonController {
             log.error("uploadImage is exception,", e.getMessage(), e);
             return CommonResult.failed("图片上传出现异常，" + e.getMessage());
         }
-        String filename = monthDate + "/" + fileName;
+        String filename = "/" + monthDate + "/" + fileName;
         return CommonResult.ok(filename);
     }
 }
