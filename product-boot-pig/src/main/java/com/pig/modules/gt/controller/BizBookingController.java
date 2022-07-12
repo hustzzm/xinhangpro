@@ -1,12 +1,11 @@
 package com.pig.modules.gt.controller;
 
 import com.pig.basic.util.CommonResult;
+import com.pig.modules.gt.dao.BizBookingDao;
 import com.pig.modules.gt.entity.BizBooking;
-import com.pig.modules.gt.entity.BizRoomManage;
 import com.pig.modules.gt.service.BizBookingService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.repository.query.Param;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +29,11 @@ public class BizBookingController {
     @Resource
     private BizBookingService bizBookingService;
 
+    @Resource
+    private BizBookingDao bizBookingDao;
+
     @GetMapping(value = "/list")
-    public CommonResult test(@RequestParam Map<String, Object> params) {
+    public CommonResult list(@RequestParam Map<String, Object> params) {
         Page<BizBooking> bookingPage = bizBookingService.page(params);
         if (!ObjectUtils.isEmpty(bookingPage.getContent())) {
             List<BizBooking> content = bookingPage.getContent();
@@ -45,6 +47,18 @@ public class BizBookingController {
             });
         }
         return CommonResult.ok(bookingPage);
+    }
+
+    @PutMapping(value = "/finished")
+    public CommonResult finished(@Param("id") Integer id) {
+        bizBookingDao.updateBookStatusById(id);
+        return CommonResult.ok("预约已完成！");
+    }
+
+    @DeleteMapping(value = "/delete")
+    public CommonResult delete(@Param("id") Integer id) {
+        bizBookingDao.deleteById(id);
+        return CommonResult.ok("预约已删除！");
     }
 }
 

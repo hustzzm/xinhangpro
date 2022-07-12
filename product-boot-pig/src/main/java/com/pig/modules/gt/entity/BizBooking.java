@@ -21,7 +21,7 @@ public class BizBooking extends AbstractBaseTimeEntity implements Serializable {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Integer id;
     /**
      * 预订编号:B1HC5M1ND5g
      * B+时间戳转32进制+3位随机数
@@ -67,11 +67,11 @@ public class BizBooking extends AbstractBaseTimeEntity implements Serializable {
     /**
      * 预约状态1 预约成功，3消费完成，5取消预约
      */
-    private Integer bookStatus;
+    private String bookStatus;
     /**
      * 状态，-1可用,0作废
      */
-    private Integer status;
+    private String status;
     /**
      * 房间类型
      */

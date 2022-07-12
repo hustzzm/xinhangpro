@@ -47,18 +47,23 @@ public class BizBookingServiceImpl implements BizBookingService {
                 list.add(predicateJoin);
             }
             //增加筛选条件
+            // 房间名
             Predicate predicate = criteriaBuilder.conjunction();
             if (!StringUtils.isEmpty(commonQuery.get("roomName"))) {
                 predicate.getExpressions().add(criteriaBuilder.like(root.get("roomName"), "%" + commonQuery.get("roomName") + "%"));
             }
+            // 预约状态
+            if (!StringUtils.isEmpty(commonQuery.get("bookStatus"))) {
+                predicate.getExpressions().add(criteriaBuilder.like(root.get("bookStatus"), "%" + commonQuery.get("bookStatus") + "%"));
+            }
             // 开始时间
             if (!StringUtils.isEmpty(commonQuery.get("startTime"))) {
-                predicate.getExpressions().add(criteriaBuilder.greaterThanOrEqualTo(root.get("bookTimes").as(String.class),
+                predicate.getExpressions().add(criteriaBuilder.greaterThanOrEqualTo(root.get("bookDate").as(String.class),
                         String.valueOf(commonQuery.get("startTime"))));
             }
             // 结束时间
             if (!StringUtils.isEmpty(commonQuery.get("endTime"))) {
-                predicate.getExpressions().add(criteriaBuilder.lessThanOrEqualTo(root.get("bookTimes").as(String.class),
+                predicate.getExpressions().add(criteriaBuilder.lessThanOrEqualTo(root.get("bookDate").as(String.class),
                         String.valueOf(commonQuery.get("endTime"))));
             }
             list.add(predicate);

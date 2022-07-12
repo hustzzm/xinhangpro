@@ -1,7 +1,6 @@
 package com.pig.modules.gt.dao;
 
 import com.pig.modules.gt.entity.BizBooking;
-import com.pig.modules.gt.entity.BizOrder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -29,5 +28,10 @@ public interface BizBookingDao extends JpaRepository<BizBooking, Integer> {
     @Modifying
     @Query("delete from BizBooking where id in (:ids)")
     void deleteByIds(@Param("ids") List<Integer> ids);
+
+    @Transactional(rollbackFor = Exception.class)
+    @Modifying
+    @Query("update BizBooking set bookStatus = '3' where id =:id")
+    void updateBookStatusById(@Param("id") Integer id);
 }
 

@@ -1,10 +1,7 @@
 package com.pig.modules.gt.controller;
 
 import com.pig.basic.util.CommonResult;
-import com.pig.basic.util.DateUtil;
 import com.pig.basic.util.utils.DateUtils;
-import com.pig.modules.gt.dao.BizMemberDao;
-import com.pig.modules.gt.entity.BizOrder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
