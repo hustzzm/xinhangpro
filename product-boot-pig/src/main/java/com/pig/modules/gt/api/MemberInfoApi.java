@@ -51,6 +51,7 @@ public class MemberInfoApi {
             bizMember.setPigjs1(StringUtil.getCheckString(params.get("pigjs2")));
         }
         if(!StringUtil.isNull(params.get("pigxs1"))){
+
             bizMember.setPigxs1(StringUtil.getCheckString(params.get("pigxs1")));
         }
         if(!StringUtil.isNull(params.get("pigxs2"))){
