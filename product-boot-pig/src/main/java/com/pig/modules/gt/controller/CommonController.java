@@ -22,7 +22,7 @@ import java.util.UUID;
 
 @RestController
 @Slf4j
-@RequestMapping(value = "/base")
+@RequestMapping(value = "/wx/base")
 public class CommonController {
 
     @Value("${upload.file.path:}")

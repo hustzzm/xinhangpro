@@ -1,5 +1,5 @@
 server:
-  port: 12080
+  port: 8090
 spring:
   resources:
     static-locations: file:/home/publish/
@@ -61,7 +61,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     maxActive: 20
     username: root
-    url: jdbc:mysql://39.101.203.127:3306/hangxin618?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false&useAffectedRows=true&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://localhost:3306/hangxin618?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false&useAffectedRows=true&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true&useSSL=false
     password: XinHang220618
 #    url: jdbc:mysql://localhost:3306/pg_220421?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false&useAffectedRows=true&rewriteBatchedStatements=true
 #    password: test223

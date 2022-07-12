@@ -38,10 +38,10 @@ public class RoomManageController {
             List<BizRoomManage> content = usersPage.getContent();
             content.stream().forEach(x -> {
                 if (!StringUtils.isEmpty(x.getCreateTime())) {
-                    x.setCreateTime(x.getCreateTime().substring(0, 19));
+                    x.setCreateTime(x.getCreateTime());
                 }
                 if (!StringUtils.isEmpty(x.getUpdateTime())) {
-                    x.setUpdateTime(x.getUpdateTime().substring(0, 19));
+                    x.setUpdateTime(x.getUpdateTime());
                 }
             });
         }

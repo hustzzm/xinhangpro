@@ -1,5 +1,7 @@
 package com.pig.modules.gt.entity;
 
+import com.google.gson.annotations.JsonAdapter;
+import com.pig.basic.adapter.DateTimeAdapter;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -11,6 +13,7 @@ import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * 自动更新创建时间和更新时间
@@ -21,11 +24,12 @@ import java.time.LocalDateTime;
 public abstract class AbstractBaseTimeEntity {
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    private String createTime;
+    @JsonAdapter(DateTimeAdapter.class)
+    private Date createTime;
 
     @LastModifiedDate
-    @Column()
-    private String updateTime;
+    @JsonAdapter(DateTimeAdapter.class)
+    private Date updateTime;
 
     @Column(name = "create_by", length = 50)
     @CreatedBy

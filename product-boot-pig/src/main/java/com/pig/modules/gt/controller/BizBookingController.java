@@ -37,10 +37,10 @@ public class BizBookingController {
             List<BizBooking> content = bookingPage.getContent();
             content.stream().forEach(x -> {
                 if (!StringUtils.isEmpty(x.getUpdateTime())) {
-                    x.setUpdateTime(x.getUpdateTime().substring(0, 19));
+                    x.setUpdateTime(x.getUpdateTime());
                 }
                 if (!StringUtils.isEmpty(x.getCreateTime())) {
-                    x.setCreateTime(x.getCreateTime().substring(0, 19));
+                    x.setCreateTime(x.getCreateTime());
                 }
             });
         }
