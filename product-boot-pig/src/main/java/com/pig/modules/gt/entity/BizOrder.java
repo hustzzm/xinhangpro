@@ -38,7 +38,7 @@ public class BizOrder implements Serializable {
     /**
      * 订单状态 5  待付款  10 已支付  20 支付失败
      */
-    private Integer orderStatus;
+    private String orderStatus;
     /**
      * 订单金额
      */

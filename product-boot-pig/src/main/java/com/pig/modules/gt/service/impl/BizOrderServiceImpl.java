@@ -1,6 +1,7 @@
 package com.pig.modules.gt.service.impl;
 
 import com.pig.basic.util.CommonQuery;
+import com.pig.modules.gt.constant.HomeEnum;
 import com.pig.modules.gt.dao.BizOrderDao;
 import com.pig.modules.gt.entity.BizOrder;
 import com.pig.modules.gt.entity.BizOrderExportVO;
@@ -53,8 +54,15 @@ public class BizOrderServiceImpl implements BizOrderService {
             //增加筛选条件
             Predicate predicate = criteriaBuilder.conjunction();
             //name不为空
+            if (!StringUtils.isEmpty(commonQuery.get("openId"))) {
+                predicate.getExpressions().add(criteriaBuilder.like(root.get("openId"), "%" + commonQuery.get("openId") + "%"));
+            }
+            if (!StringUtils.isEmpty(commonQuery.get("orderStatus"))) {
+                predicate.getExpressions().add(criteriaBuilder.like(root.get("orderStatus"), "%" + commonQuery.get("orderStatus") + "%"));
+            }
+            //name不为空
             if (!StringUtils.isEmpty(commonQuery.get("orderNo"))) {
-                predicate.getExpressions().add(criteriaBuilder.like(root.get("orderNo"), "%" + commonQuery.get("orderNo") + "%"));
+                predicate.getExpressions().add(root.get("orderNo"));
             }
             if (!StringUtils.isEmpty(commonQuery.get("nickName"))) {
                 predicate.getExpressions().add(criteriaBuilder.like(root.get("nickName"), "%" + commonQuery.get("nickName") + "%"));
@@ -90,7 +98,7 @@ public class BizOrderServiceImpl implements BizOrderService {
         List<BizOrder> all = orderDao.findAll();
         all.stream().forEach((order) -> {
             String orderName = order.getRdRole().getRoleName() + " " + order.getOrderStart() + " " + order.getOrderEnd();
-            String orderStatus = order.getOrderStatus() == 5 ? "待支付" : (order.getOrderStatus() == 10 ? "支付成功" : "支付失败");
+            String orderStatus = HomeEnum.CommonEnum.getValue(order.getOrderStatus());
             BizOrderExportVO orderExportVO = BizOrderExportVO.builder()
                     .orderNo(order.getOrderNo())
                     .orderAccount(order.getOrderAccount())
