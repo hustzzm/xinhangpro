@@ -41,7 +41,7 @@ public class InterceptorPermission implements HandlerInterceptor {
             }
             throw new MessageException("缺少访问权限，请进入登录页面重新登录系统.");
         }
-        return true;
+        return false;
     }
 
     /**
