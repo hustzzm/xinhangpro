@@ -26,7 +26,7 @@ public class BizMember extends AbstractBaseTimeEntity implements Serializable {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Integer id;
     /**
      * 微信号，唯一性校验
      */
