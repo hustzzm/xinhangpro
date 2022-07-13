@@ -47,4 +47,9 @@ public class BizCompanyServiceImpl implements BizCompanyService {
         };
         return bizCompanyDao.findAll(specification, pageable);
     }
+
+    @Override
+    public BizCompany insertOrUpdate(Map<String, Object> params) {
+        return null;
+    }
 }

@@ -25,6 +25,10 @@ public abstract class DateUtils {
 
     public static final SimpleDateFormat SDF_MONTH = new SimpleDateFormat(MONTH_DATE);
 
+    public static final SimpleDateFormat SDF_DATE = new SimpleDateFormat(DATE);
+
+
+
 
     public static final Map<String, DateTimeFormatter> datetimeFormatterMap = new HashMap() {{
         put(DATE_TIME, DATE_TIME_FORMAT);

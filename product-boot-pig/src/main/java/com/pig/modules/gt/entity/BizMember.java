@@ -1,8 +1,8 @@
 package com.pig.modules.gt.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.google.gson.annotations.JsonAdapter;
+import com.pig.basic.adapter.DateTimeAdapter;
 import lombok.Data;
-import lombok.experimental.Accessors;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -42,11 +42,11 @@ public class BizMember extends AbstractBaseTimeEntity implements Serializable {
     /**
      * 性别1 男，2 女，3未知
      */
-    private Integer gender;
+    private String gender;
     /**
      * 生日
      */
-    private Date birthday;
+    private String birthday;
     /**
      * 微信openid，个人公开信息获得
      */
@@ -54,11 +54,14 @@ public class BizMember extends AbstractBaseTimeEntity implements Serializable {
     /**
      * 添加日期
      */
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    @JsonAdapter(DateTimeAdapter.class)
     private Date registerTime;
     /**
      * 会员类型：0 非会员，1 普通会员，2钻石会员
      */
-    private Integer userLevel;
+    private String userLevel = "0";
     /**
      * 昵称
      */
@@ -102,10 +105,10 @@ public class BizMember extends AbstractBaseTimeEntity implements Serializable {
     /**
      * 会员到期时间
      */
-    private Date endDate;
+    private String endDate;
     /**
      * 状态，-1可用,1拉黑，0作废
      */
-    private Integer status;
+    private String status = "-1";
 }
 

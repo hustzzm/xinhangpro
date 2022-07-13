@@ -10,8 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 用户信息
- * 不可编辑：account，openid，register_time，avatar，nickname，gender(BizMember)实体类
+ * 商家管理
  *
  * @author makejava
  * @since 2022-07-10 13:36:52
@@ -28,22 +27,48 @@ public class BizCompany extends AbstractBaseTimeEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     /**
-     * 微信号，唯一性校验
+     * 商家类型，见字典
      */
-    private String comptype;
-    private String compname;
-    private String compaddr;
-    private String telphone;
-    private String shopfee;
-    private String toppig;
-    private String details;
-    private String subpig;
-    private String remark;
-
-
+    private Integer comptype;
     /**
-     * 状态，-1可用,1拉黑，0作废
+     * 商家名称
+     */
+    private String compname;
+    /**
+     * 商家地址
+     */
+    private String compaddr;
+    /**
+     * 商家联系电话
+     */
+    private String telphone;
+    /**
+     * 消费折扣：0.65，表示6.5折
+     */
+    private Double shopfee;
+    /**
+     * 列表展示logo，连接地址 只允许一张
+     */
+    private String toppig;
+    /**
+     * 详细文本内容
+     */
+    private String details;
+    /**
+     * 其他图片，只允许一张
+     */
+    private String subpig;
+    /**
+     * 备注
+     */
+    private String remark;
+    /**
+     * 状态，-1可用 其他不可用
      */
     private Integer status;
+    /**
+     * 详细页面图片，只允许一张
+     */
+    private String subheadpig;
 }
 

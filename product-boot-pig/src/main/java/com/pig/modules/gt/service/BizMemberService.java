@@ -1,5 +1,10 @@
 package com.pig.modules.gt.service;
 
+import com.pig.basic.util.CommonResult;
+import com.pig.modules.gt.entity.BizMember;
+
+import java.util.Map;
+
 /**
  * 用户信息
  * 不可编辑：account，openid，register_time，avatar，nickname，gender(BizMember)表服务接口
@@ -9,4 +14,5 @@ package com.pig.modules.gt.service;
  */
 public interface BizMemberService {
 
+    CommonResult insertOrUpdate(Map<String, Object> params);
 }
