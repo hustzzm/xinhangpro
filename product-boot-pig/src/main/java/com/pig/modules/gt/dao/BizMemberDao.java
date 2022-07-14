@@ -12,6 +12,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface BizMemberDao extends JpaRepository<BizMember, Integer> {
 
-    BizMember findByOpenidAndStatus(String openid, Integer status);
+    BizMember findByOpenidAndStatus(String openid, String status);
 }
 

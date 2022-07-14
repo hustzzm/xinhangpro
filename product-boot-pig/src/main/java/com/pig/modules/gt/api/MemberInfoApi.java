@@ -28,7 +28,7 @@ public class MemberInfoApi {
     @GetMapping("/getbyaccount")
     public CommonResult getbyaccount(String openid) {
 
-        BizMember bizMember = bizMemberDao.findByOpenidAndStatus(openid, -1);
+        BizMember bizMember = bizMemberDao.findByOpenidAndStatus(openid, "-1");
 
         return CommonResult.ok(bizMember);
     }
