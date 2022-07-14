@@ -45,7 +45,7 @@ public class OrderApi {
 
     @GetMapping(value = "/totalAmount")
     public CommonResult totalAmount(@RequestParam Map<String, Object> params) {
-        double totalAmount  = orderService.getTotalAmount(params);
+        double totalAmount = orderService.getTotalAmount(params);
 
         return CommonResult.ok(totalAmount);
     }
@@ -82,6 +82,18 @@ public class OrderApi {
 
         excelWriter.finish();
 
+    }
+
+    /**、
+     * 购买会员产生订单
+     *
+     * @param params params
+     * @return CommonResult
+     */
+    @PostMapping(value = "/insert")
+    public CommonResult insert(@RequestBody Map<String, Object> params) {
+
+        return orderService.insert(params);
     }
 }
 

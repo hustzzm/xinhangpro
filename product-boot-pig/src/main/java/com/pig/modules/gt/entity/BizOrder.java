@@ -1,11 +1,14 @@
 package com.pig.modules.gt.entity;
 
+import com.google.gson.annotations.JsonAdapter;
+import com.pig.basic.adapter.DateTimeAdapter;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 订单信息表(BizOrder)实体类
@@ -15,7 +18,7 @@ import java.io.Serializable;
  */
 @Entity
 @Data
-public class BizOrder implements Serializable {
+public class BizOrder extends AbstractBaseTimeEntity implements Serializable {
     private static final long serialVersionUID = -19088977913835102L;
 
     @Id
@@ -38,7 +41,11 @@ public class BizOrder implements Serializable {
     /**
      * 订单状态 5  待付款  10 已支付  20 支付失败
      */
-    private String orderStatus;
+    private String orderStatus = "5";
+    /**
+     * 订单类型 1-6
+     */
+    private String orderType = "5";
     /**
      * 订单金额
      */
@@ -46,15 +53,15 @@ public class BizOrder implements Serializable {
     /**
      * 会员类型
      */
-    private Integer userLevel;
+    private String userLevel;
     /**
      * 订单生效日期-开始
      */
-    private String orderStart;
+    private Date orderStart;
     /**
      * 订单生效日期-结束
      */
-    private String orderEnd;
+    private Date orderEnd;
     /**
      * 付款金额
      */
@@ -63,22 +70,13 @@ public class BizOrder implements Serializable {
      * 付款时间
      */
     private String payTime;
-    /**
-     * 创建时间
-     */
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private String createTime;
 
     private Date deletedAt;
 
-    private Date updatedAt;
-
-    private Date createdAt;
     /**
      * 状态，-1可用,0作废
      */
-    private Integer status;
+    private String status = "-1";
 
     @OneToOne
     @JoinColumn(name = "userLevel", referencedColumnName = "id", insertable = false, updatable = false)

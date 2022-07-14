@@ -24,6 +24,8 @@ public interface BizOrderDao extends JpaRepository<BizOrder, Integer> {
 
     List<BizOrder> findAll(Specification<BizOrder> specification);
 
+    BizOrder findByOpenId(String openId);
+
     @Transactional(rollbackFor = Exception.class)
     @Modifying
     @Query("delete from BizOrder where orderId in (:orderIds)")

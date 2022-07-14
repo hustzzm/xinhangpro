@@ -39,14 +39,6 @@ public class OrderController {
     @GetMapping(value = "/list")
     public CommonResult list(@RequestParam Map<String, Object> params) {
         Page<BizOrder> usersPage = orderService.page(params);
-        if (!ObjectUtils.isEmpty(usersPage.getContent())) {
-            List<BizOrder> content = usersPage.getContent();
-            content.stream().forEach(x -> {
-                if (!StringUtils.isEmpty(x.getCreateTime())) {
-                    x.setCreateTime(x.getCreateTime().substring(0, 19));
-                }
-            });
-        }
         return CommonResult.ok(usersPage);
     }
 

@@ -1,7 +1,11 @@
 package com.pig.modules.gt.service.impl;
 
 import com.pig.basic.util.CommonQuery;
+import com.pig.basic.util.CommonResult;
+import com.pig.basic.util.StringUtil;
+import com.pig.basic.util.utils.DateUtils;
 import com.pig.modules.gt.constant.HomeEnum;
+import com.pig.modules.gt.dao.BizMemberDao;
 import com.pig.modules.gt.dao.BizOrderDao;
 import com.pig.modules.gt.entity.BizOrder;
 import com.pig.modules.gt.entity.BizOrderExportVO;
@@ -19,8 +23,12 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.Predicate;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * 订单信息表(BizOrder)表服务实现类
@@ -34,6 +42,9 @@ public class BizOrderServiceImpl implements BizOrderService {
     private BizOrderDao orderDao;
 
     @Resource
+    private BizMemberDao bizMemberDao;
+
+    @Resource
     private EntityManager entityManager;
 
 
@@ -42,8 +53,7 @@ public class BizOrderServiceImpl implements BizOrderService {
         //分页，以及排序方式
         //注意点：pageNo 是从0开始的，pageSize是当前页查询个数
         CommonQuery commonQuery = new CommonQuery(params);
-        Pageable pageable = PageRequest.of(commonQuery.getCurrent() - 1, commonQuery.getSize(),
-                Sort.by(Sort.Direction.ASC, "createTime"));
+        Pageable pageable = PageRequest.of(commonQuery.getCurrent() - 1, commonQuery.getSize(), Sort.by(Sort.Direction.ASC, "createTime"));
         Specification<BizOrder> specification = getBizOrderSpecification(commonQuery);
 
         return orderDao.findAll(specification, pageable);
@@ -72,13 +82,11 @@ public class BizOrderServiceImpl implements BizOrderService {
             }
             // 开始时间
             if (!StringUtils.isEmpty(commonQuery.get("startTime"))) {
-                predicate.getExpressions().add(criteriaBuilder.greaterThanOrEqualTo(root.get("createTime").as(String.class),
-                        String.valueOf(commonQuery.get("startTime"))));
+                predicate.getExpressions().add(criteriaBuilder.greaterThanOrEqualTo(root.get("createTime").as(String.class), String.valueOf(commonQuery.get("startTime"))));
             }
             // 结束时间
             if (!StringUtils.isEmpty(commonQuery.get("endTime"))) {
-                predicate.getExpressions().add(criteriaBuilder.lessThanOrEqualTo(root.get("createTime").as(String.class),
-                        String.valueOf(commonQuery.get("endTime"))));
+                predicate.getExpressions().add(criteriaBuilder.lessThanOrEqualTo(root.get("createTime").as(String.class), String.valueOf(commonQuery.get("endTime"))));
             }
             return predicate;
         };
@@ -99,14 +107,7 @@ public class BizOrderServiceImpl implements BizOrderService {
         all.stream().forEach((order) -> {
             String orderName = order.getRdRole().getRoleName() + " " + order.getOrderStart() + " " + order.getOrderEnd();
             String orderStatus = HomeEnum.CommonEnum.getValue(order.getOrderStatus());
-            BizOrderExportVO orderExportVO = BizOrderExportVO.builder()
-                    .orderNo(order.getOrderNo())
-                    .orderAccount(order.getOrderAccount())
-                    .createTime(order.getCreateTime())
-                    .orderName(orderName)
-                    .orderPrice(String.valueOf(order.getOrderPrice()))
-                    .orderStatus(orderStatus)
-                    .build();
+            BizOrderExportVO orderExportVO = BizOrderExportVO.builder().orderNo(order.getOrderNo()).orderAccount(order.getOrderAccount()).createTime(order.getCreateTime()).orderName(orderName).orderPrice(String.valueOf(order.getOrderPrice())).orderStatus(orderStatus).build();
             scrollResultsHandler.handle(orderExportVO);
 
             //对象被session持有，调用detach方法释放内存
@@ -121,5 +122,72 @@ public class BizOrderServiceImpl implements BizOrderService {
         // 按条件计算总金额
         List<BizOrder> orderList = orderDao.findAll(specification);
         return orderList.stream().mapToDouble(BizOrder::getOrderPrice).sum();
+    }
+
+    @Override
+    public CommonResult insert(Map<String, Object> params) {
+        String msg = checkParam(params);
+        if (!StringUtils.isEmpty(msg)) {
+            return CommonResult.failed(msg);
+        }
+        // 开始逻辑处理
+        String openId = StringUtil.getCheckString(params.get("openId"));
+        BizOrder bizOrder = orderDao.findByOpenId(openId);
+        // 如果订单已存在
+        if (null != bizOrder) {
+            // 1 检查是否有未处理的订单，如果有则返回，不执行添加操作；
+            if (bizOrder.getOrderStatus().equalsIgnoreCase(HomeEnum.CommonEnum.TO_BE_PAID.getKey())) {
+                return CommonResult.ok("已有未付款的订单！");
+            }
+            // 2 检查是否有已经购买且未过期的订单，如果有则返回，不执行添加操作；
+            if (null != bizOrder.getOrderEnd()) {
+                Date now = new Date();
+                Date orderEnd = bizOrder.getOrderEnd();
+                // 如果当前时间小于过期时间，则不添加
+                if (now.compareTo(orderEnd) < 0) {
+                    return CommonResult.ok("当前会员未过期！");
+                }
+            }
+        } else {
+            bizOrder = new BizOrder();
+            // 新增订单
+            String orderNo = UUID.randomUUID().toString(); // 订单号
+            String orderType = StringUtil.getCheckString(params.get("orderType"));
+            Double orderPrice = StringUtil.getCheckDouble(params.get("orderPrice"));
+            String userLevel = StringUtil.getCheckString(params.get("userLevel"));
+
+            bizOrder.setOpenId(openId);
+            bizOrder.setOrderNo(orderNo);
+            bizOrder.setOrderType(orderType);
+            bizOrder.setOrderPrice(orderPrice);
+            bizOrder.setUserLevel(userLevel);
+
+            orderDao.save(bizOrder);
+            // orderNo更新至member表中
+            bizMemberDao.updateOrderNoByOpenId(openId, orderNo);
+        }
+        return CommonResult.ok(bizOrder);
+    }
+
+    /**
+     * 参数检查
+     *
+     * @param params
+     */
+    private String checkParam(Map<String, Object> params) {
+        String msg = "";
+        if (StringUtil.isNull(params.get("openId"))) {
+            return "openId不能为空！";
+        }
+        if (StringUtil.isNull(params.get("orderType"))) {
+            return "orderType不能为空！";
+        }
+        if (StringUtil.isNull(params.get("orderPrice"))) {
+            return "orderPrice不能为空！";
+        }
+        if (StringUtil.isNull(params.get("userLevel"))) {
+            return "userLevel不能为空！";
+        }
+        return msg;
     }
 }

@@ -32,6 +32,10 @@ public class BizMember extends AbstractBaseTimeEntity implements Serializable {
      */
     private String account;
     /**
+     * 订单号
+     */
+    private String orderNo;
+    /**
      * 备用
      */
     private String password;

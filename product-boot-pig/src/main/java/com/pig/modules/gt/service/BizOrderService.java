@@ -1,5 +1,6 @@
 package com.pig.modules.gt.service;
 
+import com.pig.basic.util.CommonResult;
 import com.pig.modules.gt.entity.BizOrder;
 import com.pig.modules.gt.entity.BizOrderExportVO;
 import org.springframework.data.domain.Page;
@@ -18,4 +19,6 @@ public interface BizOrderService {
     void exportData(ScrollResultsHandler<BizOrderExportVO> scrollResultsHandler);
 
     double getTotalAmount(Map<String, Object> params);
+
+    CommonResult insert(Map<String, Object> params);
 }

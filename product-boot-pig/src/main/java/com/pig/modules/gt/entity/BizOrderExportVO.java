@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 订单信息表(BizOrder)实体类
@@ -28,7 +29,7 @@ public class BizOrderExportVO implements Serializable {
     private String orderAccount;
 
     @ExcelProperty(value = "下单时间")
-    private String createTime;
+    private Date createTime;
 
     @ExcelProperty(value = "商品")
     private String orderName;
