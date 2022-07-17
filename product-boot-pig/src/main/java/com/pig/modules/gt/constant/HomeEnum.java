@@ -14,7 +14,12 @@ public class HomeEnum {
 
         TO_BE_PAID("5", "待支付"),
         PAYMENT("10", "已支付"),
-        PAYMENT_FAILED("20", "支付失败");
+        PAYMENT_FAILED("20", "支付失败"),
+        ORDER_NO("O", "O"), // order表的no
+        DEVICE_INFO("WEB", "WEB"), // 自定义参数，可以为终端设备号(门店号或收银设备ID)，PC网页或公众号内支付可以传"WEB"
+        FEE_TYPE("CNY", "CNY"), // 符合ISO 4217标准的三位字母代码，默认人民币：CNY，详细列表请参见货币类型
+        TRADE_TYPE("trade_type", "JSAPI"); // 交易类型
+
 
         public static String getValue(String key) {
             CommonEnum[] carTypeEnums = values();

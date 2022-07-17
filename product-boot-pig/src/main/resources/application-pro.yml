@@ -92,3 +92,5 @@ logging:
 #        modules:
 #          wes:
 #            mapper: debug
+api:
+  certPath: /home/publish/cert/apiclient_cert.p12
