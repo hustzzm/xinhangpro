@@ -14,5 +14,7 @@ import java.util.Map;
  */
 public interface BizMemberService {
 
+    BizMember findByOpenidAndStatus(String openid, String status);
+
     CommonResult insertOrUpdate(Map<String, Object> params);
 }

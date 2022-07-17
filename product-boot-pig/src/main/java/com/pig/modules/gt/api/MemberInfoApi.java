@@ -29,7 +29,9 @@ public class MemberInfoApi {
     public CommonResult getbyaccount(String openid) {
 
         BizMember bizMember = bizMemberDao.findByOpenidAndStatus(openid, "-1");
-
+        if(bizMember ==null){
+            return CommonResult.failed();
+        }
         return CommonResult.ok(bizMember);
     }
 

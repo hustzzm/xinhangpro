@@ -153,7 +153,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-quartz</artifactId>
         </dependency>
-
         <!--lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -161,7 +160,11 @@
             <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.56</version>
+        </dependency>
         <!--druid -->
         <dependency>
             <groupId>com.alibaba</groupId>

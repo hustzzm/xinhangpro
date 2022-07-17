@@ -29,6 +29,12 @@ public class BizMemberServiceImpl implements BizMemberService {
     private BizMemberDao memberDao;
 
     @Override
+    public BizMember findByOpenidAndStatus(String openid, String status){
+
+        return memberDao.findByOpenidAndStatus(openid,status);
+    }
+
+    @Override
     public CommonResult insertOrUpdate(Map<String, Object> params) {
         log.info("bizMemberService.insertOrUpdate.params={}", params);
         BizMember bizMember = null;
