@@ -25,7 +25,7 @@ spring:
       pool:
         max-active: 8
         max-idle: 8
-        max-wait:  -1
+        max-wait: -1
         min-idle: 0
     timeout: 100000
   quartz:
@@ -57,12 +57,12 @@ spring:
     initialSize: 1
     maxWait: 60000
     poolPreparedStatements: true
-#    filters: stat
+    #    filters: stat
     driver-class-name: com.mysql.jdbc.Driver
     maxActive: 20
     username: root
     url: jdbc:mysql://39.101.203.127:3306/hangxin618?serverTimezone=GMT%2B8&useUnicode=true&amp;characterEncoding=utf-8&useSSL=false&useAffectedRows=true&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true&useSSL=false
-#    url: jdbc:mysql://rm-bp1ukh6tc93ip5nn13o.mysql.rds.aliyuncs.com:3306/hangxin0618?serverTimezone=GMT%2B8&useUnicode=true&amp;characterEncoding=utf-8&useSSL=false&useAffectedRows=true&rewriteBatchedStatements=true
+    #    url: jdbc:mysql://rm-bp1ukh6tc93ip5nn13o.mysql.rds.aliyuncs.com:3306/hangxin0618?serverTimezone=GMT%2B8&useUnicode=true&amp;characterEncoding=utf-8&useSSL=false&useAffectedRows=true&rewriteBatchedStatements=true
     password: XinHang220618
     #    password: test223
     type: com.alibaba.druid.pool.DruidDataSource
@@ -70,7 +70,7 @@ spring:
       filter:
         config:
           enabled: true
-#      connection-properties: config.decrypt=true;config.decrypt.key=${spring.datasource.publickey}
+    #      connection-properties: config.decrypt=true;config.decrypt.key=${spring.datasource.publickey}
     testOnBorrow: false
     maxOpenPreparedStatements: 20
     testWhileIdle: true
@@ -90,3 +90,6 @@ logging:
         modules:
           wes:
             mapper: debug
+
+api:
+  certPath: D:\Program Files\Downloads\WXCertUtil\cert\1628655062_20220717_cert
