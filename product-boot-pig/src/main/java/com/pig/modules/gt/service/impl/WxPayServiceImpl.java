@@ -70,7 +70,7 @@ public class WxPayServiceImpl implements WxPayService {
         String prepayid = resp.get("prepay_id");
         resultMap.put("appId", configurationConfig.appId); // appId,再次签名中的appId的i要大写不能写成appid
         resultMap.put("timeStamp", timeStamp + ""); // 这边要将返回的时间戳转化成字符串，不然小程序端调用wx.requestPayment方法会报签名错误
-        resultMap.put("nonceStr", StringUtil.getCheckString(params.get("nonceStr")));//随机字符串必须和统一下单接口使用的随机字符串相同
+        resultMap.put("nonceStr", StringUtil.getCheckString(params.get("nonce_str")));//随机字符串必须和统一下单接口使用的随机字符串相同
         resultMap.put("package", "prepay_id=" + prepayid);
         resultMap.put("signType", WXPayConstants.MD5);//MD5或者HMAC-SHA256
         String sign = WXPayUtil.generateSignature(resultMap, configurationConfig.v2Key);//再次签名，这个签名用于小程序端调用wx
