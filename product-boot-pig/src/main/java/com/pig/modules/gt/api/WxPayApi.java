@@ -23,7 +23,7 @@ public class WxPayApi {
      */
     @RequestMapping(value = "/unifiedOrder", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult unifiedOrder(@RequestParam Map<String, Object> params) throws Exception {
+    public CommonResult unifiedOrder(@RequestBody Map<String, Object> params) throws Exception {
         log.info("unifiedOrder.params={}", params);
         return wxPayService.unifiedOrder(params);
     }
