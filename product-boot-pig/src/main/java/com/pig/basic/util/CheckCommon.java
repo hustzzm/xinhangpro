@@ -17,6 +17,8 @@ public class CheckCommon {
      * 订单类别头
      */
     private static final String ORDER_CODE = "O";
+
+    private static final String ROOM_CODE = "R";
     /**
      * 退货类别头
      */
@@ -48,8 +50,7 @@ public class CheckCommon {
         //C + 当前日期时间(2022-05-09 16:40:32)时间戳转36位 + 3位随机数
         //例如：CBieNMJO8h  C+BieNMJ+O8h
         StringBuilder sb = new StringBuilder(type);
-        sb.append(Long.toString(System.currentTimeMillis() / 1000, 36))
-                .append(StringUtil.getRandomCode(3));
+        sb.append(Long.toString(System.currentTimeMillis() / 1000, 36)).append(StringUtil.getRandomCode(3));
         return sb.toString();
     }
 
@@ -75,8 +76,7 @@ public class CheckCommon {
         //E + 当前日期时间(2022-05-09 16:40:32)时间戳转36位 + 3位随机数
         //例如：CBieNMJO8h  C+BieNMJ+O8h
         StringBuilder sb = new StringBuilder("E");
-        sb.append(Long.toString(System.currentTimeMillis() / 1000, 36))
-                .append(StringUtil.getRandomCode(3));
+        sb.append(Long.toString(System.currentTimeMillis() / 1000, 36)).append(StringUtil.getRandomCode(3));
         return sb.toString();
     }
 
@@ -94,12 +94,19 @@ public class CheckCommon {
         }
         return "";
     }
-    
+
     /**
      * 生成订单单号编码
      */
     public static String getOrderCode() {
         return ORDER_CODE + getCode();
+    }
+
+    /**
+     * 生成房间号编码
+     */
+    public static String getRoomCode() {
+        return ROOM_CODE + getCode();
     }
 
 

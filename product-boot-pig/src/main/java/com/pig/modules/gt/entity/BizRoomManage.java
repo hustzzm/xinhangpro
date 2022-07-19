@@ -36,11 +36,11 @@ public class BizRoomManage extends AbstractBaseTimeEntity implements Serializabl
     /**
      * 房间编号1001，1002...，不可重复
      */
-    private int roomCode;
+    private String roomCode;
     /**
      * 状态，-1可用,0作废
      */
-    private Integer status;
+    private String status = "-1";
 
     @OneToOne
     @JoinColumn(name = "roleType", referencedColumnName = "id", insertable = false, updatable = false)

@@ -44,7 +44,7 @@ public class OrderController {
 
     @GetMapping(value = "/totalAmount")
     public CommonResult totalAmount(@RequestParam Map<String, Object> params) {
-        double totalAmount  = orderService.getTotalAmount(params);
+        double totalAmount = orderService.getTotalAmount(params);
 
         return CommonResult.ok(totalAmount);
     }
@@ -52,10 +52,10 @@ public class OrderController {
     /**
      * 删除
      */
-    @DeleteMapping("/remove")
-    public CommonResult remove(@RequestBody List<Integer> orderIds) {
+    @DeleteMapping("/remove/{id}")
+    public CommonResult remove(@PathVariable Integer id) {
 
-        orderDao.deleteByOrderIds(orderIds);
+        orderDao.deleteById(id);
 
         return CommonResult.ok("删除成功");
     }

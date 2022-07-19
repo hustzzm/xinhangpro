@@ -35,28 +35,18 @@ public class BizBookingController {
     @GetMapping(value = "/list")
     public CommonResult list(@RequestParam Map<String, Object> params) {
         Page<BizBooking> bookingPage = bizBookingService.page(params);
-        if (!ObjectUtils.isEmpty(bookingPage.getContent())) {
-            List<BizBooking> content = bookingPage.getContent();
-            content.stream().forEach(x -> {
-                if (!StringUtils.isEmpty(x.getUpdateTime())) {
-                    x.setUpdateTime(x.getUpdateTime());
-                }
-                if (!StringUtils.isEmpty(x.getCreateTime())) {
-                    x.setCreateTime(x.getCreateTime());
-                }
-            });
-        }
+
         return CommonResult.ok(bookingPage);
     }
 
-    @PutMapping(value = "/finished")
-    public CommonResult finished(@Param("id") Integer id) {
+    @PutMapping(value = "/finished/{id}")
+    public CommonResult finished(@PathVariable Integer id) {
         bizBookingDao.updateBookStatusById(id);
         return CommonResult.ok("预约已完成！");
     }
 
-    @DeleteMapping(value = "/delete")
-    public CommonResult delete(@Param("id") Integer id) {
+    @DeleteMapping(value = "/remove/{id}")
+    public CommonResult delete(@PathVariable Integer id) {
         bizBookingDao.deleteById(id);
         return CommonResult.ok("预约已删除！");
     }

@@ -39,22 +39,12 @@ public class BizCompanyController {
     @GetMapping(value = "/list")
     public CommonResult list(@RequestParam Map<String, Object> params) {
         Page<BizCompany> bizCompanyPage = bizCompanyService.page(params);
-        if (!ObjectUtils.isEmpty(bizCompanyPage.getContent())) {
-            List<BizCompany> content = bizCompanyPage.getContent();
-            content.stream().forEach(x -> {
-                if (!StringUtils.isEmpty(x.getUpdateTime())) {
-                    x.setUpdateTime(x.getUpdateTime());
-                }
-                if (!StringUtils.isEmpty(x.getCreateTime())) {
-                    x.setCreateTime(x.getCreateTime());
-                }
-            });
-        }
+
         return CommonResult.ok(bizCompanyPage);
     }
 
-    @PutMapping(value = "/add")
-    public CommonResult add(@RequestBody BizCompany bizCompany) {
+    @PostMapping(value = "/save")
+    public CommonResult save(@RequestBody BizCompany bizCompany) {
         if (CommonUtil.checkObjAllFieldsIsNull(bizCompany)) {
             return CommonResult.ok();
         }
@@ -62,8 +52,17 @@ public class BizCompanyController {
         return CommonResult.ok("新增成功");
     }
 
-    @DeleteMapping(value = "/delete")
-    public CommonResult delete(@Param("id") Integer id) {
+    @PostMapping(value = "/update")
+    public CommonResult update(@RequestBody BizCompany bizCompany) {
+        if (CommonUtil.checkObjAllFieldsIsNull(bizCompany)) {
+            return CommonResult.ok();
+        }
+        bizCompanyService.update(bizCompany);
+        return CommonResult.ok("修改成功");
+    }
+
+    @DeleteMapping(value = "/remove/{id}")
+    public CommonResult delete(@PathVariable Integer id) {
         bizCompanyDao.deleteById(id);
         return CommonResult.ok("删除成功");
     }

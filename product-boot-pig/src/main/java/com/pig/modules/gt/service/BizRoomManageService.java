@@ -10,4 +10,6 @@ public interface BizRoomManageService {
     Page<BizRoomManage> page(Map<String, Object> params);
 
     CommonResult save(BizRoomManage roomManage);
+
+    CommonResult update(BizRoomManage roomManage);
 }

@@ -2,6 +2,7 @@ package com.pig.modules.gt.service.impl;
 
 import com.pig.basic.util.CommonQuery;
 import com.pig.basic.util.CommonResult;
+import com.pig.basic.util.utils.JpaUtil;
 import com.pig.modules.gt.dao.RoomManageDao;
 import com.pig.modules.gt.entity.BizRoomManage;
 import com.pig.modules.gt.service.BizRoomManageService;
@@ -48,15 +49,23 @@ public class BizRoomManageServiceImpl implements BizRoomManageService {
 
     @Override
     public CommonResult save(BizRoomManage roomManage) {
-        String msg = "修改成功";
-        if (StringUtils.isEmpty(roomManage.getId())) {
-            msg = "新增成功";
-            roomManage.setRoomCode(getRoomCode());
-            roomManage.setStatus(-1);
-        }
+        roomManage.setRoomCode(getRoomCode());
+
         roomManageDao.save(roomManage);
 
-        return CommonResult.ok(msg);
+        return CommonResult.ok("新增成功");
+    }
+
+    @Override
+    public CommonResult update(BizRoomManage roomManage) {
+        if (roomManage != null && roomManage.getId() != null) {
+            BizRoomManage roomManageBak = roomManageDao.getOne(roomManage.getId());
+            if (roomManageBak != null) {
+                JpaUtil.copyNotNullProperties(roomManage, roomManageBak);
+            }
+            roomManageDao.save(roomManageBak);
+        }
+        return CommonResult.ok("修改成功！");
     }
 
     /**
@@ -64,11 +73,11 @@ public class BizRoomManageServiceImpl implements BizRoomManageService {
      *
      * @return int
      */
-    private int getRoomCode() {
-        Integer maxRoomCode = roomManageDao.getMaxRoomCode();
+    private String getRoomCode() {
+        String maxRoomCode = roomManageDao.getMaxRoomCode();
         if (StringUtils.isEmpty(maxRoomCode)) {
-            return 1001;
+            return "1001";
         }
-        return maxRoomCode + 1;
+        return Integer.valueOf(maxRoomCode) + 1 + "";
     }
 }

@@ -29,5 +29,5 @@ public interface RoomManageDao extends JpaRepository<BizRoomManage, Integer> {
     void deleteByIds(@Param("ids") List<Integer> ids);
 
     @Query("select MAX(roomCode) from BizRoomManage")
-    Integer getMaxRoomCode();
+    String getMaxRoomCode();
 }

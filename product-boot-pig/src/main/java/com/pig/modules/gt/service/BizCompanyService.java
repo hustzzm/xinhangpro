@@ -16,5 +16,5 @@ import java.util.Map;
 public interface BizCompanyService {
     Page<BizCompany> page(Map<String, Object> params);
 
-    BizCompany insertOrUpdate(Map<String, Object> params);
+    void update(BizCompany bizCompany);
 }

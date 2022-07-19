@@ -1,9 +1,11 @@
 package com.pig.modules.gt.service.impl;
 
 import com.pig.basic.util.CommonQuery;
+import com.pig.basic.util.utils.JpaUtil;
 import com.pig.modules.gt.entity.BizBooking;
 import com.pig.modules.gt.entity.BizCompany;
 import com.pig.modules.gt.dao.BizCompanyDao;
+import com.pig.modules.gt.entity.BizRoomManage;
 import com.pig.modules.gt.service.BizCompanyService;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
@@ -49,7 +51,13 @@ public class BizCompanyServiceImpl implements BizCompanyService {
     }
 
     @Override
-    public BizCompany insertOrUpdate(Map<String, Object> params) {
-        return null;
+    public void update(BizCompany bizCompany) {
+        if (bizCompany != null && bizCompany.getId() != null) {
+            BizCompany bizCompanyBak = bizCompanyDao.getOne(bizCompany.getId());
+            if (bizCompanyBak != null) {
+                JpaUtil.copyNotNullProperties(bizCompany, bizCompanyBak);
+            }
+            bizCompanyDao.save(bizCompanyBak);
+        }
     }
 }

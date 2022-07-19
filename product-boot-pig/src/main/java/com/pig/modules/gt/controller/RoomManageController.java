@@ -2,13 +2,10 @@ package com.pig.modules.gt.controller;
 
 import com.pig.basic.util.CommonResult;
 import com.pig.basic.util.CommonUtil;
-import com.pig.basic.util.utils.DateUtils;
 import com.pig.modules.gt.dao.RoomManageDao;
 import com.pig.modules.gt.entity.BizRoomManage;
 import com.pig.modules.gt.service.BizRoomManageService;
 import org.springframework.data.domain.Page;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -34,36 +31,34 @@ public class RoomManageController {
     @GetMapping(value = "/list")
     public CommonResult test(@RequestParam Map<String, Object> params) {
         Page<BizRoomManage> usersPage = bizRoomManageService.page(params);
-        if (!ObjectUtils.isEmpty(usersPage.getContent())) {
-            List<BizRoomManage> content = usersPage.getContent();
-            content.stream().forEach(x -> {
-                if (!StringUtils.isEmpty(x.getCreateTime())) {
-                    x.setCreateTime(x.getCreateTime());
-                }
-                if (!StringUtils.isEmpty(x.getUpdateTime())) {
-                    x.setUpdateTime(x.getUpdateTime());
-                }
-            });
-        }
         return CommonResult.ok(usersPage);
     }
 
 
-    @PostMapping("/insertOrUpdate")
-    public CommonResult update(@RequestBody BizRoomManage roomManage) {
+    @PostMapping("/save")
+    public CommonResult save(@RequestBody BizRoomManage roomManage) {
         if (CommonUtil.checkObjAllFieldsIsNull(roomManage)) {
             return CommonResult.ok();
         }
         return bizRoomManageService.save(roomManage);
     }
 
+
+    @PostMapping("/update")
+    public CommonResult update(@RequestBody BizRoomManage roomManage) {
+        if (CommonUtil.checkObjAllFieldsIsNull(roomManage)) {
+            return CommonResult.ok();
+        }
+        return bizRoomManageService.update(roomManage);
+    }
+
     /**
      * 删除
      */
-    @DeleteMapping("/remove")
-    public CommonResult remove(@RequestBody List<Integer> ids) {
+    @DeleteMapping("/remove/{id}")
+    public CommonResult remove(@PathVariable Integer id) {
 
-        roomManageDao.deleteByIds(ids);
+        roomManageDao.deleteById(id);
 
         return CommonResult.ok("删除成功");
     }
