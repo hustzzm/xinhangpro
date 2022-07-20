@@ -4,6 +4,7 @@ import request from '../../utils/request';
 // =====================参数===========================
 
 export async function list(params) {
+  debugger
   return request(`/api/gtmember/list?${stringify(params)}`);
 }
 
