@@ -42,8 +42,8 @@ public class BizRoomManage extends AbstractBaseTimeEntity implements Serializabl
      */
     private String status = "-1";
 
-    @OneToOne
-    @JoinColumn(name = "roleType", referencedColumnName = "id", insertable = false, updatable = false)
-    private RdRole rdRole;
+//    @OneToOne
+//    @JoinColumn(name = "roleType", referencedColumnName = "id", insertable = false, updatable = false)
+//    private RdRole rdRole;
 }
 

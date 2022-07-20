@@ -16,7 +16,6 @@ export default {
   effects: {
     *fetchList({ payload }, { call, put }) {
       const response = yield call(list, payload);
-      debugger
       if (response.success) {
         yield put({
           type: 'saveList',

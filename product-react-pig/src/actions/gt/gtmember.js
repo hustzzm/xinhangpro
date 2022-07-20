@@ -1,7 +1,6 @@
 export const GTMEMBERINFO_NAMESPACE = 'gtmember';
 
 export function GTMEMBERINFO_LIST(payload) {
-  debugger
   return {
     type: `${GTMEMBERINFO_NAMESPACE}/fetchList`,
     payload,

@@ -199,7 +199,7 @@ export default [
         },
         {
           path: '/wesanalysis/list',  
-          component: './gt/GtWorking.js'
+          component: './Room/roomindex.js'
         },
         ],
       },

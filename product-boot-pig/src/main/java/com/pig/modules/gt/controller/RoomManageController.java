@@ -2,6 +2,7 @@ package com.pig.modules.gt.controller;
 
 import com.pig.basic.util.CommonResult;
 import com.pig.basic.util.CommonUtil;
+import com.pig.basic.util.StringUtil;
 import com.pig.modules.gt.dao.RoomManageDao;
 import com.pig.modules.gt.entity.BizRoomManage;
 import com.pig.modules.gt.service.BizRoomManageService;
@@ -30,6 +31,7 @@ public class RoomManageController {
 
     @GetMapping(value = "/list")
     public CommonResult test(@RequestParam Map<String, Object> params) {
+
         Page<BizRoomManage> usersPage = bizRoomManageService.page(params);
         return CommonResult.ok(usersPage);
     }

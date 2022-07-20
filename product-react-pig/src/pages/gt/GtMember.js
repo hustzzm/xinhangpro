@@ -82,7 +82,6 @@ class GtMember extends PureComponent {
 
     componentWillMount() {
       
-        debugger
         this.getList();
     }
 
@@ -135,7 +134,6 @@ class GtMember extends PureComponent {
 
     // ============ 查询 ===============
     handleSearch = params => {
-        debugger
         // 清空选中状态
         this.childTable.clearSelect()
         const { dispatch } = this.props;
