@@ -178,28 +178,28 @@ export default [
       },
       {
         /**1 样本管理-样本 */
-        path: '/wessample',
+        path: '/room',
         routes: [{
-          path: '/wessample',
-          redirect: '/wessample/list'
+          path: '/room',
+          redirect: '/room/list'
         },
         {
-          path: '/wessample/list',
-          component: './gt/GtWorking.js'
+          path: '/room/list',
+          component: './room/roomindex.js'
         },
         ],
       },
       {
-        /**2 信息采集 */
-        path: '/wesanalysis',
+        /**2 商家管理 */
+        path: '/company',
        
         routes: [{
-          path: '/wesanalysis',
-          redirect: '/wesanalysis/list',
+          path: '/company',
+          redirect: '/company/list',
         },
         {
-          path: '/wesanalysis/list',  
-          component: './Room/roomindex.js'
+          path: '/company/list',  
+          component: './company/companyindex.js'
         },
         ],
       },
