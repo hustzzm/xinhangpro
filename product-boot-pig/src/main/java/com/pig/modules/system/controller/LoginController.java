@@ -72,7 +72,7 @@ public class LoginController {
 			if(byId!=null){
 				authInfo.setDeptName(byId.getDeptName());
 			}
-//			authInfo.setImgpath(paramService.getPath("cnvimgPath"));
+			authInfo.setImgPath(paramService.getPath("imgPath"));
 			authInfo.setAuthority("administrator");
 			authInfo.setAccessToken(token);
 			authInfo.setExpiresIn(Long.parseLong(PropertiesListenerConfig.getProperty("accessTokenExpireTime")) * 1000);

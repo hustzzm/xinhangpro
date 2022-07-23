@@ -1,17 +1,26 @@
 package com.pig.modules.gt.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.pig.basic.util.CommonQuery;
 import com.pig.basic.util.CommonResult;
 import com.pig.basic.util.DateUtil;
 import com.pig.basic.util.StringUtil;
 import com.pig.modules.gt.dao.BizMemberDao;
+import com.pig.modules.gt.entity.BizCompany;
 import com.pig.modules.gt.entity.BizMember;
 import com.pig.modules.gt.service.BizMemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.time.DateUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import javax.persistence.criteria.Predicate;
 import java.util.Map;
 import java.util.Optional;
 
@@ -32,6 +41,24 @@ public class BizMemberServiceImpl implements BizMemberService {
     public BizMember findByOpenidAndStatus(String openid, String status){
 
         return memberDao.findByOpenidAndStatus(openid,status);
+    }
+
+    @Override
+    public Page<BizMember> page(Map<String, Object> params){
+
+        CommonQuery commonQuery = new CommonQuery(params);
+        Pageable pageable = PageRequest.of(commonQuery.getCurrent() - 1, commonQuery.getSize(),
+                Sort.by(Sort.Direction.ASC, "createTime"));
+        Specification<BizMember> specification = (root, criteriaQuery, criteriaBuilder) -> {
+            //增加筛选条件
+            // 房间名
+            Predicate predicate = criteriaBuilder.conjunction();
+            if (!StringUtils.isEmpty(commonQuery.get("name"))) {
+                predicate.getExpressions().add(criteriaBuilder.like(root.get("name"), "%" + commonQuery.get("name") + "%"));
+            }
+            return predicate;
+        };
+        return memberDao.findAll(specification, pageable);
     }
 
     @Override

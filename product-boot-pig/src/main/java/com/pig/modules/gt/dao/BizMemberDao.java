@@ -1,6 +1,10 @@
 package com.pig.modules.gt.dao;
 
+import com.pig.modules.gt.entity.BizCompany;
 import com.pig.modules.gt.entity.BizMember;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 public interface BizMemberDao extends JpaRepository<BizMember, Integer> {
 
     BizMember findByOpenidAndStatus(String openid, String status);
+
+    Page<BizMember> findAll(Specification<BizMember> specification, Pageable pageable);
 
     @Transactional(rollbackFor = Exception.class)
     @Modifying

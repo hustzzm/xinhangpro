@@ -35,6 +35,7 @@ public class AuthInfo {
 	private String roleid;
 	private String deptName;
 	private long expiresIn;
+	private String imgPath;
 	private String license = "powered by product";
 	/**
 	 * 授权的产品列表

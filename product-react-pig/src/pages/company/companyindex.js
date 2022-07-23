@@ -563,8 +563,7 @@ class companyindex extends PureComponent {
                     bodyStyle={{ 'backgroundColor': '#f0f2f5' }}
                     destroyOnClose={true}                   
                     onCancel={() => that.setState({  detailvisible: false   })}
-                    okText="提交"
-                    cancelText="取消"
+                    footer={null}
                     maskClosable={false}
                 >
                     <Companyview detail={selectedRow} commontypeDicts={commontypeDicts}></Companyview>

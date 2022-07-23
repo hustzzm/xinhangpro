@@ -44,6 +44,10 @@ public class BizMember extends AbstractBaseTimeEntity implements Serializable {
      */
     private String name;
     /**
+     * 用户年龄
+     */
+    private String age;
+    /**
      * 性别1 男，2 女，3未知
      */
     private String gender;

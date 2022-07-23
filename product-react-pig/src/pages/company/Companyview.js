@@ -7,6 +7,7 @@ import Panel from '../../components/Panel';
 import Axios from "axios";
 
 import { UploadOutlined,PlusOutlined  } from '@ant-design/icons';
+import { getCurrentUser } from '../../utils/authority';
 
 import { uploadTemplate } from "../../services/gt/api";
 import { Label } from "bizcharts";
@@ -56,9 +57,12 @@ class Companyview extends PureComponent {
             detail,
             commontypeDicts
         } = this.props;
+        const currentUser = getCurrentUser();
         const {
             fileList
         } = this.state;
+     
+       
         const formItemLayout = {
             labelCol: {
               
@@ -183,17 +187,23 @@ class Companyview extends PureComponent {
                      
                          <Row gutter={32}>
                             <Col span={24}>
-                            <img src="http://39.101.203.127/static/202207/test2.jpg" width={400} />
+                            <Form.Item
+                                name="subheadpig1"
+                                {...formItemLayout}
+                                label="商家logo图片">
+                                    
+                                    <img src= {currentUser.imgPath + detail.toppig}  width={200} />
+                            </Form.Item>                           
                             </Col>
                          </Row>  
-                         {/* <Row gutter={32}>
+                         <Row gutter={32}>
                             <Col span={24}>
                             <Form.Item
                                 name="subheadpig1"
                                 {...formItemLayout}
                                 label="商家门店图片">
                                     
-                                    <Image src="http://39.101.203.127/static/202207/test2.jpg"  width={400} />
+                                    <img src={currentUser.imgPath + detail.subheadpig}  width={400} />
                             </Form.Item>
                             </Col>
                          </Row>  
@@ -204,10 +214,10 @@ class Companyview extends PureComponent {
                                 {...formItemLayout}
                                 label="商家宣传图片">
                                     
-                                <Image src="http://39.101.203.127/static/202207/test2.jpg" width={400}/>
+                                <img src={currentUser.imgPath + detail.subpig} width={400}/>
                             </Form.Item>
                             </Col>
-                         </Row>                          */}
+                         </Row>                         
                     </Card>
                 </Form>
             </Panel>

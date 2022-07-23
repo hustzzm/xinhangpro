@@ -119,8 +119,9 @@ export default {
 
       if (status) {
         const {
-          data: { tokenType, accessToken, authority, account, userName, avatar,roleid,imgpath,productList },
+          data: { tokenType, accessToken, authority, account, userName, avatar,roleid,imgPath,productList },
         } = payload;
+        
         const token = `${tokenType} ${accessToken}`;
         const newavatar = {avatar_img};
         setToken(token);
@@ -128,7 +129,7 @@ export default {
         setAuthority(authority);
         setProduct(productList);
         
-        setCurrentUser({ avatar, account, name: userName, authority,roleid,imgpath });
+        setCurrentUser({ avatar, account, name: userName, authority,roleid,imgPath });
       } else {
         removeAll();
       }
