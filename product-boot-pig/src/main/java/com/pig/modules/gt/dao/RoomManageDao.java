@@ -30,4 +30,6 @@ public interface RoomManageDao extends JpaRepository<BizRoomManage, Integer> {
 
     @Query("select MAX(roomCode) from BizRoomManage")
     String getMaxRoomCode();
+
+    BizRoomManage findByRoomCode(String roomCode);
 }

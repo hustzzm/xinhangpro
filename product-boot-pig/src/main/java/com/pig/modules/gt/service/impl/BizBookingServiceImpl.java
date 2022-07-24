@@ -6,8 +6,10 @@ import com.pig.basic.util.CommonResult;
 import com.pig.basic.util.StringUtil;
 import com.pig.modules.gt.dao.BizBookingDao;
 import com.pig.modules.gt.dao.BizMemberDao;
+import com.pig.modules.gt.dao.RoomManageDao;
 import com.pig.modules.gt.entity.BizBooking;
 import com.pig.modules.gt.entity.BizMember;
+import com.pig.modules.gt.entity.BizRoomManage;
 import com.pig.modules.gt.service.BizBookingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -40,6 +42,9 @@ public class BizBookingServiceImpl implements BizBookingService {
 
     @Resource
     private BizMemberDao memberDao;
+
+    @Resource
+    private RoomManageDao roomManageDao;
 
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -140,6 +145,9 @@ public class BizBookingServiceImpl implements BizBookingService {
                     return CommonResult.failed("超过当前可预约的小时数！");
                 }
             }
+            // 根据房间编号获取房间信息
+            String roomCode = StringUtil.getCheckString(params.get("roomCode"));
+            BizRoomManage roomManage = roomManageDao.findByRoomCode(roomCode);
             // save to db
             BizBooking bizBooking = null;
             List<BizBooking> bookingList = new ArrayList<>();
@@ -147,11 +155,11 @@ public class BizBookingServiceImpl implements BizBookingService {
                 bizBooking = new BizBooking();
                 bizBooking.setBooksNo(CheckCommon.getBookingCode());
                 bizBooking.setBookTimes(value);
-                bizBooking.setRoomCode(StringUtil.getCheckString(params.get("roomCode")));
+                bizBooking.setRoomCode(roomCode);
                 bizBooking.setBookDate(bookDate);
                 bizBooking.setBookStatus("1");
-                bizBooking.setRoomType(StringUtil.getCheckString(params.get("roomType")));
-                bizBooking.setRoomName(StringUtil.getCheckString(params.get("roomName")));
+                bizBooking.setRoomType(roomManage.getRoomType());
+                bizBooking.setRoomName(roomManage.getName());
                 bizBooking.setOpenid(openid);
                 bookingList.add(bizBooking);
             }
@@ -160,6 +168,6 @@ public class BizBookingServiceImpl implements BizBookingService {
             log.error("预定异常，", e.getMessage(), e);
             return CommonResult.failed("预定异常，" + e.getMessage());
         }
-        return CommonResult.ok();
+        return CommonResult.ok("预约成功！");
     }
 }

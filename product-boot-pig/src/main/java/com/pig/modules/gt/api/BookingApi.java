@@ -1,7 +1,6 @@
 package com.pig.modules.gt.api;
 
 import com.pig.basic.util.CommonResult;
-import com.pig.modules.gt.entity.BizBooking;
 import com.pig.modules.gt.service.BizBookingService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +23,7 @@ public class BookingApi {
      * @param params params
      * @return CommonResult
      */
-    @PostMapping("/make")
+    @PostMapping("/submit")
     public CommonResult make(@RequestBody Map<String, Object> params) {
 
         return bookingService.make(params);
