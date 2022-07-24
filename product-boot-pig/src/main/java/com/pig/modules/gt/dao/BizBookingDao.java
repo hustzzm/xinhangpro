@@ -24,6 +24,8 @@ public interface BizBookingDao extends JpaRepository<BizBooking, Integer> {
 
     List<BizBooking> findAll(Specification<BizBooking> specification);
 
+    List<BizBooking> findByOpenidAndBookStatusOrderByCreateTimeDesc(String openid, String bookStatus);
+
     @Transactional(rollbackFor = Exception.class)
     @Modifying
     @Query("delete from BizBooking where id in (:ids)")

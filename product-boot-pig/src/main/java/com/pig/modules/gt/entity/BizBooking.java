@@ -63,7 +63,7 @@ public class BizBooking extends AbstractBaseTimeEntity implements Serializable {
     /**
      * 预订日期
      */
-    private String bookDate;
+    private Date bookDate;
     /**
      * 预约状态1 预约成功，3消费完成，5取消预约
      */
@@ -71,7 +71,7 @@ public class BizBooking extends AbstractBaseTimeEntity implements Serializable {
     /**
      * 状态，-1可用,0作废
      */
-    private String status;
+    private String status = "-1";
     /**
      * 房间类型
      */

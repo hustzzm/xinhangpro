@@ -18,7 +18,7 @@ public class CheckCommon {
      */
     private static final String ORDER_CODE = "O";
 
-    private static final String ROOM_CODE = "R";
+    private static final String BOOKING_CODE = "B";
     /**
      * 退货类别头
      */
@@ -105,8 +105,8 @@ public class CheckCommon {
     /**
      * 生成房间号编码
      */
-    public static String getRoomCode() {
-        return ROOM_CODE + getCode();
+    public static String getBookingCode() {
+        return BOOKING_CODE + getCode();
     }
 
 
