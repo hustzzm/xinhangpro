@@ -200,7 +200,7 @@ export default [
         },
         {
           path: '/order/list',
-          component: './gt/GtWorking.js'
+          component: './order/orderindex.js'
         },
         ],
       },
@@ -213,7 +213,7 @@ export default [
         },
         {
           path: '/book/list',
-          component: './gt/GtWorking.js'
+          component: './order/bookindex.js'
         }
         ]
       },

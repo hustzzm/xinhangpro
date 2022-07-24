@@ -36,6 +36,7 @@ public class BizOrder extends AbstractBaseTimeEntity implements Serializable {
      * 微信昵称
      */
     private String nickName;
+    private String name;
 
     private String openId;
     /**

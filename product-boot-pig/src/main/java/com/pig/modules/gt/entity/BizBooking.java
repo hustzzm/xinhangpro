@@ -33,9 +33,9 @@ public class BizBooking extends AbstractBaseTimeEntity implements Serializable {
      */
     private String openid;
     /**
-     * 微信号
+     * 姓名
      */
-    private String account;
+    private String name;
     /**
      * 微信昵称
      */
@@ -56,6 +56,8 @@ public class BizBooking extends AbstractBaseTimeEntity implements Serializable {
      * 20：20:00-21:00;
      */
     private String bookTimes;
+
+    private String bookTimesText;
     /**
      * 房间编号
      */
