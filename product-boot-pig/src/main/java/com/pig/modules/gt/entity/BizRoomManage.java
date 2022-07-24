@@ -30,6 +30,10 @@ public class BizRoomManage extends AbstractBaseTimeEntity implements Serializabl
      */
     private String roomType;
     /**
+     * 房间logo
+     */
+    private String roomLogo;
+    /**
      * 1 普通会员，2普通+钻石
      */
     private Integer roleType;

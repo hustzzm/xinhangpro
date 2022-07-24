@@ -98,8 +98,8 @@ public class BizCompanyController {
 //        }
         String monthDate = DateUtils.getMonthDate(); // 年月
         fileName = UUID.randomUUID() + suffixName; // 新文件名
-//        File dest = new File(uploadFilePath + "/" + monthDate + "/" + fileName);
-        File dest = new File("D:\\usr\\local" + "\\" + monthDate + "\\" + fileName);
+        File dest = new File(uploadFilePath + "/" + monthDate + "/" + fileName);
+//        File dest = new File("D:\\usr\\local" + "\\" + monthDate + "\\" + fileName);
         if (!dest.getParentFile().exists()) {
             dest.getParentFile().mkdirs();
         }

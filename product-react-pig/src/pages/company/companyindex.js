@@ -174,6 +174,20 @@ class companyindex extends PureComponent {
                 //values 可获取到表单中所有键值数据  将数据进行保存操作
                 const subparams = values;
                 subparams.id = selectedRow.id;
+
+                let filename1 = that.editForm.state.filename1;
+                let filename2 = that.editForm.state.filename2;
+                let filename3 = that.editForm.state.filename3;
+    
+                if(filename1 && filename1.length > 0){
+                    subparams.toppig = filename1;
+                }
+                if(filename2 && filename2.length > 0){
+                    subparams.subheadpig = filename2;
+                }
+                if(filename3 && filename3.length > 0){
+                    subparams.subpig = filename3;
+                }
               
                 //保存操作
                 dispatch(COMPANYINFO_UPDATE(subparams)).then(result => {

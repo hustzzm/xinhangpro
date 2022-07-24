@@ -6,10 +6,6 @@ import React, { PureComponent } from "react";
 import Panel from '../../components/Panel';
 import Axios from "axios";
 
-import { UploadOutlined,PlusOutlined  } from '@ant-design/icons';
-
-import { uploadTemplate } from "../../services/gt/api";
-import { Label } from "bizcharts";
 const FormItem = Form.Item;
 const { TextArea } = Input;
 const { Option } = Select;
@@ -255,7 +251,7 @@ class Companyadd extends PureComponent {
                                 extra="文件大小 500k 以内, 仅支持 JPG/PNG"
                                 rules={[
                                 {
-                                    required: true,
+                                    required: false,
                                     message: '商家logo必填！',
                                 },
                                 ]}
@@ -271,15 +267,7 @@ class Companyadd extends PureComponent {
                                 {...formItemLayout}
                                 label="商家门店图片"
                                 extra="文件大小 500k 以内, 仅支持 JPG/PNG"  >
-                                 {getFieldDecorator('subheadpig',                                     
-                                    {
-                                        rules: [
-                                            {                                                
-                                                required: false,
-                                                message: '商家logo不能为空',
-                                            },
-                                        ],
-                                    })( <Input type="hidden" value={this.state.filename2} />)}
+                               
                              <Input type="file" onChange={this.handleChange2} />
                             </Form.Item>
                             </Col>

@@ -4,6 +4,7 @@ import '@ant-design/compatible/assets/index.css';
 import { Button, Card, Col, DatePicker, Input, Row, Select, message, Divider } from "antd";
 import React, { PureComponent } from "react";
 import Panel from '../../components/Panel';
+import Axios from "axios";
 
 
 const FormItem = Form.Item;
@@ -17,7 +18,11 @@ const { Option } = Select;
 }))
 @Form.create()
 class roomadd extends PureComponent {
-    state = {};
+   
+    state = {
+        filename:'',
+      
+    };
     handleSubmit = (value) => {
         const {dispatch} = this.props;
         // // values.chip_id = detail.chip_id;
@@ -37,6 +42,30 @@ class roomadd extends PureComponent {
         //         }
         //     });
     };
+
+    handleChange = (event) => {
+        
+        const that = this;
+        let fileData = event.target.files[0]
+        if(!fileData){
+            return false;
+        }
+        const formdata = new FormData();
+        formdata.append('file', fileData)
+
+        Axios.post("/api/bizCompany/base64Upload", formdata, {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        }).then(res => {   
+            
+        
+            that.setState({filename:res.data})
+        }).catch(res => {
+            
+            that.setState({filename:''})
+        })
+    }
 
     render() {
 
@@ -140,7 +169,18 @@ class roomadd extends PureComponent {
                                     )}
                                 </FormItem>
                             </Col>              
-                        </Row>                       
+                        </Row>  
+                        <Row gutter={32}>
+                            <Col span={16}>
+                            <Form.Item
+                                name="roomLogo"
+                                {...formItemLayout}
+                                label="房间log图片"
+                                extra="文件大小 500k 以内, 仅支持 JPG/PNG"  >                                
+                             <Input type="file" onChange={this.handleChange} />
+                            </Form.Item>
+                            </Col>
+                         </Row>      
                     </Card>
                 </Form>
             </Panel>

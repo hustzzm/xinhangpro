@@ -6,11 +6,8 @@ import React, { PureComponent } from "react";
 import Panel from '../../components/Panel';
 import Axios from "axios";
 
-import { UploadOutlined,PlusOutlined  } from '@ant-design/icons';
 import { getCurrentUser } from '../../utils/authority';
 
-import { uploadTemplate } from "../../services/gt/api";
-import { Label } from "bizcharts";
 const FormItem = Form.Item;
 const { TextArea } = Input;
 const { Option } = Select;
@@ -202,8 +199,7 @@ class Companyview extends PureComponent {
                                 name="subheadpig1"
                                 {...formItemLayout}
                                 label="商家门店图片">
-                                    
-                                    <img src={currentUser.imgPath + detail.subheadpig}  width={400} />
+                                   <img src={currentUser.imgPath + detail.subheadpig} width={400} />
                             </Form.Item>
                             </Col>
                          </Row>  
@@ -213,8 +209,7 @@ class Companyview extends PureComponent {
                                 name="subpig1"
                                 {...formItemLayout}
                                 label="商家宣传图片">
-                                    
-                                <img src={currentUser.imgPath + detail.subpig} width={400}/>
+                                   <img src={currentUser.imgPath + detail.subpig}  width={400} />
                             </Form.Item>
                             </Col>
                          </Row>                         

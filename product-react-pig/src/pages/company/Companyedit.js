@@ -274,16 +274,7 @@ class Companyedit extends PureComponent {
                                 name="subheadpig1"
                                 {...formItemLayout}
                                 label="商家门店图片"
-                                extra="文件大小 500k 以内, 仅支持 JPG/PNG"  >
-                                 {getFieldDecorator('subheadpig',                                     
-                                    {
-                                        rules: [
-                                            {                                                
-                                                required: false,
-                                                message: '商家logo不能为空',
-                                            },
-                                        ],
-                                    })( <Input type="hidden" value={this.state.filename2} />)}
+                                extra="文件大小 500k 以内, 仅支持 JPG/PNG"  >                                
                              <Input type="file" onChange={this.handleChange2} />
                             </Form.Item>
                             </Col>

@@ -45,6 +45,7 @@ import styles from '../../utils/utils.less';
 import Panel from "../../components/Panel";
 
 import styleTester from "../Wes/index.less";
+import { getCurrentUser } from '../../utils/authority';
 
 import moment from "moment";
 
@@ -167,12 +168,19 @@ class roomindex extends PureComponent {
         const that = this;
         //验证表单数据
         that.editForm.props.form.validateFields((err, values) => {
-         
+            
+            
             if (!err) {
                 //values 可获取到表单中所有键值数据  将数据进行保存操作
-                const subparams = values;
-                subparams.id = selectedRow.id;
-                subparams.account = selectedRow.account;             
+                let subparams = values;
+                subparams.id = selectedRow.id;                 
+                
+                let filename = that.editForm.state.filename;
+             
+                if(filename && filename.length > 0){
+                    subparams.roomLogo = filename;
+                }
+            
                 // subparams.token = selectedRow.token;
               
                 //保存操作
@@ -354,6 +362,11 @@ class roomindex extends PureComponent {
          
             //保存操作
             if (!err) {
+                let filename = that.editForm.state.filename;
+
+                if(filename && filename.length > 0){
+                    values.roomLogo = filename;
+                }
                 dispatch(ROOMINFO_SUBMIT(values)).then(result => {
                     if (result.success) {
                         message.success('操作成功！');
@@ -406,7 +419,7 @@ class roomindex extends PureComponent {
             room: { data },
         } = this.props;
 
-    
+        const currentUser = getCurrentUser();
         const formItemLayout = {
             labelCol: {
                 xs: { span: 24 },
@@ -421,6 +434,15 @@ class roomindex extends PureComponent {
 
         const columns = [
        
+            {
+                title: '房间logo',
+                dataIndex: 'roomLogo',  
+               width:140,
+                render: (text, record, index) => {
+                 
+                    return text && text.length > 0 ? <img src={currentUser.imgPath + text} width={80}/> : ''
+                }
+              },
           {
             title: '房间名称',
             dataIndex: 'name',  
