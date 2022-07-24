@@ -13,14 +13,16 @@ export default {
   'menu.dashboard.monitor': '监控页',
   'menu.dashboard.workplace': '工作台',
   'menu.desk': '工作台',
-  'menu.company': '商家管理',
+  'menu.room': '房间管理',
   'menu.tester': '会员管理',
+  'menu.order': '订单管理',
+  'menu.book':'预订管理',
+  'menu.company': '商家管理',
+  'menu.hxuser':'用户管理',
   // 'menu.chipcase': '芯片样本',
   'menu.gotask':'调度配置',
-  'menu.room': '房间管理',
-  'menu.wesreport': '订单管理',
-  'menu.firstseq':'商家管理',
-  'menu.gttools':'预订管理',
+
+
 
   'menu.system': '系统管理',
   'menu.system.user': '用户管理',

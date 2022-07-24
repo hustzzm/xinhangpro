@@ -46,9 +46,8 @@ export async function resetPassword(params) {
 }
 
 export async function remove(params) {
-  return request('/api/user/remove', {
-    method: 'POST',
-    body: func.toFormData(params),
+  return request(`/api/user/remove?${stringify(params)}`, {
+    method: 'POST',   
   });
 }
 

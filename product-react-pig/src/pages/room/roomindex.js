@@ -167,12 +167,12 @@ class roomindex extends PureComponent {
         const that = this;
         //验证表单数据
         that.editForm.props.form.validateFields((err, values) => {
-
+         
             if (!err) {
                 //values 可获取到表单中所有键值数据  将数据进行保存操作
                 const subparams = values;
                 subparams.id = selectedRow.id;
-                subparams.account = selectedRow.account;
+                subparams.account = selectedRow.account;             
                 // subparams.token = selectedRow.token;
               
                 //保存操作
@@ -351,7 +351,7 @@ class roomindex extends PureComponent {
        
         //验证表单数据
         that.editForm.props.form.validateFields((err, values) => {
-
+         
             //保存操作
             if (!err) {
                 dispatch(ROOMINFO_SUBMIT(values)).then(result => {

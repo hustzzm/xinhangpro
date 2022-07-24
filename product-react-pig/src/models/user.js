@@ -1,7 +1,7 @@
 import { message } from 'antd';
 import router from 'umi/router';
 import { USER_NAMESPACE } from '../actions/user';
-import { query as queryUsers, list, submit, update, detail, remove, grant } from '../services/user';
+import { query as queryUsers, list, submit, update,resetPassword, detail, remove, grant } from '../services/user';
 import { tree as roles } from '../services/role';
 import { tree as depts } from '../services/dept';
 import { getCurrentUser } from '../utils/authority';
@@ -112,25 +112,25 @@ export default {
       const response = yield call(submit, payload);
       if (response.success) {
         message.success('提交成功');
-        router.push('/system/user');
+        // router.push('/system/user');
       }
     },
     *update({ payload }, { call }) {
       const response = yield call(update, payload);
       if (response.success) {
         message.success('提交成功');
-        router.push('/system/user');
+        // router.push('/system/user');
       }
     },
     *remove({ payload }, { call }) {
-      const {
-        data: { keys },
-        success,
-      } = payload;
-      const response = yield call(remove, { ids: keys });
-      if (response.success) {
-        success();
-      }
+     
+      const response = yield call(remove, payload);
+      return response;
+    },
+    *resetPassword({ payload }, { call }) {
+     
+      const response = yield call(resetPassword, payload);
+      return response;
     },
   },
 

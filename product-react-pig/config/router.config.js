@@ -164,20 +164,12 @@ export default [
         },
         {
           path: '/dashboard/analysis',
-          component: './gt/GtMember.js'
+          component: './member/memberindex.js'
         },
         ],
       },
       {
-        /**1 帐号管理 */
-        path: '/tester',
-        routes: [
-          { path: '/tester',   redirect: '/tester/list'    },
-          { path: '/tester/list',   component: './gt/GtMember.js'},          
-        ],
-      },
-      {
-        /**1 样本管理-样本 */
+        /**1 房间管理 */
         path: '/room',
         routes: [{
           path: '/room',
@@ -189,8 +181,44 @@ export default [
         },
         ],
       },
+      
       {
-        /**2 商家管理 */
+        /**2 会员管理 */
+        path: '/tester',
+        routes: [
+          { path: '/tester',   redirect: '/tester/list'    },
+          { path: '/tester/list',   component: './member/memberindex.js'},          
+        ],
+      },
+
+      {
+        /**3 订单管理 */
+        path: '/order',
+        routes: [{
+          path: '/order',
+          redirect: '/order/list'
+        },
+        {
+          path: '/order/list',
+          component: './gt/GtWorking.js'
+        },
+        ],
+      },
+      {
+        /**4 预订管理 */
+        path: '/book',
+        routes: [{
+          path: '/book',
+          redirect: '/book/list'
+        },
+        {
+          path: '/book/list',
+          component: './gt/GtWorking.js'
+        }
+        ]
+      },
+      {
+        /**5 商家管理 */
         path: '/company',
        
         routes: [{
@@ -204,56 +232,15 @@ export default [
         ],
       },
       {
-        /**1 报告模板管理 */
-        path: '/templateMg',
+        /**6 用户管理 */
+        path: '/hxuser',
         routes: [{
-          path: '/templateMg',
-          redirect: '/templateMg/list'
+          path: '/hxuser',
+          redirect: '/hxuser/list'
         },
         {
-          path: '/templateMg/list',
-          component: './gt/GtWorking.js'
-        },
-        ],
-      },
-      {
-        /** 数据统计 */
-        path: '/firstseq',
-        routes: [{
-          path: '/firstseq',
-          redirect: '/firstseq/list'
-        },
-        {
-          path: '/firstseq/list',
-          component: './gt/GtWorking.js'
-        }
-        ]
-      },
-     
-      {
-        /**3 调度配置 */
-        path: '/gotask',
-        routes: [{
-          path: '/gotask',
-          redirect: '/gotask/list'
-        },
-        {
-          path: '/gotask/list',
-          component: './Quartz/Quartz.js'
-        } ,
-        { path: '/gotask/list/add', component: './Quartz/QuartzAdd' }
-        ],
-      },
-      {
-        /**4 数据监控 */
-        path: '/wesreport',
-        routes: [{
-          path: '/wesreport',
-          redirect: '/wesreport/list'
-        },
-        {
-          path: '/wesreport/list',
-          component: './gt/GtWorking.js'
+          path: '/hxuser/list',
+          component: './hxuser/hxuserindex.js'
         },
         // {
         //   path: '/wesreport/reportDetail',
@@ -266,21 +253,21 @@ export default [
         ],
       },
       {
-        /**4 小工具 */
-        path: '/gttools',
+        /**7 调度配置 */
+        path: '/gotask',
         routes: [{
-          path: '/gttools',
-          redirect: '/gttools/list',        
+          path: '/gotask',
+          redirect: '/gotask/list'
         },
         {
-          path: '/gttools/list',    
-          // query:{
-          //   pagetype:'home'
-          // },          
-          component: './gt/GtWorking.js'
-        },       
+          path: '/gotask/list',
+          component: './Quartz/Quartz.js'
+        } ,
+        { path: '/gotask/list/add', component: './Quartz/QuartzAdd' }
         ],
-      },     
+      },
+      
+    
       {
         component: '404',
       },

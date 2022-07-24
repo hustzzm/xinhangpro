@@ -1,30 +1,24 @@
-export const COMPANYINFO_NAMESPACE = 'company';
+export const MEMBERINFO_NAMESPACE = 'member';
 
-export function COMPANYINFO_LIST(payload) {
+export function MEMBERINFO_LIST(payload) {
   return {
-    type: `${COMPANYINFO_NAMESPACE}/fetchList`,
-    payload,
-  };
-}
-
-export function COMPANYINFO_SUBMIT(payload) {
-  return {
-    type: `${COMPANYINFO_NAMESPACE}/submit`,
-    payload,
-  };
-}
-
-export function COMPANYINFO_UPDATE(payload) {
-  return {
-    type: `${COMPANYINFO_NAMESPACE}/update`,
+    type: `${MEMBERINFO_NAMESPACE}/fetchList`,
     payload,
   };
 }
 
 
-export function COMPANYINFO_REMOVE(payload) {
+export function MEMBERINFO_UPDATE(payload) {
   return {
-    type: `${COMPANYINFO_NAMESPACE}/remove`,
+    type: `${MEMBERINFO_NAMESPACE}/update`,
+    payload,
+  };
+}
+
+
+export function MEMBERINFO_REMOVE(payload) {
+  return {
+    type: `${MEMBERINFO_NAMESPACE}/remove`,
     payload,
   };
 }

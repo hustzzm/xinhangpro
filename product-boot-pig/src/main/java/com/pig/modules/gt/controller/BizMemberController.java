@@ -32,6 +32,8 @@ public class BizMemberController {
     @GetMapping(value = "/list")
     public CommonResult list(@RequestParam Map<String, Object> params) {
 
+        //只有普通会员、钻石会员才加入列表
+        params.put("checktype","0");
         Page<BizMember> bizCompanyPage = bizMemberService.page(params);
 
         return CommonResult.ok(bizCompanyPage);

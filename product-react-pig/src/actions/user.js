@@ -56,3 +56,10 @@ export function USER_REMOVE(payload) {
     payload,
   };
 }
+
+export function USER_RESETPWD(payload) {
+  return {
+    type: `${USER_NAMESPACE}/resetPassword`,
+    payload,
+  };
+}

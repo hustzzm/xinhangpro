@@ -95,7 +95,7 @@ class memberindex extends PureComponent {
      */
     resetSelectRow = () => {
         const {
-            room: { data },
+            member: { data },
         } = this.props;
         const { selectedRow } = this.state;
 
@@ -282,18 +282,10 @@ class memberindex extends PureComponent {
 
      // 检测类型
   renderSearchSelect = () => {
-    const {
-        dictionary: { roomtypeDicts },
-      } = this.props;
-    
-      let children = [];
-      for (let i = 0; i < roomtypeDicts.length; i++) {
-        children.push(<Option key={roomtypeDicts[i].dictKey}>{roomtypeDicts[i].dictValue}</Option>);
-      }
       return (
-        <Select        
-          style={{ width: '183px' }} allowClear={true}>
-          {children}
+        <Select style={{ width: '183px' }} allowClear={true}>
+          <Option key="1">普通会员</Option>
+          <Option key="2">钻石会员</Option>
         </Select>
       )
   }
@@ -315,11 +307,11 @@ class memberindex extends PureComponent {
             <div id="query-table" className={styles.query_item_css}>
                 <Row gutter={16}>
                     <Col span={18}>
-                        <FormItem label="房间名称">
+                        <FormItem label="会员名称">
                             {getFieldDecorator('name', { rules: [{ max: 30, message: '最多只能输入30个字符！' }] })(<Input />)}
                         </FormItem>
-                        <FormItem label="房间类型">
-                        {getFieldDecorator('roomType')(this.renderSearchSelect())}
+                        <FormItem label="会员类型">
+                        {getFieldDecorator('userLevel')(this.renderSearchSelect())}
                         </FormItem>
                     </Col>
 
@@ -400,28 +392,42 @@ class memberindex extends PureComponent {
             flex:0.1,
           },
           {
-            title: '房间类型',
-            dataIndex: 'roomType',  
+            title: '年龄',
+            dataIndex: 'age',  
+            flex:0.1,
+          },
+          {
+            title: '性别',
+            dataIndex: 'gender',  
             flex:0.1,
             render: (text, record, index) => {
-                const item = roomtypeDicts.find(item => item.dictKey == record.roomType);
-                    return item ? item.dictValue : ""
+               let val = '未知';
+               if(text == '1'){
+                   val = '男'
+               }else if(text == '2'){
+                   val = '女'
+               }
+               return val
             }
           },
           {
-            title: '会员类型',
-            dataIndex: 'roleType',  
-            flex:0.2,
+            title: '联系电话',
+            dataIndex: 'mobile',  
+            flex:0.1,
+          },
+          {
+            title: '会员等级',
+            dataIndex: 'userLevel',  
+            flex:0.1,
             render: (text, record, index) => {
-                let value = '普通会员';
+                let val = '普通会员';
                 if(text == '2'){
-                    value= '钻石会员'
-                } else if(text == '3'){
-                    value= '普通+钻石会员'
+                    val = '钻石会员'
                 }
-                return value;
+                return val
             }
-          },        
+          },
+          
         
           {
             title: '操作',
@@ -447,7 +453,7 @@ class memberindex extends PureComponent {
                     code={code}
                     form={form}
                     onSearch={this.handleSearch}
-                    renderLeftButton={this.renderLeftButton}
+                    // renderLeftButton={this.renderLeftButton}
                     renderSearchForm={this.renderSearchForm}
                     loading={loading}
                     data={data}
@@ -458,44 +464,8 @@ class memberindex extends PureComponent {
                     selectRow={this.selectRow}
                     clearChildSelect={this.clearChildSelect}
                 // para={filterkeys}
-                />
-                <Modal
-                    title="新增房间信息"
-                    width={800}
-                    visible={addvisible}
-                    confirmLoading={confirmLoading}
-                    bodyStyle={{ 'backgroundColor': '#f0f2f5' }}
-                    destroyOnClose={true}
-                    onOk={this.handleadd}
-                    onCancel={() => that.setState({  addvisible: false   })}
-                    okText="提交"
-                    cancelText="取消"
-                    maskClosable={false}
-                >
-                    <Roomadd roomtypeDicts={roomtypeDicts} wrappedComponentRef={(inst) => {
-                        this.editForm = inst;
-                    }}></Roomadd>
-
-                </Modal>
-
-                <Modal
-                    title="修改房间信息"
-                    width={800}
-                    visible={editvisible}
-                    confirmLoading={confirmLoading}
-                    bodyStyle={{ 'backgroundColor': '#f0f2f5' }}
-                    destroyOnClose={true}
-                    onOk={this.handleEditSave}
-                    onCancel={() => that.setState({  editvisible: false   })}
-                    okText="提交"
-                    cancelText="取消"
-                    maskClosable={false}
-                >
-                    <Roomedit detail={selectedRow} roomtypeDicts={roomtypeDicts} wrappedComponentRef={(inst) => {
-                        this.editForm = inst;
-                    }}></Roomedit>
-
-                </Modal>
+                />            
+                
             </Panel>
         )
     }

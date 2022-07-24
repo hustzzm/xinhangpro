@@ -54,24 +54,25 @@ export default {
         //   }
         // }
        
-        if(data && (data.roleid == '1123598816738675201' || data.roleid == '1123598816738675205')){
-          //管理员角色调整至管理界面
-          let productList = JSON.parse(getProduct());
+        yield put(routerRedux.replace(  '/dashboard'));
+        // if(data && (data.roleid == '1123598816738675201' || data.roleid == '1123598816738675205')){
+        //   //管理员角色调整至管理界面
+        //   let productList = JSON.parse(getProduct());
           
-          productList.map(item=>{            
-            if(item.productCode == 'system-message'){              
-              window.open(item.productPath,'_self');
-            }
-          })        
-        }else if(data.roleid == '1123598816738675202'){
-          //医生、分析人员  
-          yield put(routerRedux.replace(  '/wessample'));
-        // yield put(routerRedux.replace(  '/productChoose'));
-        }else{
-            //实验人员角色            
-          yield put(routerRedux.replace(  '/tester'));
-          // yield put(routerRedux.replace(  '/productChoose'));
-        }
+        //   productList.map(item=>{            
+        //     if(item.productCode == 'system-message'){              
+        //       window.open(item.productPath,'_self');
+        //     }
+        //   })        
+        // }else if(data.roleid == '1123598816738675202'){
+        //   //医生、分析人员  
+        //   yield put(routerRedux.replace(  '/wessample'));
+        // // yield put(routerRedux.replace(  '/productChoose'));
+        // }else{
+        //     //实验人员角色            
+        //   yield put(routerRedux.replace(  '/tester'));
+        //   // yield put(routerRedux.replace(  '/productChoose'));
+        // }
         
       }
     },
