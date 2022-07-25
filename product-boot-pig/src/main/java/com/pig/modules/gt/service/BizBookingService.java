@@ -1,9 +1,8 @@
 package com.pig.modules.gt.service;
 
+import com.pig.basic.util.CommonResult;
 import com.pig.modules.gt.entity.BizBooking;
-import com.pig.modules.gt.entity.BizRoomManage;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 
 import java.util.Map;
 
@@ -16,4 +15,7 @@ import java.util.Map;
 public interface BizBookingService {
 
     Page<BizBooking> page(Map<String, Object> params);
+
+    CommonResult make(Map<String, Object> params);
+
 }
