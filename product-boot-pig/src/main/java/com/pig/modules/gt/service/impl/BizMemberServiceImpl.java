@@ -57,7 +57,7 @@ public class BizMemberServiceImpl implements BizMemberService {
                 predicate.getExpressions().add(criteriaBuilder.like(root.get("name"), "%" + commonQuery.get("name") + "%"));
             }
             if (!StringUtils.isEmpty(commonQuery.get("userLevel"))) {
-                predicate.getExpressions().add(criteriaBuilder.equal(root.get("userLevel"), "%" + commonQuery.get("userLevel") + "%"));
+                predicate.getExpressions().add(criteriaBuilder.equal(root.get("userLevel"), commonQuery.get("userLevel")));
             }
             if (!StringUtils.isEmpty(commonQuery.get("checktype"))) {
                 predicate.getExpressions().add(criteriaBuilder.notEqual(root.get("userLevel"), "0"));
