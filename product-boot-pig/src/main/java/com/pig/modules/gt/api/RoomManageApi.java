@@ -6,6 +6,7 @@ import com.pig.modules.gt.dao.RdDictDao;
 import com.pig.modules.gt.dao.RoomManageDao;
 import com.pig.modules.gt.entity.BizRoomManage;
 import com.pig.modules.gt.entity.RdDict;
+import com.pig.modules.gt.entity.RoomType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,9 +36,12 @@ public class RoomManageApi {
     @GetMapping("/allRoomType")
     public CommonResult roomType() {
         List<RdDict> rdDictList = dictDao.findByParentIdAndCodeAndIsDeleted("12", "roomtype", "0");
-        List<String> collect = rdDictList.stream().map(RdDict::getDictValue).collect(Collectors.toList());
-        return CommonResult.ok(collect);
-
+        List<RoomType> roomTypeList = new ArrayList<>();
+        rdDictList.stream().forEach(rdDict -> {
+            RoomType roomType = RoomType.builder().roomType(rdDict.getDictKey()).name(rdDict.getDictValue()).build();
+            roomTypeList.add(roomType);
+        });
+        return CommonResult.ok(roomTypeList);
     }
 
     @GetMapping("/allRoom")
