@@ -72,20 +72,46 @@ public class BizBookingServiceImpl implements BizBookingService {
             if (!StringUtils.isEmpty(commonQuery.get("roomName"))) {
                 predicate.getExpressions().add(criteriaBuilder.like(root.get("roomName"), "%" + commonQuery.get("roomName") + "%"));
             }
+            // 房间号
+            if (!StringUtils.isEmpty(commonQuery.get("roomCode"))) {
+                predicate.getExpressions().add(criteriaBuilder.like(root.get("roomCode"), "%" + commonQuery.get("roomCode") + "%"));
+            }
+            // 预定时间
+            if (!StringUtils.isEmpty(commonQuery.get("bookTimes"))) {
+                predicate.getExpressions().add(criteriaBuilder.like(root.get("bookTimes"), "%" + commonQuery.get("bookTimes") + "%"));
+            }
+            // openid
+            if (!StringUtils.isEmpty(commonQuery.get("openid"))) {
+                predicate.getExpressions().add(criteriaBuilder.like(root.get("openid"), "%" + commonQuery.get("openid") + "%"));
+            }
+            // 预定编号
+            if (!StringUtils.isEmpty(commonQuery.get("booksNo"))) {
+                predicate.getExpressions().add(criteriaBuilder.like(root.get("booksNo"), "%" + commonQuery.get("booksNo") + "%"));
+            }
             // 预约状态
             if (!StringUtils.isEmpty(commonQuery.get("bookStatus"))) {
                 predicate.getExpressions().add(criteriaBuilder.like(root.get("bookStatus"), "%" + commonQuery.get("bookStatus") + "%"));
             }
-            // 开始时间
-            if (!StringUtils.isEmpty(commonQuery.get("startTime"))) {
-                predicate.getExpressions().add(criteriaBuilder.greaterThanOrEqualTo(root.get("bookDate").as(String.class),
-                        String.valueOf(commonQuery.get("startTime"))));
+            // 如果是不是微信端接口
+            if (StringUtils.isEmpty(commonQuery.get("apiType"))) {
+                // 开始时间
+                if (!StringUtils.isEmpty(commonQuery.get("startTime"))) {
+                    predicate.getExpressions().add(criteriaBuilder.greaterThanOrEqualTo(root.get("bookDate").as(String.class),
+                            String.valueOf(commonQuery.get("startTime"))));
+                }
+                // 结束时间
+                if (!StringUtils.isEmpty(commonQuery.get("endTime"))) {
+                    predicate.getExpressions().add(criteriaBuilder.lessThanOrEqualTo(root.get("bookDate").as(String.class),
+                            String.valueOf(commonQuery.get("endTime"))));
+                }
+            } else {
+                // 预定日期
+                if (!StringUtils.isEmpty(commonQuery.get("bookDate"))) {
+                    predicate.getExpressions().add(criteriaBuilder.equal(root.get("bookDate").as(String.class),
+                            String.valueOf(commonQuery.get("bookDate"))));
+                }
             }
-            // 结束时间
-            if (!StringUtils.isEmpty(commonQuery.get("endTime"))) {
-                predicate.getExpressions().add(criteriaBuilder.lessThanOrEqualTo(root.get("bookDate").as(String.class),
-                        String.valueOf(commonQuery.get("endTime"))));
-            }
+
             list.add(predicate);
 
             Predicate[] p = new Predicate[list.size()];

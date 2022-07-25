@@ -1,5 +1,7 @@
 package com.pig.modules.gt.entity;
 
+import com.google.gson.annotations.JsonAdapter;
+import com.pig.basic.adapter.DateTimeAdapter;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -65,6 +67,7 @@ public class BizBooking extends AbstractBaseTimeEntity implements Serializable {
     /**
      * 预订日期
      */
+    @JsonAdapter(DateTimeAdapter.class)
     private Date bookDate;
     /**
      * 预约状态1 预约成功，3消费完成，5取消预约

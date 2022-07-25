@@ -35,5 +35,10 @@ public interface BizBookingDao extends JpaRepository<BizBooking, Integer> {
     @Modifying
     @Query("update BizBooking set bookStatus = '3' where id =:id")
     void updateBookStatusById(@Param("id") Integer id);
+
+    @Transactional(rollbackFor = Exception.class)
+    @Modifying
+    @Query("update BizBooking set bookStatus = '5' where openid =:openid and booksNo = :booksNo")
+    void cancel(@Param("openid") String openid, @Param("booksNo") String booksNo);
 }
 
