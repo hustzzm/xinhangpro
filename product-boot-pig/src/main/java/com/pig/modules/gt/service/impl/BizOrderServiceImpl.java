@@ -47,6 +47,7 @@ public class BizOrderServiceImpl implements BizOrderService {
     @Resource
     private EntityManager entityManager;
 
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
     public Page<BizOrder> page(Map<String, Object> params) {
@@ -105,7 +106,8 @@ public class BizOrderServiceImpl implements BizOrderService {
     public void exportData(ScrollResultsHandler<BizOrderExportVO> scrollResultsHandler) {
         List<BizOrder> all = orderDao.findAll();
         all.stream().forEach((order) -> {
-            String orderName = order.getRdRole().getRoleName() + " " + order.getOrderStart() + " " + order.getOrderEnd();
+            String orderName =
+                    order.getRdRole().getRoleName() + " " + sdf.format(order.getOrderStart()) + "至" + sdf.format(order.getOrderEnd());
             String orderStatus = HomeEnum.CommonEnum.getValue(order.getOrderStatus());
             BizOrderExportVO orderExportVO = BizOrderExportVO.builder().orderNo(order.getOrderNo()).orderAccount(order.getOrderAccount()).createTime(order.getCreateTime()).orderName(orderName).orderPrice(String.valueOf(order.getOrderPrice())).orderStatus(orderStatus).build();
             scrollResultsHandler.handle(orderExportVO);
