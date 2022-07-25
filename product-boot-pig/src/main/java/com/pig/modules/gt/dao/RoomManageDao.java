@@ -32,4 +32,6 @@ public interface RoomManageDao extends JpaRepository<BizRoomManage, Integer> {
     String getMaxRoomCode();
 
     BizRoomManage findByRoomCode(String roomCode);
+
+    List<BizRoomManage> findByRoomTypeOrderByCreateTimeDesc(@Param("roomType") String roomType);
 }
