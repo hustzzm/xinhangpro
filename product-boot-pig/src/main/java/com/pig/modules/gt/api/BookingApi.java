@@ -31,7 +31,8 @@ public class BookingApi {
     @PostMapping("/submit")
     public CommonResult make(@RequestBody Map<String, Object> params) {
 
-        return bookingService.make(params);
+        return bookingService.booksave(params);
+//        return bookingService.make(params);
 
     }
 

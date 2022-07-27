@@ -26,6 +26,14 @@ public interface BizBookingDao extends JpaRepository<BizBooking, Integer> {
 
     List<BizBooking> findByOpenidAndBookStatusOrderByCreateTimeDesc(String openid, String bookStatus);
 
+    /** 针对含有9的记录 **/
+    @Query(value ="select count(1) from biz_booking where book_date =?1 and (book_times =?2 or book_times like  ?1||'%') and book_status='1'", nativeQuery = true)
+    int querylistByTime(String bookDate, String bookTimes,String bookTimes2);
+
+    /** 针对不含有9的记录 **/
+    @Query(value ="select count(1) from biz_booking where book_date =?1 and (book_times =?2 or book_times like  '%'||?1||',%') and book_status='1'", nativeQuery = true)
+    int querylistByNormalTime(String bookDate, String bookTimes);
+
     @Transactional(rollbackFor = Exception.class)
     @Modifying
     @Query("delete from BizBooking where id in (:ids)")

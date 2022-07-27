@@ -2,6 +2,7 @@ package com.pig.modules.gt.controller;
 
 import com.pig.basic.util.CommonResult;
 import com.pig.basic.util.CommonUtil;
+import com.pig.basic.util.CopeImageUtil;
 import com.pig.basic.util.utils.DateUtils;
 import com.pig.modules.gt.dao.BizCompanyDao;
 import com.pig.modules.gt.entity.BizBooking;
@@ -111,6 +112,56 @@ public class BizCompanyController {
 //            return CommonResult.failed("图片上传出现异常，" + e.getMessage());
         }
         String filename = "/" + monthDate + "/" + fileName;
+//        return CommonResult.ok(filename);
+        return filename;
+    }
+
+    /**
+     * 处理成圆形图片
+     * @param file
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value = "/base64UploadCircular",produces = "multipart/form-data")
+    public String base64UploadCircular(@RequestParam(value = "file") MultipartFile file,
+                               HttpServletRequest request,
+                               HttpServletResponse response) throws Exception {
+//        if (file.isEmpty()) {
+//            return CommonResult.failed("文件为空!");
+//        }
+        String fileName = file.getOriginalFilename();  // 文件名
+        String suffixName = fileName.substring(fileName.lastIndexOf("."));  // 后缀名
+//        if (!suffixName.equals(".jpg") && !suffixName.equals(".png")) {
+//            return CommonResult.failed("图片格式不正确，请上传jpg或png类型！");
+//        }
+//        long size = file.getSize();
+//        if (size / (1024 * 1024) > 5) {
+//            return CommonResult.failed("请上传不大于5M的图片！");
+//        }
+        String monthDate = DateUtils.getMonthDate(); // 年月
+        File tmp = new File(uploadFilePath + "/" + monthDate + UUID.randomUUID() + suffixName);
+        fileName = UUID.randomUUID() + suffixName; // 新文件名
+
+        File dest = new File(uploadFilePath + "/" + monthDate + "/" + fileName);
+//        File dest = new File("D:\\usr\\local" + "\\" + monthDate + "\\" + fileName);
+        if (!tmp.getParentFile().exists()) {
+            tmp.getParentFile().mkdirs();
+        }
+        try {
+
+            file.transferTo(tmp);
+            log.info("dest.getAbsolutePath(): " + dest.getAbsolutePath());
+//            CopeImageUtil.cutLocalHeadImages(tmp.getAbsolutePath(),dest.getAbsolutePath());
+            CopeImageUtil.makeCircularImg(tmp.getAbsolutePath(),dest.getAbsolutePath(),80,80);
+        } catch (IOException e) {
+            log.error("uploadImage is exception,", e.getMessage(), e);
+            return "图片上传出现异常，" + e.getMessage();
+//            return CommonResult.failed("图片上传出现异常，" + e.getMessage());
+        }
+        String filename = "/" + monthDate + "/" + fileName;
+
 //        return CommonResult.ok(filename);
         return filename;
     }

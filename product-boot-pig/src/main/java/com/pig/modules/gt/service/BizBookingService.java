@@ -18,4 +18,11 @@ public interface BizBookingService {
 
     CommonResult make(Map<String, Object> params);
 
+    /**
+     * 判断是否可预约，可则保存预约记录
+     * @param params
+     * @return
+     */
+    CommonResult booksave(Map<String, Object> params);
+
 }

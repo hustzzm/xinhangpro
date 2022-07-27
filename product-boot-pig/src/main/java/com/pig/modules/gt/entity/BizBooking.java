@@ -16,6 +16,7 @@ import java.io.Serializable;
  */
 @Entity
 @Data
+
 public class BizBooking extends AbstractBaseTimeEntity implements Serializable {
     private static final long serialVersionUID = -96491309107003392L;
     /**

@@ -163,7 +163,7 @@ public class BizBookingServiceImpl implements BizBookingService {
             if (ObjectUtils.isEmpty(bizBookingList)) {
                 // 如果没有预约记录，按照会员级别来来控制预约的次数
                 if (appointmentTimes < bookTimes.length) {
-                    return CommonResult.failed("超过当前可预约的小时数！");
+                    return CommonResult.failed("您！");
                 }
             } else {
                 // 比较用户已预约的小时数+当前要预约的小时数是否大于当前用户的可预约小时数
@@ -171,6 +171,100 @@ public class BizBookingServiceImpl implements BizBookingService {
                     return CommonResult.failed("超过当前可预约的小时数！");
                 }
             }
+            // 根据房间编号获取房间信息
+            String roomCode = StringUtil.getCheckString(params.get("roomCode"));
+            BizRoomManage roomManage = roomManageDao.findByRoomCode(roomCode);
+            // save to db
+            BizBooking bizBooking = null;
+            List<BizBooking> bookingList = new ArrayList<>();
+            for (String value : bookTimes) {
+                bizBooking = new BizBooking();
+                bizBooking.setBooksNo(CheckCommon.getBookingCode());
+                bizBooking.setBookTimes(value);
+                bizBooking.setRoomCode(roomCode);
+                bizBooking.setBookDate(bookDate);
+                bizBooking.setBookStatus("1");
+                bizBooking.setRoomType(roomManage.getRoomType());
+                bizBooking.setRoomName(roomManage.getName());
+                bizBooking.setOpenid(openid);
+                bookingList.add(bizBooking);
+            }
+            bookingDao.saveAll(bookingList);
+        } catch (Exception e) {
+            log.error("预定异常，", e.getMessage(), e);
+            return CommonResult.failed("预定异常，" + e.getMessage());
+        }
+        return CommonResult.ok("预约成功！");
+    }
+
+    /**
+     * 判断是否可预约，可则保存预约记录
+     * @param params
+     * @return
+     */
+    @Override
+    public CommonResult booksave(Map<String, Object> params){
+
+        // 获取会员信息
+        try {
+            String openid = StringUtil.getCheckString(params.get("openid"));
+            BizMember member = memberDao.findByOpenidAndStatus(openid, "-1");
+            if (null == member) {
+                return CommonResult.failed("会员不存在或失效！");
+            }
+            String userLevel = member.getUserLevel();
+            if (userLevel.equals("0")) {
+                return CommonResult.failed("非会员不可预约！");
+            }
+
+            // 预定时间
+            Date bookDate = sdf.parse(StringUtil.getCheckString(params.get("bookDate")));
+            //当前时间
+            Date timeNow = new Date();
+
+            int appointmentTimes = userLevel.equals("1") ? 2 : 3; // 预约小时数
+            // 预约时间，为连续的时间段
+            String[] bookTimes = StringUtil.getCheckString(params.get("bookTimes")).split(",");
+
+            int icompare = bookDate.compareTo(sdf.parse(sdf.format(timeNow)));
+
+            //获取当前小时
+            String nowHour = df.format(new Date());
+
+            //如果是当天，则判断是否过时，只判断第一个时间段是否过时
+            if(icompare == 0 && Integer.parseInt(bookTimes[0]) > Integer.parseInt(nowHour)){
+
+                return CommonResult.failed(bookTimes[0] + "点不可预约,请重新选择时间段");
+            }
+            //如果当前房间是否已被预订
+            for(String bookTime : bookTimes){
+
+                int iRecord = -1;
+
+                if("9".equals(bookTime)){
+
+                    iRecord = bookingDao.querylistByTime(sdf.format(bookDate),bookTime,"9,");
+                    if(iRecord > 0){
+                        return CommonResult.failed(bookTime + "点已被预约,请重新选择时间段");
+                    }
+                }else{
+                    iRecord = bookingDao.querylistByNormalTime(sdf.format(bookDate),bookTime);
+                    if(iRecord > 0){
+                        return CommonResult.failed(bookTime + "点已被预约,请重新选择时间段");
+                    }
+                }
+            }
+
+
+            // 查询已经预约记录
+            List<BizBooking> bizBookingList = bookingDao.findByOpenidAndBookStatusOrderByCreateTimeDesc(openid, "1");
+            if ((ObjectUtils.isEmpty(bizBookingList) && appointmentTimes < bookTimes.length)
+            || appointmentTimes < bizBookingList.size() + bookTimes.length) {
+                // 比较用户已预约的小时数+当前要预约的小时数是否大于当前用户的可预约小时数
+                // 如果没有预约记录，按照会员级别来来控制预约的次数
+                return CommonResult.failed("您当前预约已超过预约限制，请重新选择预约时间段");
+            }
+
             // 根据房间编号获取房间信息
             String roomCode = StringUtil.getCheckString(params.get("roomCode"));
             BizRoomManage roomManage = roomManageDao.findByRoomCode(roomCode);
