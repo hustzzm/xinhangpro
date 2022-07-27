@@ -43,7 +43,7 @@ class roomedit extends PureComponent {
         const formdata = new FormData();
         formdata.append('file', fileData)
 
-        Axios.post("/api/bizCompany/base64Upload", formdata, {
+        Axios.post("/api/bizCompany/base64UploadCircular", formdata, {
             headers: {
                 "Content-Type": "multipart/form-data"
             }
