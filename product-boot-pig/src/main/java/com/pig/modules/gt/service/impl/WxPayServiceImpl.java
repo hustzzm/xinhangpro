@@ -3,6 +3,7 @@ package com.pig.modules.gt.service.impl;
 import com.pig.basic.config.ConfigurationConfig;
 import com.pig.basic.util.CheckCommon;
 import com.pig.basic.util.CommonResult;
+import com.pig.basic.util.CommonUtil;
 import com.pig.basic.util.StringUtil;
 import com.pig.modules.gt.constant.HomeEnum;
 import com.pig.modules.gt.dao.BizOrderDao;
@@ -94,7 +95,9 @@ public class WxPayServiceImpl implements WxPayService {
         data.put("body", StringUtil.getCheckString(params.get("body")));
         String nonceStr = WXPayUtil.generateNonceStr(); // 随机字符串，与支付保持一致
         // 商户订单号
-        String outTradeNo = CheckCommon.getOrderCode();
+        // 订单编号、预定编号生成规则统一使用 newRandomSNO
+        String outTradeNo = CommonUtil.newRandomSNO("O");
+//        String outTradeNo = CheckCommon.getOrderCode();
         params.put("out_trade_no", outTradeNo); // 后面保存db使用
         params.put("nonce_str", nonceStr); // 后面保存db使用
         data.put("nonce_str", nonceStr);

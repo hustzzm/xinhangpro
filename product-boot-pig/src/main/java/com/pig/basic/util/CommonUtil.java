@@ -17,6 +17,20 @@ import java.util.regex.Pattern;
 
 public class CommonUtil {
 
+    /**
+     * 生成随机序列号
+     * @param headWord 开始字符
+     * @return
+     */
+    public static String newRandomSNO(String headWord){
+        //C + 当前日期时间(2022-05-09 16:40:32)时间戳转36位 + 3位随机数
+        //例如：CBieNMJO8h  C+BieNMJ+O8h
+        StringBuilder sb = new StringBuilder(headWord);
+        sb.append(Long.toString(System.currentTimeMillis()/1000,36))
+                .append(StringUtil.getRandomCode(3));
+        return sb.toString();
+    }
+
     public static Long[] toLongArray(String split, String str) {
         if (StringUtils.isEmpty(str)) {
             return new Long[0];

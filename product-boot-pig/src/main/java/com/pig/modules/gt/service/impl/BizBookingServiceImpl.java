@@ -1,9 +1,6 @@
 package com.pig.modules.gt.service.impl;
 
-import com.pig.basic.util.CheckCommon;
-import com.pig.basic.util.CommonQuery;
-import com.pig.basic.util.CommonResult;
-import com.pig.basic.util.StringUtil;
+import com.pig.basic.util.*;
 import com.pig.modules.gt.dao.BizBookingDao;
 import com.pig.modules.gt.dao.BizMemberDao;
 import com.pig.modules.gt.dao.RoomManageDao;
@@ -232,9 +229,9 @@ public class BizBookingServiceImpl implements BizBookingService {
             String nowHour = df.format(new Date());
 
             //如果是当天，则判断是否过时，只判断第一个时间段是否过时
-            if(icompare == 0 && Integer.parseInt(bookTimes[0]) > Integer.parseInt(nowHour)){
+            if(icompare == 0 && Integer.parseInt(bookTimes[0]) < Integer.parseInt(nowHour)){
 
-                return CommonResult.failed(bookTimes[0] + "点不可预约,请重新选择时间段");
+                return CommonResult.failed(bookTimes[0] + "点已过，不可预约,请重新选择时间段");
             }
             //如果当前房间是否已被预订
             for(String bookTime : bookTimes){
@@ -255,14 +252,41 @@ public class BizBookingServiceImpl implements BizBookingService {
                 }
             }
 
+            // 查询当天已预约、已消费的记录
+            List<BizBooking> recordsByDate = bookingDao.querylistbybookDate(sdf.format(bookDate));
+            if (!ObjectUtils.isEmpty(recordsByDate) && recordsByDate.size() > 0) {
+                String bookTs = "";
+                for(BizBooking bizBooking : recordsByDate){
+                    bookTs += bizBooking.getBookTimes() + ",";
+                }
+                bookTs = bookTs.trim();
+                if(bookTs.endsWith(",")){
+                    bookTs = bookTs.substring(0,bookTs.length() -1);
+                }
+
+                //当天准备预约的小时数+当天系统已记录的小时数，不能超过会员次数
+                if(bookTs.split(",").length + bookTimes.length > appointmentTimes){
+                    return CommonResult.failed("您当前预约已超过预约限制，请消费完成后，再进行预约");
+                }
+            }
 
             // 查询已经预约记录
             List<BizBooking> bizBookingList = bookingDao.findByOpenidAndBookStatusOrderByCreateTimeDesc(openid, "1");
-            if ((ObjectUtils.isEmpty(bizBookingList) && appointmentTimes < bookTimes.length)
-            || appointmentTimes < bizBookingList.size() + bookTimes.length) {
-                // 比较用户已预约的小时数+当前要预约的小时数是否大于当前用户的可预约小时数
-                // 如果没有预约记录，按照会员级别来来控制预约的次数
-                return CommonResult.failed("您当前预约已超过预约限制，请重新选择预约时间段");
+            if (!ObjectUtils.isEmpty(bizBookingList) && bizBookingList.size() > 0) {
+
+                String bookTs = "";
+                for(BizBooking bizBooking : bizBookingList){
+                    bookTs += bizBooking.getBookTimes() + ",";
+                }
+                bookTs = bookTs.trim();
+                if(bookTs.endsWith(",")){
+                    bookTs = bookTs.substring(0,bookTs.length() -1);
+                }
+
+                //当天准备预约的小时数+系统已记录的小时数，不能超过会员次数
+                if(bookTs.split(",").length + bookTimes.length > appointmentTimes){
+                    return CommonResult.failed("您当前预约已超过预约限制，请消费完成后，再进行预约");
+                }
             }
 
             // 根据房间编号获取房间信息
@@ -270,20 +294,18 @@ public class BizBookingServiceImpl implements BizBookingService {
             BizRoomManage roomManage = roomManageDao.findByRoomCode(roomCode);
             // save to db
             BizBooking bizBooking = null;
-            List<BizBooking> bookingList = new ArrayList<>();
-            for (String value : bookTimes) {
-                bizBooking = new BizBooking();
-                bizBooking.setBooksNo(CheckCommon.getBookingCode());
-                bizBooking.setBookTimes(value);
-                bizBooking.setRoomCode(roomCode);
-                bizBooking.setBookDate(bookDate);
-                bizBooking.setBookStatus("1");
-                bizBooking.setRoomType(roomManage.getRoomType());
-                bizBooking.setRoomName(roomManage.getName());
-                bizBooking.setOpenid(openid);
-                bookingList.add(bizBooking);
-            }
-            bookingDao.saveAll(bookingList);
+//            List<BizBooking> bookingList = new ArrayList<>();
+            bizBooking = new BizBooking();
+            bizBooking.setBooksNo(CommonUtil.newRandomSNO("B"));
+            bizBooking.setBookTimes(params.get("bookTimes").toString());
+            bizBooking.setRoomCode(roomCode);
+            bizBooking.setBookDate(bookDate);
+            bizBooking.setBookStatus("1");
+            bizBooking.setRoomType(roomManage.getRoomType());
+            bizBooking.setRoomName(roomManage.getName());
+            bizBooking.setOpenid(openid);
+
+            bookingDao.save(bizBooking);
         } catch (Exception e) {
             log.error("预定异常，", e.getMessage(), e);
             return CommonResult.failed("预定异常，" + e.getMessage());

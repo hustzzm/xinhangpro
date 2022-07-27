@@ -26,13 +26,22 @@ public interface BizBookingDao extends JpaRepository<BizBooking, Integer> {
 
     List<BizBooking> findByOpenidAndBookStatusOrderByCreateTimeDesc(String openid, String bookStatus);
 
+    /**
+     * 查询当天预约、消费的记录
+     * @param bookDate
+     * @return
+     */
+    @Query(value ="select * from biz_booking where book_date =:bookDate and book_status !='5'", nativeQuery = true)
+    List<BizBooking> querylistbybookDate(@Param("bookDate") String bookDate);
+
+
     /** 针对含有9的记录 **/
-    @Query(value ="select count(1) from biz_booking where book_date =?1 and (book_times =?2 or book_times like  ?1||'%') and book_status='1'", nativeQuery = true)
-    int querylistByTime(String bookDate, String bookTimes,String bookTimes2);
+    @Query(value ="select count(1) from biz_booking where book_date =:bookDate and (book_times =:bookTimes or book_times like CONCAT(:bookTimes2,'%'))) and book_status!='5'", nativeQuery = true)
+    int querylistByTime(@Param("bookDate") String bookDate, @Param("bookTimes") String bookTimes,@Param("bookTimes2") String bookTimes2);
 
     /** 针对不含有9的记录 **/
-    @Query(value ="select count(1) from biz_booking where book_date =?1 and (book_times =?2 or book_times like  '%'||?1||',%') and book_status='1'", nativeQuery = true)
-    int querylistByNormalTime(String bookDate, String bookTimes);
+    @Query(value ="select count(1) from biz_booking where book_date =:bookDate and (book_times like CONCAT('%',:bookTimes,'%')) and book_status!='5'", nativeQuery = true)
+    int querylistByNormalTime(@Param("bookDate") String bookDate,@Param("bookTimes") String bookTimes);
 
     @Transactional(rollbackFor = Exception.class)
     @Modifying
