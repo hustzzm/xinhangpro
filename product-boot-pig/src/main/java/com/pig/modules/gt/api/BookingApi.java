@@ -5,6 +5,7 @@ import com.pig.basic.util.StringUtil;
 import com.pig.modules.gt.dao.BizBookingDao;
 import com.pig.modules.gt.entity.BizBooking;
 import com.pig.modules.gt.service.BizBookingService;
+import net.sf.jsqlparser.expression.DateTimeLiteralExpression;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,16 +38,16 @@ public class BookingApi {
     }
 
     /**
-     * 查看已预约的记录
+     * 查看房间已预约的记录
      *
-     * @param params params
      * @return CommonResult
      */
     @GetMapping("/existbook")
     public CommonResult existbook(@RequestParam Map<String, Object> params) {
-        params.put("apiType", "-1");
-        Page<BizBooking> page = bookingService.page(params);
-        return CommonResult.ok(page);
+
+        String roomId = params.get("roomId").toString();
+        List<BizBooking> list = bookingService.getAllByBookAfterBookDate(roomId);
+        return CommonResult.ok(list);
 
     }
 
@@ -59,6 +60,11 @@ public class BookingApi {
 
     }
 
+    /**
+     * 查看会员已预约的记录
+     *
+     * @return CommonResult
+     */
     @GetMapping("/mybook")
     public CommonResult mybook(@RequestParam Map<String, Object> params) {
         String openid = StringUtil.getCheckString(params.get("openid"));

@@ -194,6 +194,13 @@ public class BizBookingServiceImpl implements BizBookingService {
         return CommonResult.ok("预约成功！");
     }
 
+    @Override
+    public List<BizBooking> getAllByBookAfterBookDate(String roomId){
+
+        String bookDate = sdf.format(new Date());
+        List<BizBooking> list = bookingDao.querylistallbybookStatus(bookDate,roomId);
+        return list;
+    }
     /**
      * 判断是否可预约，可则保存预约记录
      * @param params
@@ -253,7 +260,7 @@ public class BizBookingServiceImpl implements BizBookingService {
             }
 
             // 查询当天已预约、已消费的记录
-            List<BizBooking> recordsByDate = bookingDao.querylistbybookDate(sdf.format(bookDate));
+            List<BizBooking> recordsByDate = bookingDao.querylistbybookDate(sdf.format(bookDate),openid);
             if (!ObjectUtils.isEmpty(recordsByDate) && recordsByDate.size() > 0) {
                 String bookTs = "";
                 for(BizBooking bizBooking : recordsByDate){
