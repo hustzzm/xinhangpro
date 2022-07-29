@@ -1,22 +1,6 @@
 server:
   port: 8090
 spring:
-  resources:
-    static-locations: file:/home/publish/
-  freemarker:
-    allow-request-override: false
-    #    开发过程建议关闭缓存
-    cache: false
-    check-template-location: false
-    charset: UTF-8
-    content-type: text/html; charset=utf-8
-    expose-request-attributes: false
-    expose-session-attributes: false
-    expose-spring-macro-helpers: false
-    request-context-attribute:
-    # 默认后缀就是.ftl
-    suffix: .ftl
-    template-loader-path: classpath:/home/publish/
   redis:
     database: 0
     host: 127.0.0.1
@@ -28,28 +12,6 @@ spring:
         max-wait: -1
         min-idle: 0
     timeout: 100000
-  quartz:
-    #持久化到数据库方式
-    job-store-type: jdbc
-    initialize-schema: embedded
-    properties:
-      org:
-        quartz:
-          scheduler:
-            instanceName: MyScheduler
-            instanceId: AUTO
-          jobStore:
-            class: org.quartz.impl.jdbcjobstore.JobStoreTX
-            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
-            tablePrefix: QRTZ_
-            isClustered: true
-            clusterCheckinInterval: 10000
-            useProperties: false
-          threadPool:
-            class: org.quartz.simpl.SimpleThreadPool
-            threadCount: 10
-            threadPriority: 5
-            threadsInheritContextClassLoaderOfInitializingThread: true
   datasource:
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
     minIdle: 1

@@ -31,4 +31,16 @@ public interface BizBookingService {
      */
     CommonResult booksave(Map<String, Object> params);
 
+    /**
+     * 当前日期已过期的记录，用于自动将状态置为消费完成
+     * @return
+     */
+    List<BizBooking> querylistbyexpireDate(String bookDate);
+
+    /**
+     * 当天的小时已过期的记录，用于自动将状态置为消费完成
+     * @return
+     */
+    List<BizBooking> querylistbyexpireHour(String bookDate, String bookTimes);
+
 }

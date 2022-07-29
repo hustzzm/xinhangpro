@@ -50,6 +50,22 @@ public interface BizBookingDao extends JpaRepository<BizBooking, Integer> {
     @Query(value ="select count(1) from biz_booking where book_date =:bookDate and (book_times like CONCAT('%',:bookTimes,'%')) and (book_status='1' or book_status='3') and status='-1'", nativeQuery = true)
     int querylistByNormalTime(@Param("bookDate") String bookDate,@Param("bookTimes") String bookTimes);
 
+    /**
+     * 当前日期已过期的记录，用于自动将状态置为消费完成
+     * @param bookDate
+     * @return
+     */
+    @Query(value ="select * from biz_booking where book_date <:bookDate and book_status ='1' and status='-1'", nativeQuery = true)
+    List<BizBooking> querylistbyexpireDate(@Param("bookDate") String bookDate);
+
+    /**
+     * 当天的小时已过期的记录，用于自动将状态置为消费完成
+     * @param bookDate
+     * @return
+     */
+    @Query(value ="select a.* from (select id,books_no,name,openid,nick_name,room_type,room_name,book_date,case when LOCATE(',',book_times) > 0 then REVERSE(LEFT(REVERSE(book_times),INSTR(REVERSE(book_times),',')-1)) else book_times end as book_times,room_code,book_status,create_by,create_time,update_by,update_time,status,book_times_text,account from biz_booking where book_date=:bookDate and (book_status ='1') and status='-1') a where a.book_times<:bookTimes", nativeQuery = true)
+    List<BizBooking> querylistbyexpireHour(@Param("bookDate") String bookDate,@Param("bookTimes") String bookTimes);
+
     @Transactional(rollbackFor = Exception.class)
     @Modifying
     @Query("delete from BizBooking where id in (:ids)")

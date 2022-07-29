@@ -321,4 +321,19 @@ public class BizBookingServiceImpl implements BizBookingService {
         }
         return CommonResult.ok("预约成功！");
     }
+
+    @Override
+    public List<BizBooking> querylistbyexpireDate(String bookDate){
+
+        List<BizBooking> list = bookingDao.querylistbyexpireDate(bookDate);
+        return list;
+    }
+
+    @Override
+    public List<BizBooking> querylistbyexpireHour(String bookDate, String bookTimes){
+
+        List<BizBooking> list = bookingDao.querylistbyexpireHour(bookDate,bookTimes);
+        return list;
+    }
+
 }

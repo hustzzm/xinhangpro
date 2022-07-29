@@ -101,12 +101,21 @@ public class StringUtil {
     public static void main(String[] args) {
         StringUtil task = new StringUtil();
 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        SimpleDateFormat df = new SimpleDateFormat("HH");
+        Date dateNow = new Date();
+        String today = sdf.format(dateNow);
+        String Hour = df.format(dateNow);
+        String Hour2 = "09";
+        System.out.println("Hour:" + Hour);
+        System.out.println("Hour2:" + Integer.valueOf(Hour2).toString());
 //        task.doAutoTransFile();
 //        task.doAutoUploadFileToDB();
         //String str = task.getStringToDate("2018/5/18");
         // System.out.println("str:" + str);
-        boolean btest = hasSpecialWords("test1%3");
-        System.out.println("btest:" +btest);
+//        boolean btest = hasSpecialWords("test1%3");
+//        System.out.println("btest:" +btest);
     }
 
 

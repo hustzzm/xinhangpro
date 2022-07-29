@@ -1,6 +1,6 @@
 module.exports = {
   title: '航信商务管理系统-V1.0',
-  vision: 'V1.0.0.20220508001',
+  vision: 'V1.0.0.20220730001',
   clientId: 'product', // 客户端id
   clientSecret: 'product_secret', // 客户端密钥
   tenantMode: false, // 开启租户模式

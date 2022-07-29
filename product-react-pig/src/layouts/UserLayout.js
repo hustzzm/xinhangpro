@@ -48,7 +48,7 @@ const UserLayout = ({ children }) => (
              
                   <Col span={24}>
                   <p className={styles.title}>
-                  test系统
+                  信航业务管理系统
                   </p>
                   </Col>
                   {/*<Col span={24} style={{marginTop:'-10px'}}>*/}

@@ -9,7 +9,7 @@ spring:
     show-sql: true
   # 激活 prod
   profiles:
-    active: dev
+    active: pro
 # 也可以同时激活多个 profile
 # spring.profiles.active: prod,proddb,prodlog
 # dev 配置
