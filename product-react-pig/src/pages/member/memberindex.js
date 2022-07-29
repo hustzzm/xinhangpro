@@ -25,7 +25,7 @@ import {
     SyncOutlined,
     DeleteOutlined,
     FilterOutlined,
-    RedoOutlined,
+    UploadOutlined,
     FileAddOutlined,
     EditOutlined,
     RollbackOutlined
@@ -38,10 +38,13 @@ import {
 import { ROOMTYPE_DICT} from "../../actions/dictionary";
 
 import CommonGrid from "@/pages/gt/Grid/MemberGrid";
+import Memberedit from "@/pages/member/memberedit";
+import Memberview from "@/pages/member/memberview";
 import styles from '../../utils/utils.less';
 import Panel from "../../components/Panel";
 
 import styleTester from "../Wes/index.less";
+import { getCurrentUser } from '../../utils/authority';
 
 import moment from "moment";
 
@@ -168,8 +171,8 @@ class memberindex extends PureComponent {
             if (!err) {
                 //values 可获取到表单中所有键值数据  将数据进行保存操作
                 const subparams = values;
-                subparams.id = selectedRow.id;
-                subparams.account = selectedRow.account;
+                subparams.id = String(parseInt(selectedRow.id));
+                // subparams.account = selectedRow.account;
                 // subparams.token = selectedRow.token;
               
                 //保存操作
@@ -215,7 +218,13 @@ class memberindex extends PureComponent {
         })
       
     }
-   
+    dodetail = (record) => {
+
+        this.setState({
+            selectedRow:record,
+            detailvisible: true
+        })
+    }
 
 
     onClickReset = () => {
@@ -224,25 +233,43 @@ class memberindex extends PureComponent {
         this.handleSearch(params);
     };
 
+    
+ //导出
+ handleexport = (value) => {
+      
+    const { dispatch } = this.props;
+  
+    const that = this;
+   
+    window.open(`/api/bizMember/export`,'_self');
+   
+}
+
 
     //删除模块
-    doremove = (record) => {
+    doremove = (record,status) => {
         const {
             dispatch,
             dictionary: {  },
         } = this.props;
         const that = this;
-
+        let opttext = status == '1' ? '拉黑':'删除';
+      
+        let subparams = {};
+        
         Modal.confirm({
             title: '确认提示',
-            content: '确认执行删除操作吗?',
+            content: '确认执行' + opttext + '操作吗?',
             okText: '确定',
             okType: 'danger',
             cancelText: '取消',
             onOk() {
-                
-                dispatch(MEMBERINFO_REMOVE(record.id)).then(result => {
+             
+                subparams.id = String(parseInt(record.id));
+                subparams.status = status;
+                dispatch(MEMBERINFO_REMOVE(subparams)).then(result => {
                   
+                    debugger
                     if (result.success) {
                         message.success('操作成功！');
                         that.handleSearch({});                           
@@ -292,9 +319,9 @@ class memberindex extends PureComponent {
     renderLeftButton = () => (
         <div>
            
-            <Button type="primary" onClick={this.addmodal} icon={<PlusOutlined />}>
-                添加
-            </Button>               
+           <Button type="primary" onClick={this.handleexport} icon={<UploadOutlined />}>
+                导出Excel
+            </Button>                  
         </div>
     );
 
@@ -307,7 +334,7 @@ class memberindex extends PureComponent {
             <div id="query-table" className={styles.query_item_css}>
                 <Row gutter={16}>
                     <Col span={18}>
-                        <FormItem label="会员名称">
+                        <FormItem label="会员姓名">
                             {getFieldDecorator('name', { rules: [{ max: 30, message: '最多只能输入30个字符！' }] })(<Input />)}
                         </FormItem>
                         <FormItem label="会员类型">
@@ -347,11 +374,12 @@ class memberindex extends PureComponent {
 
     render() {
         const code = 'member';
+        const currentUser = getCurrentUser();
         const {
             editvisible,         
             confirmLoading,        
             selectedRow,         
-            addvisible,         
+            detailvisible,         
         } = this.state;
         const that = this;
         const {
@@ -375,7 +403,15 @@ class memberindex extends PureComponent {
         };
 
         const columns = [
-       
+            {
+                title: '会员正面照片',
+                dataIndex: 'selfpig',  
+               width:140,
+                render: (text, record, index) => {
+                 
+                    return text && text.length > 0 ? <img src={currentUser.imgPath + text} width={80}/> : ''
+                }
+              },
           {
             title: '会员姓名',
             dataIndex: 'name',  
@@ -385,6 +421,9 @@ class memberindex extends PureComponent {
             title: '会员卡号',
             dataIndex: 'orderNo',  
             flex:0.1,
+            render:(text,record) =>{
+                return <a onClick={() => this.dodetail(record)} >{text}</a>
+            }
           },
           {
             title: '入会时间',
@@ -439,7 +478,8 @@ class memberindex extends PureComponent {
     
                 return <Space>
                 <a onClick={() => this.domodify(record)} >编辑</a>
-                <a onClick={() => this.doremove(record)} >删除</a>
+                <a onClick={() => this.doremove(record,'1')} >拉黑</a>
+                <a onClick={() => this.doremove(record,'0')} >删除</a>
             </Space>;
             }
           },      
@@ -453,7 +493,7 @@ class memberindex extends PureComponent {
                     code={code}
                     form={form}
                     onSearch={this.handleSearch}
-                    // renderLeftButton={this.renderLeftButton}
+                    renderLeftButton={this.renderLeftButton}
                     renderSearchForm={this.renderSearchForm}
                     loading={loading}
                     data={data}
@@ -466,7 +506,42 @@ class memberindex extends PureComponent {
                 // para={filterkeys}
                 />            
                 
+                <Modal
+                    title="修改会员信息"
+                    width={800}
+                    visible={editvisible}
+                    confirmLoading={confirmLoading}
+                    bodyStyle={{ 'backgroundColor': '#f0f2f5' }}
+                    destroyOnClose={true}
+                    onOk={this.handleEditSave}
+                    onCancel={() => that.setState({  editvisible: false   })}
+                    okText="提交"
+                    cancelText="取消"
+                    maskClosable={false}
+                >
+                    <Memberedit detail={selectedRow} wrappedComponentRef={(inst) => {
+                        this.editForm = inst;
+                    }}></Memberedit>
+
+                </Modal>
+
+                <Modal
+                    title="会员信息详情"
+                    width={1000}
+                    visible={detailvisible}
+                    confirmLoading={confirmLoading}
+                    bodyStyle={{ 'backgroundColor': '#f0f2f5' }}
+                    destroyOnClose={true}                   
+                    onCancel={() => that.setState({  detailvisible: false   })}
+                    footer={null}
+                    maskClosable={false}
+                >
+                    <Memberview detail={selectedRow}></Memberview>
+
+                </Modal>
             </Panel>
+
+            
         )
     }
 }

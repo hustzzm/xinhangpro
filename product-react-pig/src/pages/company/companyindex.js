@@ -267,8 +267,8 @@ class companyindex extends PureComponent {
             cancelText: '取消',
             onOk() {
                 
-                dispatch(COMPANYINFO_REMOVE(record.id)).then(result => {
-                  
+                dispatch(COMPANYINFO_REMOVE(record.id)).then(result => {                  
+                    
                     if (result.success) {
                         message.success('操作成功！');
                         that.handleSearch({});                           
@@ -506,7 +506,7 @@ class companyindex extends PureComponent {
     
                 return <Space>
                 <a onClick={() => this.domodify(record)} >编辑</a>
-                <a onClick={() => this.doremove(record)} >删除</a>
+                <a onClick={() => this.doremove(record)} >删除</a>               
             </Space>;
             }
           },      

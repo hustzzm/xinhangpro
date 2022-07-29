@@ -5,10 +5,11 @@ import com.pig.basic.util.CommonQuery;
 import com.pig.basic.util.CommonResult;
 import com.pig.basic.util.DateUtil;
 import com.pig.basic.util.StringUtil;
+import com.pig.modules.gt.constant.HomeEnum;
 import com.pig.modules.gt.dao.BizMemberDao;
-import com.pig.modules.gt.entity.BizCompany;
-import com.pig.modules.gt.entity.BizMember;
+import com.pig.modules.gt.entity.*;
 import com.pig.modules.gt.service.BizMemberService;
+import com.pig.modules.gt.service.ScrollResultsHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.data.domain.Page;
@@ -17,10 +18,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import javax.persistence.EntityManager;
 import javax.persistence.criteria.Predicate;
+import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -37,6 +42,10 @@ public class BizMemberServiceImpl implements BizMemberService {
     @Resource
     private BizMemberDao memberDao;
 
+    @Resource
+    private EntityManager entityManager;
+
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     @Override
     public BizMember findByOpenidAndStatus(String openid, String status){
 
@@ -48,7 +57,7 @@ public class BizMemberServiceImpl implements BizMemberService {
 
         CommonQuery commonQuery = new CommonQuery(params);
         Pageable pageable = PageRequest.of(commonQuery.getCurrent() - 1, commonQuery.getSize(),
-                Sort.by(Sort.Direction.ASC, "createTime"));
+                Sort.by(Sort.Direction.DESC, "createTime"));
         Specification<BizMember> specification = (root, criteriaQuery, criteriaBuilder) -> {
             //增加筛选条件
             // 房间名
@@ -62,6 +71,8 @@ public class BizMemberServiceImpl implements BizMemberService {
             if (!StringUtils.isEmpty(commonQuery.get("checktype"))) {
                 predicate.getExpressions().add(criteriaBuilder.notEqual(root.get("userLevel"), "0"));
             }
+            predicate.getExpressions().add(criteriaBuilder.equal(root.get("status"), "-1"));
+
             return predicate;
         };
         return memberDao.findAll(specification, pageable);
@@ -134,7 +145,44 @@ public class BizMemberServiceImpl implements BizMemberService {
         if (!StringUtil.isNull(params.get("status"))) {
             bizMember.setStatus(StringUtil.getCheckString(params.get("status")));
         }
+        if (!StringUtil.isNull(params.get("remark"))) {
+            bizMember.setRemark(StringUtil.getCheckString(params.get("remark")));
+        }
         memberDao.save(bizMember);
         return CommonResult.ok(bizMember);
+    }
+
+    @Override
+    public CommonResult updateStatus(Map<String, Object> params){
+
+        int id = StringUtil.getCheckInteger(params.get("id"));
+        String status = StringUtil.getCheckString(params.get("status"));
+        memberDao.updateByStatus(id,status);
+        return CommonResult.ok();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public void exportData(ScrollResultsHandler<BizMemberVO> scrollResultsHandler) {
+
+        List<BizMember> all = memberDao.findAll();
+        all.stream().forEach((entity) -> {
+
+            BizMemberVO bizMember = BizMemberVO.builder()
+                    .name(entity.getName())
+                    .orderNo(entity.getOrderNo())
+                    .gender(entity.getGender())
+                    .age(entity.getAge())
+                    .startDate(entity.getStartDate())
+                    .endDate(entity.getEndDate())
+                    .mobile(entity.getMobile())
+                    .userLevel(entity.getUserLevel())
+                    .remark(entity.getRemark())
+                    .build();
+            scrollResultsHandler.handle(bizMember);
+
+            //对象被session持有，调用detach方法释放内存
+            entityManager.detach(entity);
+        });
     }
 }

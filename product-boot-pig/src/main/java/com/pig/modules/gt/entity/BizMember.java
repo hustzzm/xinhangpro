@@ -113,10 +113,16 @@ public class BizMember extends AbstractBaseTimeEntity implements Serializable {
     /**
      * 会员到期时间
      */
+    private String startDate;
+    /**
+     * 会员到期时间
+     */
     private String endDate;
     /**
      * 状态，-1可用,1拉黑，0作废
      */
     private String status = "-1";
+
+    private String remark;
 }
 

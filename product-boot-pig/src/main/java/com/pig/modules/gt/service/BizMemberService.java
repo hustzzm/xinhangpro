@@ -1,8 +1,8 @@
 package com.pig.modules.gt.service;
 
 import com.pig.basic.util.CommonResult;
-import com.pig.modules.gt.entity.BizCompany;
 import com.pig.modules.gt.entity.BizMember;
+import com.pig.modules.gt.entity.BizMemberVO;
 import org.springframework.data.domain.Page;
 
 import java.util.Map;
@@ -21,4 +21,8 @@ public interface BizMemberService {
     Page<BizMember> page(Map<String, Object> params);
 
     CommonResult insertOrUpdate(Map<String, Object> params);
+
+    CommonResult updateStatus(Map<String, Object> params);
+
+    void exportData(ScrollResultsHandler<BizMemberVO> scrollResultsHandler);
 }

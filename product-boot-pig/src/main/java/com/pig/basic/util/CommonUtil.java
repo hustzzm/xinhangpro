@@ -10,13 +10,16 @@ import org.springframework.util.StringUtils;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CommonUtil {
 
+    private static SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
     /**
      * 生成随机序列号
      * @param headWord 开始字符
@@ -26,6 +29,7 @@ public class CommonUtil {
         //C + 当前日期时间(2022-05-09 16:40:32)时间戳转36位 + 3位随机数
         //例如：CBieNMJO8h  C+BieNMJ+O8h
         StringBuilder sb = new StringBuilder(headWord);
+        sb.append(sdf.format(new Date()));
         sb.append(Long.toString(System.currentTimeMillis()/1000,36))
                 .append(StringUtil.getRandomCode(3));
         return sb.toString();

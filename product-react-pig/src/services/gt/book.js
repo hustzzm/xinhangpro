@@ -10,7 +10,7 @@ export async function list(params) {
 
 export async function remove(params) {
   return request(`/api/booking/remove/${params}`, {
-    method: 'DELETE',   
+    method: 'POST',   
   });
 }
 
@@ -27,8 +27,7 @@ export async function submit(params) {
  * @returns {Promise<any>}
  */
 export async function update(params) {
-  return request(`/api/booking/update`, {
-    method: 'POST',
-    body: params
+  return request(`/api/booking/finished/${params}`, {
+    method: 'POST'  
   });
 }

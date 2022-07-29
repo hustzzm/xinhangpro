@@ -37,7 +37,7 @@ public class BizCompanyServiceImpl implements BizCompanyService {
         //注意点：pageNo 是从0开始的，pageSize是当前页查询个数
         CommonQuery commonQuery = new CommonQuery(params);
         Pageable pageable = PageRequest.of(commonQuery.getCurrent() - 1, commonQuery.getSize(),
-                Sort.by(Sort.Direction.ASC, "createTime"));
+                Sort.by(Sort.Direction.DESC, "createTime"));
         Specification<BizCompany> specification = (root, criteriaQuery, criteriaBuilder) -> {
             //增加筛选条件
             // 房间名
@@ -45,6 +45,8 @@ public class BizCompanyServiceImpl implements BizCompanyService {
             if (!StringUtils.isEmpty(commonQuery.get("compname"))) {
                 predicate.getExpressions().add(criteriaBuilder.like(root.get("compname"), "%" + commonQuery.get("compname") + "%"));
             }
+            //status =-1为可用
+            predicate.getExpressions().add(criteriaBuilder.equal(root.get("status"), "-1"));
             return predicate;
         };
         return bizCompanyDao.findAll(specification, pageable);

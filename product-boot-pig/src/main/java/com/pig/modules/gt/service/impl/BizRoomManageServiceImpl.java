@@ -31,7 +31,7 @@ public class BizRoomManageServiceImpl implements BizRoomManageService {
         //注意点：pageNo 是从0开始的，pageSize是当前页查询个数
         CommonQuery commonQuery = new CommonQuery(params);
         Pageable pageable = PageRequest.of(commonQuery.getCurrent() - 1, commonQuery.getSize(),
-                Sort.by(Sort.Direction.ASC, "createTime"));
+                Sort.by(Sort.Direction.DESC, "createTime"));
         Specification<BizRoomManage> specification = (root, criteriaQuery, criteriaBuilder) -> {
             //增加筛选条件
             Predicate predicate = criteriaBuilder.conjunction();
@@ -42,6 +42,8 @@ public class BizRoomManageServiceImpl implements BizRoomManageService {
             if (!StringUtils.isEmpty(commonQuery.get("roomType"))) {
                 predicate.getExpressions().add(criteriaBuilder.like(root.get("roomType"), "%" + commonQuery.get("roomType") + "%"));
             }
+            //status =-1为可用
+            predicate.getExpressions().add(criteriaBuilder.equal(root.get("status"), "-1"));
             return predicate;
         };
         return roomManageDao.findAll(specification, pageable);

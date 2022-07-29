@@ -30,8 +30,8 @@ public interface BizBookingDao extends JpaRepository<BizBooking, Integer> {
      * 查询当前已预约的记录
      * @return
      */
-    @Query(value ="select * from biz_booking where room_id=:roomId and book_date>=:bookDate and (book_status ='1' or book_status='3') and status='-1'", nativeQuery = true)
-    List<BizBooking> querylistallbybookStatus(@Param("bookDate") String bookDate,@Param("roomId") String roomId);
+    @Query(value ="select * from biz_booking where room_code=:roomCode and book_date>=:bookDate and (book_status ='1' or book_status='3') and status='-1'", nativeQuery = true)
+    List<BizBooking> querylistallbybookStatus(@Param("bookDate") String bookDate,@Param("roomCode") String roomId);
 
     /**
      * 查询当天预约、消费的记录
@@ -57,12 +57,17 @@ public interface BizBookingDao extends JpaRepository<BizBooking, Integer> {
 
     @Transactional(rollbackFor = Exception.class)
     @Modifying
-    @Query("update BizBooking set bookStatus = '3' where id =:id")
-    void updateBookStatusById(@Param("id") Integer id);
+    @Query("update BizBooking set status = '0' where id =:id")
+    void disableStatusById(@Param("id") Integer id);
 
     @Transactional(rollbackFor = Exception.class)
     @Modifying
     @Query("update BizBooking set bookStatus = '5' where openid =:openid and booksNo = :booksNo")
     void cancel(@Param("openid") String openid, @Param("booksNo") String booksNo);
+
+    @Transactional(rollbackFor = Exception.class)
+    @Modifying
+    @Query("update BizBooking set bookStatus = '3' where id =:id")
+    void updateBookStatusById(@Param("id") Integer id);
 }
 

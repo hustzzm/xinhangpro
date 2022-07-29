@@ -54,7 +54,7 @@ public class BizOrderServiceImpl implements BizOrderService {
         //分页，以及排序方式
         //注意点：pageNo 是从0开始的，pageSize是当前页查询个数
         CommonQuery commonQuery = new CommonQuery(params);
-        Pageable pageable = PageRequest.of(commonQuery.getCurrent() - 1, commonQuery.getSize(), Sort.by(Sort.Direction.ASC, "createTime"));
+        Pageable pageable = PageRequest.of(commonQuery.getCurrent() - 1, commonQuery.getSize(), Sort.by(Sort.Direction.DESC, "createTime"));
         Specification<BizOrder> specification = getBizOrderSpecification(commonQuery);
 
         return orderDao.findAll(specification, pageable);
@@ -89,6 +89,8 @@ public class BizOrderServiceImpl implements BizOrderService {
             if (!StringUtils.isEmpty(commonQuery.get("endTime"))) {
                 predicate.getExpressions().add(criteriaBuilder.lessThanOrEqualTo(root.get("createTime").as(String.class), String.valueOf(commonQuery.get("endTime"))));
             }
+            //status =-1为可用
+            predicate.getExpressions().add(criteriaBuilder.equal(root.get("status"), "-1"));
             return predicate;
         };
         return specification;

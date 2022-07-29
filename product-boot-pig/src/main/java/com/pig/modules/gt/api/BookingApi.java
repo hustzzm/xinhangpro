@@ -45,8 +45,8 @@ public class BookingApi {
     @GetMapping("/existbook")
     public CommonResult existbook(@RequestParam Map<String, Object> params) {
 
-        String roomId = params.get("roomId").toString();
-        List<BizBooking> list = bookingService.getAllByBookAfterBookDate(roomId);
+        String roomCode = params.get("roomCode").toString();
+        List<BizBooking> list = bookingService.getAllByBookAfterBookDate(roomCode);
         return CommonResult.ok(list);
 
     }

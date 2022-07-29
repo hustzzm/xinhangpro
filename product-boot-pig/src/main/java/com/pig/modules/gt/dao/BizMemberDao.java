@@ -28,5 +28,10 @@ public interface BizMemberDao extends JpaRepository<BizMember, Integer> {
     @Modifying
     @Query("update BizMember set orderNo = :orderNo where openid = :openId ")
     void updateOrderNoByOpenId(@Param("openId") String openId, @Param("orderNo") String orderNo);
+
+    @Transactional(rollbackFor = Exception.class)
+    @Modifying
+    @Query("update BizMember set status = :status where id = :id ")
+    void updateByStatus(@Param("id") Integer id, @Param("status") String status);
 }
 

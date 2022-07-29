@@ -33,6 +33,7 @@ import {
 import {
     BOOKINFO_LIST,  
     BOOKINFO_REMOVE,
+    BOOKINFO_UPDATE,
 } from '@/actions/gt/book';
 import { ROOMTYPE_DICT} from "../../actions/dictionary";
 
@@ -96,7 +97,7 @@ class bookindex extends PureComponent {
      */
     resetSelectRow = () => {
         const {
-            order: { data },
+            book: { data },
         } = this.props;
         const { selectedRow } = this.state;
 
@@ -180,6 +181,37 @@ class bookindex extends PureComponent {
             onOk() {
                 
                 dispatch(BOOKINFO_REMOVE(record.id)).then(result => {
+                  
+                    if (result.success) {
+                        message.success('操作成功！');
+                        that.handleSearch({});                           
+                    }
+                })
+            },
+            onCancel() {
+                return false;
+            },
+        });
+       
+    }
+
+    //删除模块
+    dofinish = (record) => {
+        const {
+            dispatch,
+            dictionary: {  },
+        } = this.props;
+        const that = this;
+
+        Modal.confirm({
+            title: '确认提示',
+            content: '确认执行删除操作吗?',
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk() {
+                
+                dispatch(BOOKINFO_UPDATE(record.id)).then(result => {
                   
                     if (result.success) {
                         message.success('操作成功！');
@@ -317,10 +349,10 @@ class bookindex extends PureComponent {
             title: '预订时间',
             dataIndex: 'bookTimesText',            
             flex:0.2,
-            render: (text, record, index) => {
+            // render: (text, record, index) => {
                      
-                return record.bookDate + ' ' + text;
-             }
+            //     return record.bookDate + ' ' + text;
+            //  }
           },
           {
             title: '会员等级',
@@ -356,10 +388,18 @@ class bookindex extends PureComponent {
             width:320,
             render:(text, record, index) => {
     
-                return <Space>  
-                <a onClick={() => this.doremove(record)} >完成</a>            
-                <a onClick={() => this.doremove(record)} >删除</a>
-            </Space>;
+                if(record.bookStatus == '1'){
+
+                    return <Space>  
+                    <a onClick={() => this.dofinish(record)} >完成</a>            
+                    <a onClick={() => this.doremove(record)} >删除</a>
+                </Space>;
+                }else{
+                    return <Space>                             
+                    <a onClick={() => this.doremove(record)} >删除</a>
+                </Space>;
+                }
+               
             }
           },      
         ];
@@ -372,7 +412,7 @@ class bookindex extends PureComponent {
                     code={code}
                     form={form}
                     onSearch={this.handleSearch}
-                    renderLeftButton={this.renderLeftButton}
+                    // renderLeftButton={this.renderLeftButton}
                     renderSearchForm={this.renderSearchForm}
                     loading={loading}
                     data={data}

@@ -23,7 +23,7 @@ public interface BizBookingService {
      * 查询所有已预约的记录
      * @return
      */
-    List<BizBooking> getAllByBookAfterBookDate(String roomId);
+    List<BizBooking> getAllByBookAfterBookDate(String roomCode);
     /**
      * 判断是否可预约，可则保存预约记录
      * @param params

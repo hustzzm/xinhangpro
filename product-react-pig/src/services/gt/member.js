@@ -9,8 +9,9 @@ export async function list(params) {
 
 
 export async function remove(params) {
-  return request(`/api/bizMember/remove/${params}`, {
-    method: 'DELETE',   
+  return request(`/api/bizMember/updatestatus`, {
+    method: 'POST',  
+    body: params 
   });
 }
 
@@ -25,3 +26,4 @@ export async function update(params) {
     body: params
   });
 }
+

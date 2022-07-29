@@ -53,7 +53,7 @@ public class BizBookingServiceImpl implements BizBookingService {
         //注意点：pageNo 是从0开始的，pageSize是当前页查询个数
         CommonQuery commonQuery = new CommonQuery(params);
         Pageable pageable = PageRequest.of(commonQuery.getCurrent() - 1, commonQuery.getSize(),
-                Sort.by(Sort.Direction.ASC, "createTime"));
+                Sort.by(Sort.Direction.DESC, "createTime"));
         Specification<BizBooking> specification = (root, criteriaQuery, criteriaBuilder) -> {
             // 封装查询条件
             List<Predicate> list = new ArrayList<>();
@@ -109,6 +109,8 @@ public class BizBookingServiceImpl implements BizBookingService {
                 }
             }
 
+            //status =-1为可用
+            predicate.getExpressions().add(criteriaBuilder.equal(root.get("status"), "-1"));
             list.add(predicate);
 
             Predicate[] p = new Predicate[list.size()];
@@ -195,10 +197,10 @@ public class BizBookingServiceImpl implements BizBookingService {
     }
 
     @Override
-    public List<BizBooking> getAllByBookAfterBookDate(String roomId){
+    public List<BizBooking> getAllByBookAfterBookDate(String roomCode){
 
         String bookDate = sdf.format(new Date());
-        List<BizBooking> list = bookingDao.querylistallbybookStatus(bookDate,roomId);
+        List<BizBooking> list = bookingDao.querylistallbybookStatus(bookDate,roomCode);
         return list;
     }
     /**
