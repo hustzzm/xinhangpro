@@ -48,11 +48,5 @@ spring:
       max-file-size: 300MB
 logging:
   config: classpath:logback-spring.xml
-#  level:
-#    com:
-#      berryproduct:
-#        modules:
-#          wes:
-#            mapper: debug
 api:
   certPath: /home/publish/cert/apiclient_cert.p12

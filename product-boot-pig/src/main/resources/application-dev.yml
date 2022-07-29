@@ -42,16 +42,16 @@ spring:
     name: test
   servlet:
     multipart:
-      max-request-size: 1800MB
-      max-file-size: 300MB
+      max-request-size: 10MB
+      max-file-size: 5MB
 logging:
   config: classpath:logback-local-spring.xml
-  level:
-    com:
-      berryproduct:
-        modules:
-          wes:
-            mapper: debug
+#  level:
+#    com:
+#      berryproduct:
+#        modules:
+#          wes:
+#            mapper: debug
 
 api:
   certPath: D:\Program Files\Downloads\WXCertUtil\cert\1628655062_20220717_cert
