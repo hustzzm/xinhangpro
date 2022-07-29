@@ -35,7 +35,7 @@ export default class GlobalHeader extends PureComponent {
           <LegacyIcon type={collapsed ? 'menu-unfold' : 'menu-fold'} />
         </span>
        <span >
-       test系统
+       信航业务管理系统
          </span>
         <RightContent {...this.props} />
       </div>
