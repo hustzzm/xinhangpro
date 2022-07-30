@@ -68,6 +68,15 @@ public class BizMemberServiceImpl implements BizMemberService {
             if (!StringUtils.isEmpty(commonQuery.get("userLevel"))) {
                 predicate.getExpressions().add(criteriaBuilder.equal(root.get("userLevel"), commonQuery.get("userLevel")));
             }
+
+            if (!StringUtils.isEmpty(commonQuery.get("startDateStart"))) {
+                //起始日期 >= startDateStart
+//                predicate.getExpressions().add(criteriaBuilder.ge(root.get("startDate"), commonQuery.get("startDateStart")));
+            }
+            if (!StringUtils.isEmpty(commonQuery.get("startDateEnd"))) {
+                //起始日期 <= startDateEnd
+//                predicate.getExpressions().add(criteriaBuilder.le(root.get("startDate"), commonQuery.get("startDateEnd")));
+            }
             if (!StringUtils.isEmpty(commonQuery.get("checktype"))) {
                 predicate.getExpressions().add(criteriaBuilder.notEqual(root.get("userLevel"), "0"));
             }
@@ -171,12 +180,12 @@ public class BizMemberServiceImpl implements BizMemberService {
             BizMemberVO bizMember = BizMemberVO.builder()
                     .name(entity.getName())
                     .orderNo(entity.getOrderNo())
-                    .gender(entity.getGender())
+                    .gender(getGenderText(entity.getGender()))
                     .age(entity.getAge())
                     .startDate(entity.getStartDate())
                     .endDate(entity.getEndDate())
                     .mobile(entity.getMobile())
-                    .userLevel(entity.getUserLevel())
+                    .userLevel(getUserLevelText(entity.getUserLevel()))
                     .remark(entity.getRemark())
                     .build();
             scrollResultsHandler.handle(bizMember);
@@ -184,5 +193,35 @@ public class BizMemberServiceImpl implements BizMemberService {
             //对象被session持有，调用detach方法释放内存
             entityManager.detach(entity);
         });
+    }
+
+    private String getGenderText(String gender){
+        String genderText = "未知";
+        switch (gender){
+            case "1":
+                genderText = "男";
+                break;
+            case "2":
+                genderText = "女";
+                break;
+            default:
+                break;
+        }
+        return genderText;
+    }
+
+    private String getUserLevelText(String userLevel){
+        String resultText = "非会员";
+        switch (userLevel){
+            case "1":
+                resultText = "普通会员";
+                break;
+            case "2":
+                resultText = "钻石会员";
+                break;
+            default:
+                break;
+        }
+        return resultText;
     }
 }

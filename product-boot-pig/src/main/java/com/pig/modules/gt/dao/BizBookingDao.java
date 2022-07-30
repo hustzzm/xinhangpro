@@ -43,12 +43,12 @@ public interface BizBookingDao extends JpaRepository<BizBooking, Integer> {
 
 
     /** 针对含有9的记录 **/
-    @Query(value ="select count(1) from biz_booking where book_date =:bookDate and (book_times =:bookTimes or book_times like CONCAT(:bookTimes2,'%'))) and (book_status='1' or book_status='3') and status='-1'", nativeQuery = true)
-    int querylistByTime(@Param("bookDate") String bookDate, @Param("bookTimes") String bookTimes,@Param("bookTimes2") String bookTimes2);
+    @Query(value ="select count(1) from biz_booking where roomCode =:roomCode and book_date =:bookDate and (book_times =:bookTimes or book_times like CONCAT(:bookTimes2,'%'))) and (book_status='1' or book_status='3') and status='-1'", nativeQuery = true)
+    int querylistByTime(@Param("roomCode") String roomCode,@Param("bookDate") String bookDate, @Param("bookTimes") String bookTimes,@Param("bookTimes2") String bookTimes2);
 
     /** 针对不含有9的记录 **/
-    @Query(value ="select count(1) from biz_booking where book_date =:bookDate and (book_times like CONCAT('%',:bookTimes,'%')) and (book_status='1' or book_status='3') and status='-1'", nativeQuery = true)
-    int querylistByNormalTime(@Param("bookDate") String bookDate,@Param("bookTimes") String bookTimes);
+    @Query(value ="select count(1) from biz_booking where roomCode = :roomCode and book_date =:bookDate and (book_times like CONCAT('%',:bookTimes,'%')) and (book_status='1' or book_status='3') and status='-1'", nativeQuery = true)
+    int querylistByNormalTime(@Param("roomCode") String roomCode,@Param("bookDate") String bookDate,@Param("bookTimes") String bookTimes);
 
     /**
      * 当前日期已过期的记录，用于自动将状态置为消费完成

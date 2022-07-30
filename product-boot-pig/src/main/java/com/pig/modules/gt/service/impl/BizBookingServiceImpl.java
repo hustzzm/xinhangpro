@@ -213,6 +213,9 @@ public class BizBookingServiceImpl implements BizBookingService {
 
         // 获取会员信息
         try {
+            // 根据房间编号获取房间信息
+            String roomCode = StringUtil.getCheckString(params.get("roomCode"));
+
             String openid = StringUtil.getCheckString(params.get("openid"));
             BizMember member = memberDao.findByOpenidAndStatus(openid, "-1");
             if (null == member) {
@@ -249,12 +252,12 @@ public class BizBookingServiceImpl implements BizBookingService {
 
                 if("9".equals(bookTime)){
 
-                    iRecord = bookingDao.querylistByTime(sdf.format(bookDate),bookTime,"9,");
+                    iRecord = bookingDao.querylistByTime(roomCode,sdf.format(bookDate),bookTime,"9,");
                     if(iRecord > 0){
                         return CommonResult.failed(bookTime + "点已被预约,请重新选择时间段");
                     }
                 }else{
-                    iRecord = bookingDao.querylistByNormalTime(sdf.format(bookDate),bookTime);
+                    iRecord = bookingDao.querylistByNormalTime(roomCode,sdf.format(bookDate),bookTime);
                     if(iRecord > 0){
                         return CommonResult.failed(bookTime + "点已被预约,请重新选择时间段");
                     }
@@ -298,8 +301,7 @@ public class BizBookingServiceImpl implements BizBookingService {
                 }
             }
 
-            // 根据房间编号获取房间信息
-            String roomCode = StringUtil.getCheckString(params.get("roomCode"));
+
             BizRoomManage roomManage = roomManageDao.findByRoomCode(roomCode);
             // save to db
             BizBooking bizBooking = null;
