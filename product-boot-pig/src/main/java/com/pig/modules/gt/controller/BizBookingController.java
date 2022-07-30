@@ -2,6 +2,7 @@ package com.pig.modules.gt.controller;
 
 import com.pig.basic.util.CommonResult;
 import com.pig.basic.util.StringUtil;
+import com.pig.modules.core.BusinessUtil;
 import com.pig.modules.gt.dao.BizBookingDao;
 import com.pig.modules.gt.entity.BizBooking;
 import com.pig.modules.gt.service.BizBookingService;
@@ -47,7 +48,7 @@ public class BizBookingController {
 
                String bookTimes = bookingPage.getContent().get(i).getBookTimes();
                String bookDate = sdf.format(bookingPage.getContent().get(i).getBookDate());
-               bookingPage.getContent().get(i).setBookTimesText(bookDate + " " + getBookTimeText(bookTimes));
+               bookingPage.getContent().get(i).setBookTimesText(bookDate + " " + BusinessUtil.getBookTimeText(bookTimes));
            }
        }
 
@@ -56,27 +57,7 @@ public class BizBookingController {
         return CommonResult.ok(bookingPage);
     }
 
-    private String getBookTimeText(String bookTimes){
 
-        String result = "";
-        if(StringUtil.isNull(bookTimes)){
-            return result;
-        }
-
-        String[] arr = bookTimes.split(",");
-        if(arr.length == 1){
-            int itmpval = StringUtil.getCheckInteger(bookTimes);
-
-            result = String.valueOf(itmpval) + ":00-" + String.valueOf(itmpval+1) + ":00";
-        }else{
-            int itmpval = StringUtil.getCheckInteger(arr[0]);
-            int itmpval2 = StringUtil.getCheckInteger(arr[arr.length -1]);
-
-            result = String.valueOf(itmpval) + ":00-" + String.valueOf(itmpval2 + 1) + ":00";
-        }
-
-        return result;
-    }
 
     @PostMapping(value = "/finished/{id}")
     public CommonResult finished(@PathVariable Integer id) {

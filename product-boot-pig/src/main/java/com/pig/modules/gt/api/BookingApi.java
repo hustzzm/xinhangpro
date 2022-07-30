@@ -2,6 +2,7 @@ package com.pig.modules.gt.api;
 
 import com.pig.basic.util.CommonResult;
 import com.pig.basic.util.StringUtil;
+import com.pig.modules.core.BusinessUtil;
 import com.pig.modules.gt.dao.BizBookingDao;
 import com.pig.modules.gt.entity.BizBooking;
 import com.pig.modules.gt.service.BizBookingService;
@@ -70,6 +71,10 @@ public class BookingApi {
         String openid = StringUtil.getCheckString(params.get("openid"));
         String bookStatus = StringUtil.getCheckString(params.get("bookStatus"));
         List<BizBooking> bizBookingList = bookingDao.findByOpenidAndBookStatusOrderByCreateTimeDesc(openid, bookStatus);
+        for(BizBooking bizBooking : bizBookingList){
+            String bookContent = bizBooking.getBookDate() + " " + BusinessUtil.getBookTimeText(bizBooking.getBookTimes());
+            bizBooking.setBookTimesText(bookContent);
+        }
         return CommonResult.ok(bizBookingList);
 
     }

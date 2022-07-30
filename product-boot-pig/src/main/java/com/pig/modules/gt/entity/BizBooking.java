@@ -65,6 +65,7 @@ public class BizBooking extends AbstractBaseTimeEntity implements Serializable {
      * 房间编号
      */
     private String roomCode;
+    private String roomLogo;
     /**
      * 预订日期
      */

@@ -136,40 +136,45 @@ public class BizOrderServiceImpl implements BizOrderService {
         }
         // 开始逻辑处理
         String openId = StringUtil.getCheckString(params.get("openId"));
-        BizOrder bizOrder = orderDao.findByOpenId(openId);
+        BizOrder bizOrder = orderDao.findByOpenIdAndNoPay(openId);
         // 如果订单已存在
-        if (null != bizOrder) {
+        if (null != bizOrder && StringUtil.isNull(bizOrder.getOrderStatus())) {
             // 1 检查是否有未处理的订单，如果有则返回，不执行添加操作；
-            if (bizOrder.getOrderStatus().equalsIgnoreCase(HomeEnum.CommonEnum.TO_BE_PAID.getKey())) {
-                return CommonResult.ok("已有未付款的订单！");
-            }
-            // 2 检查是否有已经购买且未过期的订单，如果有则返回，不执行添加操作；
-            if (null != bizOrder.getOrderEnd()) {
-                Date now = new Date();
-                Date orderEnd = bizOrder.getOrderEnd();
-                // 如果当前时间小于过期时间，则不添加
-                if (now.compareTo(orderEnd) < 0) {
-                    return CommonResult.ok("当前会员未过期！");
-                }
-            }
-        } else {
-            bizOrder = new BizOrder();
-            // 新增订单
-            String orderNo = UUID.randomUUID().toString(); // 订单号
-            String orderType = StringUtil.getCheckString(params.get("orderType"));
-            Double orderPrice = StringUtil.getCheckDouble(params.get("orderPrice"));
-            String userLevel = StringUtil.getCheckString(params.get("userLevel"));
+//            if (bizOrder.getOrderStatus().equalsIgnoreCase(HomeEnum.CommonEnum.TO_BE_PAID.getKey())) {
+//
+//            }
+            return CommonResult.failed("已有未付款的订单，请进入我的订单中进行付款操作！");
 
-            bizOrder.setOpenId(openId);
-            bizOrder.setOrderNo(orderNo);
-            bizOrder.setOrderType(orderType);
-            bizOrder.setOrderPrice(orderPrice);
-            bizOrder.setUserLevel(userLevel);
-
-            orderDao.save(bizOrder);
-            // orderNo更新至member表中
-            bizMemberDao.updateOrderNoByOpenId(openId, orderNo);
         }
+        String dateNow = sdf.format(new Date());
+        bizOrder = orderDao.findByOpenIdAndNoExpired(openId, dateNow);
+        // 2 检查是否有已经购买且未过期的订单，如果有则返回，不执行添加操作；
+        if (bizOrder != null && null != bizOrder.getOrderEnd()) {
+//            Date now = new Date();
+//            Date orderEnd = bizOrder.getOrderEnd();
+//            // 如果当前时间小于过期时间，则不添加
+//            if (now.compareTo(orderEnd) < 0) {
+//
+//            }
+            return CommonResult.failed("当前会员未过期，无需重复购买！");
+        }
+
+        bizOrder = new BizOrder();
+        // 新增订单
+        String orderNo = UUID.randomUUID().toString(); // 订单号
+        String orderType = StringUtil.getCheckString(params.get("orderType"));
+        Double orderPrice = StringUtil.getCheckDouble(params.get("orderPrice"));
+        String userLevel = StringUtil.getCheckString(params.get("userLevel"));
+
+        bizOrder.setOpenId(openId);
+        bizOrder.setOrderNo(orderNo);
+        bizOrder.setOrderType(orderType);
+        bizOrder.setOrderPrice(orderPrice);
+        bizOrder.setUserLevel(userLevel);
+
+        orderDao.save(bizOrder);
+        // orderNo更新至member表中
+        bizMemberDao.updateOrderNoByOpenId(openId, orderNo);
         return CommonResult.ok(bizOrder);
     }
 
@@ -184,13 +189,13 @@ public class BizOrderServiceImpl implements BizOrderService {
             return "openId不能为空！";
         }
         if (StringUtil.isNull(params.get("orderType"))) {
-            return "orderType不能为空！";
+            return "会员类型不能为空！";
         }
         if (StringUtil.isNull(params.get("orderPrice"))) {
-            return "orderPrice不能为空！";
+            return "付款金额不能为空！";
         }
         if (StringUtil.isNull(params.get("userLevel"))) {
-            return "userLevel不能为空！";
+            return "会员等级不能为空！";
         }
         return msg;
     }

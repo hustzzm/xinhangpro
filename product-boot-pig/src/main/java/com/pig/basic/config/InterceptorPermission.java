@@ -31,6 +31,10 @@ public class InterceptorPermission implements HandlerInterceptor {
             if (request.getRequestURI().startsWith("/wx")) {
                 return true;
             }
+            // 过滤微信api接口的认证
+            if (request.getRequestURI().startsWith("/static")) {
+                return true;
+            }
             User user = (User) request.getSession().getAttribute("currentUser");
             if (user == null) {
                 response.setStatus(999);
