@@ -221,7 +221,8 @@ class orderindex extends PureComponent {
            
             <Button type="primary" onClick={this.handleexport} icon={<UploadOutlined />}>
                 导出Excel
-            </Button>               
+            </Button>     
+            <Space>当前订单总金额: </Space>          
         </div>
     );
 

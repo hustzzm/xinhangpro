@@ -130,23 +130,21 @@ class Companyedit extends PureComponent {
         } = this.state;
         const formItemLayout = {
             labelCol: {
-              
-                width:200
-            },
-            wrapperCol: {
-                // xs: { span: 24 },
-                // sm: { span: 12 },
-                // md: { span: 10 },
-            },
-        };
-
-        const formAllItemLayout = {
-            labelCol: {
                 span: 3,
                 //sm: { span: 2 },
             },
             wrapperCol: {
                 span: 21,
+            },
+        };
+
+        const formAllItemLayout = {
+            labelCol: {
+                span:6,
+                //sm: { span: 2 },
+            },
+            wrapperCol: {
+                span: 18,
             },
         };
 
@@ -164,12 +162,12 @@ class Companyedit extends PureComponent {
       
         return (
             <Panel back="/company/list" action={action}>
-                <Form ref={this.formRef}>
+                <Form {...formAllItemLayout} ref={this.formRef}>
                     <Card title="" style={{ marginTop: '16px', padding: '8px', }} bordered={false}>
 
                         <Row gutter={32}>
                             <Col span={12}>
-                                <FormItem {...formItemLayout} label="商家名称" >
+                                <FormItem label="商家名称" >
                                     {getFieldDecorator('compname', {
                                          initialValue: detail.compname,
                                         rules: [
@@ -183,7 +181,7 @@ class Companyedit extends PureComponent {
                                 </FormItem>
                             </Col>
                             <Col span={12}>
-                                <FormItem {...formItemLayout} label="商家类别" >
+                                <FormItem label="商家类别" >
                                 {getFieldDecorator('comptype', {
                                     initialValue: detail.comptype,
                                     rules: [
@@ -204,7 +202,7 @@ class Companyedit extends PureComponent {
 
                             <Row gutter={32}>
                             <Col span={12}>
-                                <FormItem {...formItemLayout} label="联系电话">
+                                <FormItem  label="联系电话">
                                     {getFieldDecorator('telphone', {
                                         initialValue: detail.telphone,
                                         rules: [
@@ -219,7 +217,7 @@ class Companyedit extends PureComponent {
                                 </FormItem>
                             </Col>
                             <Col span={12}>
-                            <FormItem {...formItemLayout} label="折扣      " >
+                            <FormItem label="折扣      " >
                                     {getFieldDecorator('shopfee', {
                                         initialValue: detail.shopfee,
                                         rules: [

@@ -17,7 +17,7 @@ import {
     Tag,
     Upload,
     Space,
-    Progress,
+    Progress,  
     message, Tooltip
 } from 'antd';
 import {
@@ -46,7 +46,15 @@ import Panel from "../../components/Panel";
 import styleTester from "../Wes/index.less";
 import { getCurrentUser } from '../../utils/authority';
 
+import {
+    getBeginDateTime,
+    getEndDateTime,
+    getDateBeginStr,
+    getDateEndStr
+} from "../../utils/timeUtils";
+
 import moment from "moment";
+import { Label } from 'bizcharts';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -72,6 +80,9 @@ class memberindex extends PureComponent {
         params: {},             //查询条件参数       
         sampleDetail: {},     
         selectedRows: [],
+        beginDateTime: "",
+        endDateTime: "",
+        memberCount:0,
         // selectedRowKeys: [],  //选中行主键
         onReset: () => {
         },
@@ -115,6 +126,13 @@ class memberindex extends PureComponent {
         }
     }
 
+    //时间插件值变化
+    timeChange = (date, dateString) => {
+        console.log(dateString);
+        this.setState({ beginDateTime: dateString[0], endDateTime: dateString[1]});
+        // this.setState({ beginDateTime: getDateBeginStr(dateString[0]), endDateTime: getDateEndStr(dateString[1]) });
+    }
+
     // ============ 查询 ===============
     handleSearch = params => {
         // 清空选中状态
@@ -123,14 +141,13 @@ class memberindex extends PureComponent {
         
         this.setState({ params: params });
         const payload = {
-            ...params
-            // getblood_date_start: this.state.beginDateTime,
-            // getblood_date_end: this.state.endDateTime,
-          
-        };
+            ...params,
+            startDateStart: this.state.beginDateTime,
+            startDateEnd: this.state.endDateTime,           
+        };        
         // delete payload.getbloodDate
-        // delete payload.startDate
-      
+        delete payload.startDate
+        debugger
         dispatch(MEMBERINFO_LIST(payload)).then(() => this.resetSelectRow());
 
     };
@@ -283,28 +300,7 @@ class memberindex extends PureComponent {
        
     }
 
-    
-     //加入绑定，解除绑定
-     dotestRole = (record,roleid) => {
-        // const { dispatch } = this.props
-        
-        // const subparams = {};
-        // const that = this;
-        // subparams.id = record.id;
-        // subparams.roleId = roleid;    
-        //  //保存操作
-        //  dispatch(GTROLEINFO_UPDATE(subparams)).then(result => {
-            
-        //     if (result.success) {
-        //         message.success('操作成功！');
-        //         that.handleSearch({});      
-                
-        //     } else {
-        //         message.error('操作失败！');
-        //         return false;
-        //     }
-        // });
-    }
+
 
 
      // 检测类型
@@ -317,11 +313,14 @@ class memberindex extends PureComponent {
       )
   }
     renderLeftButton = () => (
+
         <div>
            
            <Button type="primary" onClick={this.handleexport} icon={<UploadOutlined />}>
                 导出Excel
-            </Button>                  
+            </Button>   
+            <Space>当前会员总数:{this.state.memberCount}</Space>
+                       
         </div>
     );
 
@@ -339,6 +338,9 @@ class memberindex extends PureComponent {
                         </FormItem>
                         <FormItem label="会员类型">
                         {getFieldDecorator('userLevel')(this.renderSearchSelect())}
+                        </FormItem>
+                        <FormItem label="入会日期" >
+                            {getFieldDecorator('startDate')(<RangePicker onChange={this.timeChange} className={styleTester.width230} />)}
                         </FormItem>
                     </Col>
 
@@ -375,21 +377,22 @@ class memberindex extends PureComponent {
     render() {
         const code = 'member';
         const currentUser = getCurrentUser();
-        const {
-            editvisible,         
-            confirmLoading,        
-            selectedRow,         
-            detailvisible,         
-        } = this.state;
-        const that = this;
+
+        
         const {
             form,
             loading,
             dictionary: { roomtypeDicts },
             member: { data },
         } = this.props;
-
+        const {
+            editvisible,         
+            confirmLoading,        
+            selectedRow,         
+            detailvisible,                
+        } = this.state;
     
+        this.setState({memberCount:data.pagination.total})
         const formItemLayout = {
             labelCol: {
                 xs: { span: 24 },
@@ -421,14 +424,16 @@ class memberindex extends PureComponent {
             title: '会员卡号',
             dataIndex: 'orderNo',  
             flex:0.1,
-            render:(text,record) =>{
-                return <a onClick={() => this.dodetail(record)} >{text}</a>
-            }
+           
           },
           {
             title: '入会时间',
-            dataIndex: 'registerTime',  
+            dataIndex: 'startDate',  
             flex:0.1,
+            render:(text,record) =>{
+                return text && text.length > 0 ? moment(text).format('YYYY-MM-DD') : '';
+            }
+
           },
           {
             title: '年龄',

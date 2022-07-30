@@ -69,14 +69,17 @@ public class BizMemberServiceImpl implements BizMemberService {
                 predicate.getExpressions().add(criteriaBuilder.equal(root.get("userLevel"), commonQuery.get("userLevel")));
             }
 
+            // 开始时间
             if (!StringUtils.isEmpty(commonQuery.get("startDateStart"))) {
-                //起始日期 >= startDateStart
-//                predicate.getExpressions().add(criteriaBuilder.ge(root.get("startDate"), commonQuery.get("startDateStart")));
+                predicate.getExpressions().add(criteriaBuilder.greaterThanOrEqualTo(root.get("startDate").as(String.class),
+                        String.valueOf(commonQuery.get("startDateStart"))));
             }
+            // 结束时间
             if (!StringUtils.isEmpty(commonQuery.get("startDateEnd"))) {
-                //起始日期 <= startDateEnd
-//                predicate.getExpressions().add(criteriaBuilder.le(root.get("startDate"), commonQuery.get("startDateEnd")));
+                predicate.getExpressions().add(criteriaBuilder.lessThanOrEqualTo(root.get("startDate").as(String.class),
+                        String.valueOf(commonQuery.get("startDateEnd"))));
             }
+
             if (!StringUtils.isEmpty(commonQuery.get("checktype"))) {
                 predicate.getExpressions().add(criteriaBuilder.notEqual(root.get("userLevel"), "0"));
             }
