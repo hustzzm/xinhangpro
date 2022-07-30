@@ -33,7 +33,7 @@ public class CommonDataTask {
     /**
      * 每10分钟执行一次，预定状态更新
      */
-    @Scheduled(cron = "0 0/1 * * * ?")
+    @Scheduled(cron = "0 0/3 * * * ?")
     public void backup(){
         //获取过期的样本数据
         log.info("CommonDataTask Scheduled start ----------------");
