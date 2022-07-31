@@ -40,6 +40,18 @@ public class WxPayApi {
     }
 
     /**
+     * 统一下单，成功后会返回prepay_id
+     *
+     * @return
+     */
+    @RequestMapping(value = "/orderQuery", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult orderQuery(@RequestParam Map<String, Object> params) throws Exception {
+        log.info("orderQuery.params={}", params);
+        return wxPayService.orderQuery(params);
+    }
+
+    /**
      * 异步接收微信支付结果通知的回调地址，通知url必须为外网可访问的url
      *
      * @return

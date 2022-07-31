@@ -377,9 +377,9 @@ public class WXPay {
     public Map<String, String> orderQuery(Map<String, String> reqData, int connectTimeoutMs, int readTimeoutMs) throws Exception {
         String url;
         if (this.useSandbox) {
-            url = WXPayConstants.SANDBOX_ORDERQUERY_URL_SUFFIX;
-        } else {
             url = WXPayConstants.ORDERQUERY_URL_SUFFIX;
+        } else {
+            url = WXPayConstants.SANDBOX_ORDERQUERY_URL_SUFFIX;
         }
         String respXml = this.requestWithoutCert(url, this.fillRequestData(reqData), connectTimeoutMs, readTimeoutMs);
         return this.processResponseXml(respXml);

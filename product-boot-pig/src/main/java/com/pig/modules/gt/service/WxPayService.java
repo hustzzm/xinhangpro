@@ -7,4 +7,6 @@ import java.util.Map;
 
 public interface WxPayService {
     CommonResult unifiedOrder(@RequestParam Map<String, Object> params) throws Exception;
+
+    CommonResult orderQuery(Map<String, Object> params) throws Exception;
 }

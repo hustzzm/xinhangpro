@@ -6,8 +6,11 @@ import com.pig.basic.util.CommonResult;
 import com.pig.basic.util.CommonUtil;
 import com.pig.basic.util.StringUtil;
 import com.pig.modules.gt.constant.HomeEnum;
+import com.pig.modules.gt.dao.BizMemberDao;
 import com.pig.modules.gt.dao.BizOrderDao;
+import com.pig.modules.gt.entity.BizMember;
 import com.pig.modules.gt.entity.BizOrder;
+import com.pig.modules.gt.entity.OrderEnum;
 import com.pig.modules.gt.service.WxPayService;
 import com.pig.modules.wxpay.MyConfig;
 import com.pig.modules.wxpay.WXPay;
@@ -15,11 +18,18 @@ import com.pig.modules.wxpay.WXPayConstants;
 import com.pig.modules.wxpay.WXPayUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +43,13 @@ public class WxPayServiceImpl implements WxPayService {
     @Resource
     private BizOrderDao orderDao;
 
+    @Resource
+    private BizMemberDao memberDao;
+
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+    private DecimalFormat df = new DecimalFormat("######0.00");
+
     @Override
     public CommonResult unifiedOrder(Map<String, Object> params) throws Exception {
         // 参数检查
@@ -42,6 +59,7 @@ public class WxPayServiceImpl implements WxPayService {
         }
         // 封装请求参数
         Map<String, String> data = getData(params);
+        log.info("unifiedOrder.data={}", data);
         // 发送请求Z
         try {
             // 初始化数据
@@ -65,6 +83,94 @@ public class WxPayServiceImpl implements WxPayService {
         }
     }
 
+    @Override
+    public CommonResult orderQuery(Map<String, Object> params) throws Exception {
+        // 参数检查
+        String msg = CheckCommon.checkParams(params);
+        if (!StringUtils.isEmpty(msg)) {
+            return CommonResult.failed(msg);
+        }
+        // 封装请求参数
+        Map<String, String> data = getOrderQueryData(params);
+        log.info("orderQuery.data={}", data);
+        // 发送请求
+        try {
+            // 初始化数据
+            MyConfig config = new MyConfig();
+            WXPay wxpay = new WXPay(config);
+            Map<String, String> resp = wxpay.orderQuery(data);
+            if (resp.get("return_code").equalsIgnoreCase("FAIL")) {
+                return CommonResult.failed(resp.get("return_msg"));
+            }
+            if (resp.get("result_code").equalsIgnoreCase("FAIL")) {
+                return CommonResult.failed(resp.get("err_code_des"));
+            }
+            if (resp.get("trade_state").equals("SUCCESS")) {
+                String openid = resp.get("openid");
+                BizMember member = memberDao.findByOpenidAndStatus(openid, "-1");
+                if (ObjectUtils.isEmpty(member)) {
+                    return CommonResult.failed(resp.get("会员不存在或失效！"));
+                }
+                String outTradeNo = resp.get("out_trade_no");
+                BizOrder order = orderDao.findByOrderNo(outTradeNo);
+                if (ObjectUtils.isEmpty(order)) {
+                    return CommonResult.failed(resp.get("订单不存在！"));
+                }
+                String timeEnd = resp.get("time_end"); // 支付完成时间
+                // 当订单使用了免充值型优惠券后返回该参数，应结订单金额=订单金额-免充值优惠券金额。
+                String settlementTotalFee = resp.get("settlement_total_fee");
+
+                // 保存order表
+                order.setPayPrice(Double.valueOf(settlementTotalFee));
+                order.setPayTime(getPayTime(timeEnd));
+                order.setOrderStatus(OrderEnum.PAYMENT_RECEIVED.getCode());
+                orderDao.save(order);
+
+                // 保存member表
+                member.setOrderNo(outTradeNo);
+                String startDate = member.getStartDate();
+                if (StringUtils.isEmpty(startDate)) {
+                    startDate = sdf.format(new Date());
+                    member.setStartDate(startDate);
+                }
+                String endDate = member.getEndDate();
+                if (StringUtils.isEmpty(endDate)) {
+                    endDate = sdf.format(new Date());
+                }
+                Date orderEnd = getOrderEnd(sdf.parse(endDate), order.getOrderType());
+                member.setEndDate(sdf.format(orderEnd));
+                memberDao.save(member);
+
+                return CommonResult.ok();
+            } else {
+                return CommonResult.failed(resp.get("trade_state_desc"));
+            }
+        } catch (Exception e) {
+            log.error("unifiedOrder is exception,", e.getMessage(), e);
+            return CommonResult.failed("查询订单出现异常，" + e.getMessage());
+        }
+    }
+
+    private String getPayTime(String timeEnd) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        LocalDateTime ldt = LocalDateTime.parse(timeEnd, dtf);
+        DateTimeFormatter fa = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return ldt.format(fa);
+    }
+
+
+    private Map<String, String> getOrderQueryData(Map<String, Object> params) throws Exception {
+        Map<String, String> data = new HashMap<>();
+        String nonceStr = WXPayUtil.generateNonceStr(); // 随机字符串，与支付保持一致
+        // 商户订单号
+        // 订单编号、预定编号生成规则统一使用 newRandomSNO
+        params.put("out_trade_no", StringUtil.getCheckString(params.get("out_trade_no"))); // 后面保存db使用
+        params.put("nonce_str", nonceStr); // 后面保存db使用
+        data.put("out_trade_no", StringUtil.getCheckString(params.get("out_trade_no")));
+        data.put("nonce_str", nonceStr);
+        return data;
+    }
+
     private Map<String, String> getResultMap(Map<String, Object> params, Map<String, String> resp) throws Exception {
         Map<String, String> resultMap = new HashMap();
         Long timeStamp = System.currentTimeMillis() / 1000; // 获取时间戳
@@ -82,12 +188,58 @@ public class WxPayServiceImpl implements WxPayService {
 
     private void saveToDb(Map<String, Object> params) {
         BizOrder bizOrder = new BizOrder();
-        bizOrder.setOpenId(StringUtil.getCheckString(params.get("openid")));
+        String openid = StringUtil.getCheckString(params.get("openid"));
+        bizOrder.setOpenId(openid);
         bizOrder.setOrderNo(StringUtil.getCheckString(params.get("out_trade_no")));
-        bizOrder.setOrderType(StringUtil.getCheckString(params.get("orderType")));
-        bizOrder.setOrderPrice(StringUtil.getCheckDouble(params.get("orderPrice")));
+        String orderType = StringUtil.getCheckString(params.get("orderType")); // 订单类型
+        bizOrder.setOrderType(orderType);
+        Double orderPrice = StringUtil.getCheckDouble(params.get("orderPrice")); // 订单金额
+        String orderPriceFormat = df.format(orderPrice / 100);
+        bizOrder.setOrderPrice(Double.parseDouble(orderPriceFormat));
+
         bizOrder.setUserLevel(StringUtil.getCheckString(params.get("userLevel")));
+        BizMember member = memberDao.findByOpenidAndStatus(openid, "-1");
+        if (null != member) {
+            bizOrder.setName(member.getName());
+        }
+        // 根据订单类型，算出订单结束日期
+        bizOrder.setOrderStart(new Date());
+        bizOrder.setOrderEnd(getOrderEnd(new Date(), orderType));
         orderDao.save(bizOrder);
+    }
+
+    private Date getOrderEnd(Date sourceDate, String orderType) {
+        Date end = null;
+        switch (orderType) {
+            case "1":
+                end = stepMonth(sourceDate, 1);
+                break;
+            case "2":
+                end = stepMonth(sourceDate, 3);
+                break;
+            case "3":
+                end = stepMonth(sourceDate, 6);
+                break;
+            case "4":
+                end = stepMonth(sourceDate, 9);
+                break;
+            case "5":
+            case "6":
+                end = stepMonth(sourceDate, 12);
+                break;
+            default:
+                end = sourceDate;
+                break;
+        }
+        return end;
+    }
+
+    public static Date stepMonth(Date sourceDate, int month) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(sourceDate);
+        c.add(Calendar.MONTH, month);
+
+        return c.getTime();
     }
 
     private Map<String, String> getData(Map<String, Object> params) throws UnknownHostException {
@@ -97,7 +249,6 @@ public class WxPayServiceImpl implements WxPayService {
         // 商户订单号
         // 订单编号、预定编号生成规则统一使用 newRandomSNO
         String outTradeNo = CommonUtil.newRandomSNO("O");
-//        String outTradeNo = CheckCommon.getOrderCode();
         params.put("out_trade_no", outTradeNo); // 后面保存db使用
         params.put("nonce_str", nonceStr); // 后面保存db使用
         data.put("nonce_str", nonceStr);

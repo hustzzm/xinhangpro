@@ -1,7 +1,6 @@
 package com.pig.modules.gt.dao;
 
 import com.pig.modules.gt.entity.BizOrder;
-import com.pig.modules.gt.entity.BizRoomManage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,29 +23,34 @@ public interface BizOrderDao extends JpaRepository<BizOrder, Integer> {
 
     List<BizOrder> findAll(Specification<BizOrder> specification);
 
+    BizOrder findByOrderNo(@Param("orderNo") String orderNo);
+
     /**
      * 根据openId查询本人的所有订单
+     *
      * @param openId
      * @return
      */
-    @Query(value ="select * from biz_order where open_id=:openId order by create_time desc", nativeQuery = true)
+    @Query(value = "select * from biz_order where open_id=:openId order by create_time desc", nativeQuery = true)
     List<BizOrder> findByOpenId(@Param("openId") String openId);
 
     /**
      * 查找是否有未支付的订单
+     *
      * @param openId
      * @return
      */
-    @Query(value ="select * from biz_order where open_id=:openId and order_status!='10' and status='-1' limit 0,1", nativeQuery = true)
+    @Query(value = "select * from biz_order where open_id=:openId and order_status!='10' and status='-1' limit 0,1", nativeQuery = true)
     BizOrder findByOpenIdAndNoPay(@Param("openId") String openId);
 
     /**
      * 查找有效的订单，未过期
+     *
      * @param openId
      * @return
      */
-    @Query(value ="select * from biz_order where open_id=:openId and order_status='10' and order_end>:orderEnd and status='-1' limit 0,1", nativeQuery = true)
-    BizOrder findByOpenIdAndNoExpired(@Param("openId") String openId,@Param("orderEnd") String orderEnd);
+    @Query(value = "select * from biz_order where open_id=:openId and order_status='10' and order_end>:orderEnd and status='-1' limit 0,1", nativeQuery = true)
+    BizOrder findByOpenIdAndNoExpired(@Param("openId") String openId, @Param("orderEnd") String orderEnd);
 
     @Transactional(rollbackFor = Exception.class)
     @Modifying
