@@ -11,6 +11,9 @@ public class ConfigurationConfig {
     @Value("${api.appId:}")
     public String appId;
 
+    @Value("${api.Appsecret:}")
+    public String Appsecret;
+
     @Value("${api.mchID:}")
     public String mchID;
 

@@ -23,6 +23,7 @@ upload:
 
 api:
   appId: wx98c69df355fad828 # 小程序ID
+  Appsecret: 15d180b368829741c05cb31476e68b5d
   mchID: 1628655062 # 商户号
   v2Key: FLKtRVXq75okuzRnzXFh2by00FdBSma5 # APIv2密钥
   notifyUrl: https://api.xinhang618.com/wx/pay/notify # 支付成功后的回调地址，域名下来后换成域名
