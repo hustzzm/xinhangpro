@@ -99,6 +99,7 @@ public class WxPayServiceImpl implements WxPayService {
             MyConfig config = new MyConfig();
             WXPay wxpay = new WXPay(config);
             Map<String, String> resp = wxpay.orderQuery(data);
+            log.info("orderQuery.resp={}", resp);
             if (resp.get("return_code").equalsIgnoreCase("FAIL")) {
                 return CommonResult.failed(resp.get("return_msg"));
             }
