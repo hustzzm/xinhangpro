@@ -164,7 +164,9 @@ export default class MemberGrid extends PureComponent {
             renderActionButton,
             expandable,
             code,
-            isSerial
+            isSerial,
+            noCheck
+            
         } = this.props;
         let { columns, onChange } = this.props;
 
@@ -236,8 +238,10 @@ export default class MemberGrid extends PureComponent {
                         size="middle"
                         bordered
                         expandable={expandable}
+                        noCheck={noCheck}
                         // expandProps = {rowSelection}
                         {...other}
+                     
                         rowSelection={{ width:'50px', onChange: this.rowSelectChange.bind(this), selectedRowKeys: this.state.selectedRowKeys }}
                     />
 

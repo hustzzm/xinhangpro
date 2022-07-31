@@ -4,6 +4,7 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.pig.basic.util.CommonResult;
+import com.pig.modules.core.BusinessUtil;
 import com.pig.modules.gt.dao.BizOrderDao;
 import com.pig.modules.gt.entity.BizOrder;
 import com.pig.modules.gt.entity.BizOrderExportVO;
@@ -17,6 +18,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,8 +40,21 @@ public class OrderController {
 
     @GetMapping(value = "/list")
     public CommonResult list(@RequestParam Map<String, Object> params) {
-        Page<BizOrder> usersPage = orderService.page(params);
-        return CommonResult.ok(usersPage);
+        Page<BizOrder> orderPage = orderService.page(params);
+        if(orderPage.getContent() != null && orderPage.getContent().size() > 0){
+
+            for(int i = 0; i < orderPage.getContent().size();i++){
+
+                orderPage.getContent().get(i).setOrderPrice(orderPage.getContent().get(i).getOrderPrice());
+            }
+        }
+
+        double totalAmount = orderService.getTotalAmount(params);
+
+        Map<String,Object> result = new HashMap<>();
+        result.put("result",orderPage);
+        result.put("totalAmount",totalAmount);
+        return CommonResult.ok(result);
     }
 
     @GetMapping(value = "/totalAmount")

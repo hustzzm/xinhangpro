@@ -58,14 +58,17 @@ public class BizBookingServiceImpl implements BizBookingService {
             // 封装查询条件
             List<Predicate> list = new ArrayList<>();
 
-            Join join = root.join("bizMember", JoinType.LEFT);
-            if (!StringUtils.isEmpty(commonQuery.get("name"))) {
-                Predicate predicateJoin = criteriaBuilder.like(join.get("name"), "%" + commonQuery.get("name") + "%");
-                list.add(predicateJoin);
-            }
+//            Join join = root.join("bizMember", JoinType.LEFT);
+//            if (!StringUtils.isEmpty(commonQuery.get("name"))) {
+//                Predicate predicateJoin = criteriaBuilder.like(join.get("name"), "%" + commonQuery.get("name") + "%");
+//                list.add(predicateJoin);
+//            }
             //增加筛选条件
             // 房间名
             Predicate predicate = criteriaBuilder.conjunction();
+            if (!StringUtils.isEmpty(commonQuery.get("name"))) {
+                predicate.getExpressions().add(criteriaBuilder.like(root.get("name"), "%" + commonQuery.get("name") + "%"));
+            }
             if (!StringUtils.isEmpty(commonQuery.get("roomName"))) {
                 predicate.getExpressions().add(criteriaBuilder.like(root.get("roomName"), "%" + commonQuery.get("roomName") + "%"));
             }

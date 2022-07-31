@@ -71,6 +71,7 @@ class orderindex extends PureComponent {
         params: {},             //查询条件参数       
         sampleDetail: {},     
         selectedRows: [],
+        totalAmount:0,
         // selectedRowKeys: [],  //选中行主键
         onReset: () => {
         },
@@ -222,7 +223,7 @@ class orderindex extends PureComponent {
             <Button type="primary" onClick={this.handleexport} icon={<UploadOutlined />}>
                 导出Excel
             </Button>     
-            <Space>当前订单总金额: </Space>          
+            <Space>当前订单总金额: {this.state.totalAmount}</Space>          
         </div>
     );
 
@@ -292,6 +293,8 @@ class orderindex extends PureComponent {
             dictionary: { roomtypeDicts },
             order: { data },
         } = this.props;
+       
+        this.setState({totalAmount:data.totalAmount})
 
         const currentUser = getCurrentUser();
         const formItemLayout = {

@@ -39,7 +39,7 @@ import {
 } from '@/actions/user';
 import { ROOMTYPE_DICT} from "../../actions/dictionary";
 
-import CommonGrid from "@/pages/gt/Grid/MemberGrid";
+import CommonGrid from "@/pages/gt/Grid/CommonGrid";
 import Useradd from "@/pages/hxuser/hxuseradd";
 import Useredit from "@/pages/hxuser/hxuseredit";
 import styles from '../../utils/utils.less';
@@ -339,12 +339,9 @@ class hxuserindex extends PureComponent {
             <div id="query-table" className={styles.query_item_css}>
                 <Row gutter={16}>
                     <Col span={18}>
-                        <FormItem label="房间名称">
+                        <FormItem label="姓名">
                             {getFieldDecorator('name', { rules: [{ max: 30, message: '最多只能输入30个字符！' }] })(<Input />)}
-                        </FormItem>
-                        <FormItem label="房间类型">
-                        {getFieldDecorator('roomType')(this.renderSearchSelect())}
-                        </FormItem>
+                        </FormItem>                       
                     </Col>
 
                     <Col span={6}>
@@ -468,12 +465,18 @@ class hxuserindex extends PureComponent {
             width:320,
             render:(text, record, index) => {
     
+                if(record.account == 'sysadmin' || record.account == 'admin'){
+                    return <Space>
+                        <a onClick={() => this.dochangepwd(record)} >密码初始化</a>                
+                    </Space>;
+                }else{
+                    return <Space>
+                        <a onClick={() => this.dochangepwd(record)} >密码初始化</a>
+                    <a onClick={() => this.domodify(record)} >编辑</a>
+                    <a onClick={() => this.doremove(record)} >删除</a>
+                </Space>;
+                }
                 
-                return <Space>
-                    <a onClick={() => this.dochangepwd(record)} >密码初始化</a>
-                <a onClick={() => this.domodify(record)} >编辑</a>
-                <a onClick={() => this.doremove(record)} >删除</a>
-            </Space>;
             }
           },      
         ];
@@ -490,9 +493,8 @@ class hxuserindex extends PureComponent {
                     renderSearchForm={this.renderSearchForm}
                     loading={loading}
                     data={data}
-                    columns={columns}
-                   
-                    // noCheck
+                    columns={columns}                   
+                    noCheck
                     isSerial //序号
                     selectRow={this.selectRow}
                     clearChildSelect={this.clearChildSelect}

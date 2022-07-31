@@ -256,7 +256,7 @@ class bookindex extends PureComponent {
             <div id="query-table" className={styles.query_item_css}>
                 <Row gutter={16}>
                     <Col span={18}>
-                        <FormItem label="订单号">
+                        <FormItem label="预约号">
                             {getFieldDecorator('booksNo', { rules: [{ max: 30, message: '最多只能输入30个字符！' }] })(<Input />)}
                         </FormItem>
                         <FormItem label="姓名">

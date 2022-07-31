@@ -73,10 +73,10 @@ public class BizOrderServiceImpl implements BizOrderService {
             }
             //name不为空
             if (!StringUtils.isEmpty(commonQuery.get("orderNo"))) {
-                predicate.getExpressions().add(root.get("orderNo"));
+                predicate.getExpressions().add(criteriaBuilder.like(root.get("orderNo"), "%" + commonQuery.get("orderNo") + "%"));
             }
-            if (!StringUtils.isEmpty(commonQuery.get("nickName"))) {
-                predicate.getExpressions().add(criteriaBuilder.like(root.get("nickName"), "%" + commonQuery.get("nickName") + "%"));
+            if (!StringUtils.isEmpty(commonQuery.get("name"))) {
+                predicate.getExpressions().add(criteriaBuilder.like(root.get("name"), "%" + commonQuery.get("name") + "%"));
             }
             if (!StringUtils.isEmpty(commonQuery.get("userLevel"))) {
                 predicate.getExpressions().add(criteriaBuilder.like(root.get("userLevel"), "%" + commonQuery.get("userLevel") + "%"));
