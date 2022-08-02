@@ -112,20 +112,20 @@ public class WxPayServiceImpl implements WxPayService {
                 String openid = resp.get("openid");
                 BizMember member = memberDao.findByOpenidAndStatus(openid, "-1");
                 if (ObjectUtils.isEmpty(member)) {
-                    return CommonResult.failed(resp.get("会员不存在或失效！"));
+                    return CommonResult.failed("会员不存在或失效！");
                 }
                 String outTradeNo = resp.get("out_trade_no");
                 log.info("orderQuery step 112 ...outTradeNo:" + outTradeNo);
                 BizOrder order = orderDao.findByOrderNo(outTradeNo);
                 if (ObjectUtils.isEmpty(order)) {
-                    return CommonResult.failed(resp.get("订单不存在！"));
+                    return CommonResult.failed("订单不存在！");
                 }
                 String timeEnd = resp.get("time_end"); // 支付完成时间
                 // 当订单使用了免充值型优惠券后返回该参数，应结订单金额=订单金额-免充值优惠券金额。
-                String settlementTotalFee = resp.get("settlement_total_fee");
+                String cashFee = resp.get("cash_fee");
 
                 // 保存order表
-                order.setPayPrice(Double.valueOf(settlementTotalFee));
+                order.setPayPrice(Double.valueOf(cashFee));
                 order.setPayTime(getPayTime(timeEnd));
                 order.setOrderStatus(OrderEnum.PAYMENT_RECEIVED.getCode());
                 orderDao.save(order);
@@ -141,7 +141,6 @@ public class WxPayServiceImpl implements WxPayService {
                 if (StringUtils.isEmpty(endDate)) {
                     endDate = sdf.format(new Date());
                 }
-
 
 
                 Date orderEnd = getOrderEnd(sdf.parse(endDate), order.getOrderType());
