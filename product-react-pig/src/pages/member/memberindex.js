@@ -37,7 +37,7 @@ import {
 } from '@/actions/gt/member';
 import { ROOMTYPE_DICT} from "../../actions/dictionary";
 
-import CommonGrid from "@/pages/gt/Grid/MemberGrid";
+import CommonGrid from "@/pages/gt/Grid/CommonGrid";
 import Memberedit from "@/pages/member/memberedit";
 import Memberview from "@/pages/member/memberview";
 import styles from '../../utils/utils.less';
@@ -46,16 +46,8 @@ import Panel from "../../components/Panel";
 import styleTester from "../Wes/index.less";
 import { getCurrentUser } from '../../utils/authority';
 
-import {
-    getBeginDateTime,
-    getEndDateTime,
-    getDateBeginStr,
-    getDateEndStr
-} from "../../utils/timeUtils";
 
 import moment from "moment";
-import { Label } from 'bizcharts';
-
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 const FormItem = Form.Item;
@@ -147,7 +139,7 @@ class memberindex extends PureComponent {
         };        
         // delete payload.getbloodDate
         delete payload.startDate
-        debugger
+    
         dispatch(MEMBERINFO_LIST(payload)).then(() => this.resetSelectRow());
 
     };
@@ -284,9 +276,8 @@ class memberindex extends PureComponent {
              
                 subparams.id = String(parseInt(record.id));
                 subparams.status = status;
-                dispatch(MEMBERINFO_REMOVE(subparams)).then(result => {
-                  
-                    debugger
+                dispatch(MEMBERINFO_REMOVE(subparams)).then(result => {                  
+                
                     if (result.success) {
                         message.success('操作成功！');
                         that.handleSearch({});                           

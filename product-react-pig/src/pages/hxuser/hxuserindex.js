@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+
 import { connect } from 'dva';
 // import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
@@ -46,6 +47,7 @@ import styles from '../../utils/utils.less';
 import Panel from "../../components/Panel";
 
 import styleTester from "../Wes/index.less";
+
 
 import moment from "moment";
 
@@ -403,7 +405,7 @@ class hxuserindex extends PureComponent {
         this.childTable = ref
     }
 
-    
+
 
     render() {
         const code = 'user';
@@ -483,7 +485,8 @@ class hxuserindex extends PureComponent {
     
 
         return (
-            <Panel>
+            <Panel>              
+                
                 <CommonGrid
                     // scroll={{ y: 504 }}
                     code={code}

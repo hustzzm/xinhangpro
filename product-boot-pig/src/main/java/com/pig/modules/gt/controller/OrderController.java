@@ -4,6 +4,7 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.pig.basic.util.CommonResult;
+import com.pig.basic.util.StringUtil;
 import com.pig.modules.core.BusinessUtil;
 import com.pig.modules.gt.dao.BizOrderDao;
 import com.pig.modules.gt.entity.BizOrder;
@@ -65,13 +66,38 @@ public class OrderController {
     }
 
     /**
+     * 查询新的一条未语音播报的新订单
+     * @return
+     */
+    @GetMapping(value = "/queryNewRecord")
+    public CommonResult queryNewRecord() {
+
+        BizOrder bizOrder = orderDao.findByUnSoundState();
+        if(bizOrder == null || StringUtil.isNull(bizOrder.getOrderNo())){
+            CommonResult.failed();
+        }
+        return CommonResult.ok(bizOrder);
+    }
+
+    /**
+     * 声音播报完成后，更新该记录的声音状态未已播报
+     */
+    @GetMapping("/updateSoundState")
+    public CommonResult updateSoundState(@RequestParam String orderId) {
+
+//        orderDao.deleteById(id);
+        orderDao.updateByUnSoundState(Integer.parseInt(orderId));
+        return CommonResult.ok("删除成功");
+    }
+
+    /**
      * 删除
      */
-    @DeleteMapping("/remove/{id}")
-    public CommonResult remove(@PathVariable Integer id) {
+    @GetMapping("/remove")
+    public CommonResult remove(@RequestParam String orderId) {
 
-        orderDao.deleteById(id);
-
+//        orderDao.deleteById(id);
+        orderDao.updateByOrderStatus(Integer.parseInt(orderId));
         return CommonResult.ok("删除成功");
     }
 

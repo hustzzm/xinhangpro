@@ -79,6 +79,11 @@ public class BizOrder extends AbstractBaseTimeEntity implements Serializable {
      */
     private String status = "-1";
 
+    /**
+     * 语音播报状态 -1未播报，1已播报
+     */
+    private String soundState = "-1";
+
     @OneToOne
     @JoinColumn(name = "userLevel", referencedColumnName = "id", insertable = false, updatable = false)
     private RdRole rdRole;

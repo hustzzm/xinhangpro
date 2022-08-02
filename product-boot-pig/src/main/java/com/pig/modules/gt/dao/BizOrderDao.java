@@ -35,6 +35,24 @@ public interface BizOrderDao extends JpaRepository<BizOrder, Integer> {
     List<BizOrder> findByOpenId(@Param("openId") String openId);
 
     /**
+     * 查询一条未语音播报的新订单
+     * 订单状态=10
+     * @return
+     */
+    @Query(value = "select * from biz_order where order_status='10' and sound_state='-1' order by create_time desc limit 0,1", nativeQuery = true)
+    BizOrder findByUnSoundState();
+
+    /**
+     * 更新语音播报的记录为已播报
+     * 订单状态=10
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Modifying
+    @Query(value = "update biz_order set sound_state='1' where order_id=:orderId", nativeQuery = true)
+    void updateByUnSoundState(@Param("orderId") Integer orderId);
+
+    /**
      * 查找是否有未支付的订单
      *
      * @param openId
@@ -56,5 +74,14 @@ public interface BizOrderDao extends JpaRepository<BizOrder, Integer> {
     @Modifying
     @Query("delete from BizOrder where orderId in (:orderIds)")
     void deleteByOrderIds(@Param("orderIds") List<Integer> orderIds);
+
+    /**
+     * 更新记录为作废
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Modifying
+    @Query("update BizOrder set status='0' where orderId=:orderId")
+    void updateByOrderStatus(@Param("orderId") Integer orderId);
 }
 

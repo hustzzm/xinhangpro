@@ -2,7 +2,7 @@ import { message } from 'antd';
 import {routerRedux} from 'dva/router';
 import router from 'umi/router';
 import { ORDERINFO_NAMESPACE } from '@/actions/gt/order';
-import { list,doexport,remove } from '@/services/gt/order';
+import { list,doexport,remove,queryNewRecord,updateSoundState } from '@/services/gt/order';
 
 export default {
   namespace: ORDERINFO_NAMESPACE,
@@ -32,13 +32,22 @@ export default {
       }
     },  
 
+    *queryNewRecord({ payload }, { call }) {      
+      return yield call(queryNewRecord, payload);  
+    },
    
     *doexport({ payload }, { call }) {      
       return yield call(doexport, payload);  
     },
+
+    *updateSoundState({ payload }, { call }) {
+      //return yield call(remove, { ids: payload.ids });     
+      return yield call(updateSoundState, payload);
+    },
+   
+
     *remove({ payload }, { call }) {
-      //return yield call(remove, { ids: payload.ids });
-      console.log(payload);
+      //return yield call(remove, { ids: payload.ids });     
       return yield call(remove, payload);
     },
    
