@@ -107,12 +107,15 @@ public class WxPayServiceImpl implements WxPayService {
                 return CommonResult.failed(resp.get("err_code_des"));
             }
             if (resp.get("trade_state").equals("SUCCESS")) {
+
+                log.info("orderQuery step 111 ...");
                 String openid = resp.get("openid");
                 BizMember member = memberDao.findByOpenidAndStatus(openid, "-1");
                 if (ObjectUtils.isEmpty(member)) {
                     return CommonResult.failed(resp.get("会员不存在或失效！"));
                 }
                 String outTradeNo = resp.get("out_trade_no");
+                log.info("orderQuery step 112 ...outTradeNo:" + outTradeNo);
                 BizOrder order = orderDao.findByOrderNo(outTradeNo);
                 if (ObjectUtils.isEmpty(order)) {
                     return CommonResult.failed(resp.get("订单不存在！"));
@@ -126,7 +129,7 @@ public class WxPayServiceImpl implements WxPayService {
                 order.setPayTime(getPayTime(timeEnd));
                 order.setOrderStatus(OrderEnum.PAYMENT_RECEIVED.getCode());
                 orderDao.save(order);
-
+                log.info("orderQuery step 113 ...orderDao.save:");
                 // 保存member表
                 member.setOrderNo(outTradeNo);
                 String startDate = member.getStartDate();
@@ -138,11 +141,18 @@ public class WxPayServiceImpl implements WxPayService {
                 if (StringUtils.isEmpty(endDate)) {
                     endDate = sdf.format(new Date());
                 }
+
+
+
                 Date orderEnd = getOrderEnd(sdf.parse(endDate), order.getOrderType());
+
+                log.info("orderQuery step 114 ...orderEnd:" + orderEnd);
                 member.setEndDate(sdf.format(orderEnd));
                 memberDao.save(member);
 
-                return CommonResult.ok();
+                log.info("orderQuery step 115 ...memberDao.save end");
+
+                return CommonResult.ok(member);
             } else {
                 return CommonResult.failed(resp.get("trade_state_desc"));
             }

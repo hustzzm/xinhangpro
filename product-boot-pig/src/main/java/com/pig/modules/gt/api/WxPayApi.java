@@ -44,9 +44,9 @@ public class WxPayApi {
      *
      * @return
      */
-    @RequestMapping(value = "/orderQuery", method = RequestMethod.GET)
+    @RequestMapping(value = "/orderQuery", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult orderQuery(@RequestParam Map<String, Object> params) throws Exception {
+    public CommonResult orderQuery(@RequestBody Map<String, Object> params) throws Exception {
         log.info("orderQuery.params={}", params);
         return wxPayService.orderQuery(params);
     }
@@ -58,7 +58,9 @@ public class WxPayApi {
      */
     @RequestMapping(value = "/notify", method = RequestMethod.POST)
     public void notifyUrl(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
         log.info("支付结果通知开始...");
+        log.info("支付结果通知开始    111111");
         String requestString = StringUtil.getStringFromInputStream(request.getInputStream());
         log.info("微信结果通知加密字符串: " + requestString);
         NotifyResutlVo obj = JSON.parseObject(requestString, NotifyResutlVo.class);

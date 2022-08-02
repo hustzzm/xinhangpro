@@ -48,8 +48,10 @@ public class CommonDataTask {
         }
 
         List<BizBooking> hourList = bizBookingService.querylistbyexpireHour(today,Hour);
-        for(BizBooking bizBooking : hourList){
-            bizBookingDao.updateBookStatusById(bizBooking.getId());
+        if(hourList != null && hourList.size() > 0) {
+            for (BizBooking bizBooking : hourList) {
+                bizBookingDao.updateBookStatusById(bizBooking.getId());
+            }
         }
         log.info("CommonDataTask do backup :" + new Date());
 
