@@ -49,11 +49,11 @@ public class OrderApi {
     public CommonResult myorder(@RequestParam Map<String, Object> params) {
         String openid = StringUtil.getCheckString(params.get("openid"));
         List<BizOrder> bizOrderList = orderDao.findByOpenId(openid);
-        for(BizOrder bizOrder : bizOrderList){
-            String content = bizOrder.getOrderStart() == null ? "" : sdf.format(bizOrder.getOrderStart());
-            //暂时使用nickname代替订单生成日期
-            bizOrder.setNickName(content);
-        }
+//        for(BizOrder bizOrder : bizOrderList){
+//            String content = bizOrder.getOrderStart() == null ? "" : sdf.format(bizOrder.getOrderStart());
+//            //暂时使用nickname代替订单生成日期
+//            bizOrder.setNickName(content);
+//        }
         return CommonResult.ok(bizOrderList);
     }
 
@@ -69,17 +69,6 @@ public class OrderApi {
         double totalAmount = orderService.getTotalAmount(params);
 
         return CommonResult.ok(totalAmount);
-    }
-
-    /**
-     * 删除
-     */
-    @DeleteMapping("/remove")
-    public CommonResult remove(@RequestBody List<Integer> orderIds) {
-
-        orderDao.deleteByOrderIds(orderIds);
-
-        return CommonResult.ok("删除成功");
     }
 
     @GetMapping("/export")

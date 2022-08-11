@@ -87,6 +87,10 @@ public class BizBooking extends AbstractBaseTimeEntity implements Serializable {
      * 房间名称
      */
     private String roomName;
+    /**
+     * 会员会为微信端进行删除，状态 -1可用，0作废
+     */
+    private String otherdelState = "-1";
 
     @ManyToOne
     @JoinColumn(name = "openid", referencedColumnName = "openid", insertable = false, updatable = false)

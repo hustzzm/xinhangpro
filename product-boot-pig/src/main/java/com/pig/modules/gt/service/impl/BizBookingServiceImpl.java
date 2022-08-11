@@ -214,10 +214,11 @@ public class BizBookingServiceImpl implements BizBookingService {
     @Override
     public CommonResult booksave(Map<String, Object> params){
 
+
         // 获取会员信息
         try {
             // 根据房间编号获取房间信息
-            String roomCode = StringUtil.getCheckString(params.get("roomCode"));
+            String roomCode  = StringUtil.getCheckString(params.get("roomCode"));
 
             String openid = StringUtil.getCheckString(params.get("openid"));
             BizMember member = memberDao.findByOpenidAndStatus(openid, "-1");
@@ -321,11 +322,12 @@ public class BizBookingServiceImpl implements BizBookingService {
             bizBooking.setOpenid(openid);
 
             bookingDao.save(bizBooking);
+
+            return CommonResult.ok(bizBooking);
         } catch (Exception e) {
             log.error("预定异常，", e.getMessage(), e);
             return CommonResult.failed("预定异常，" + e.getMessage());
         }
-        return CommonResult.ok("预约成功！");
     }
 
     @Override
@@ -333,6 +335,16 @@ public class BizBookingServiceImpl implements BizBookingService {
 
         List<BizBooking> list = bookingDao.querylistbyexpireDate(bookDate);
         return list;
+    }
+
+    /**
+     * 根据预定号查询已预约的记录
+     * @return
+     */
+    @Override
+    public BizBooking findByWxOrderByBooksNo(String bookSNo){
+        BizBooking bizBooking = bookingDao.findByWxOrderByBooksNo(bookSNo);
+        return bizBooking;
     }
 
     @Override

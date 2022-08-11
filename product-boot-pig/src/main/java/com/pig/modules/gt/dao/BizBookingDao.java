@@ -27,11 +27,39 @@ public interface BizBookingDao extends JpaRepository<BizBooking, Integer> {
     List<BizBooking> findByOpenidAndBookStatusOrderByCreateTimeDesc(String openid, String bookStatus);
 
     /**
+     * 微信端个人预定查询
+     * @param openid
+     * @param bookStatus
+     * @return
+     */
+    @Query(value ="select * from biz_booking where openid=:openid and book_status=:bookStatus and otherdel_state='-1' and status='-1'", nativeQuery = true)
+    List<BizBooking> findByWxOrderList(@Param("openid") String openid, @Param("bookStatus") String bookStatus);
+
+    /**
+     * 微信端个人预定查询
+     * @param bookSNo
+     * @return
+     */
+    @Query(value ="select * from biz_booking where bookS_no=:bookSNo and status='-1' limit 0,1", nativeQuery = true)
+    BizBooking findByWxOrderByBooksNo(@Param("bookSNo") String bookSNo);
+
+    /**
+     * 微信端会员删除已完成的预约记录
+     * @param openid
+     * @param booksNo
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Modifying
+    @Query("update BizBooking set otherdelState = '0' where openid =:openid and booksNo = :booksNo")
+    void disableOtherDelState(@Param("openid") String openid, @Param("booksNo") String booksNo);
+
+    /**
      * 查询当前已预约的记录
      * @return
      */
     @Query(value ="select * from biz_booking where room_code=:roomCode and book_date>=:bookDate and (book_status ='1' or book_status='3') and status='-1'", nativeQuery = true)
-    List<BizBooking> querylistallbybookStatus(@Param("bookDate") String bookDate,@Param("roomCode") String roomId);
+    List<BizBooking> querylistallbybookStatus(@Param("bookDate") String bookDate,@Param("roomCode") String roomCode);
 
     /**
      * 查询当天预约、消费的记录
@@ -43,11 +71,11 @@ public interface BizBookingDao extends JpaRepository<BizBooking, Integer> {
 
 
     /** 针对含有9的记录 **/
-    @Query(value ="select count(1) from biz_booking where roomCode =:roomCode and book_date =:bookDate and (book_times =:bookTimes or book_times like CONCAT(:bookTimes2,'%'))) and (book_status='1' or book_status='3') and status='-1'", nativeQuery = true)
+    @Query(value ="select count(1) from biz_booking where room_code =:roomCode and book_date =:bookDate and (book_times =:bookTimes or book_times like CONCAT(:bookTimes2,'%'))) and (book_status='1' or book_status='3') and status='-1'", nativeQuery = true)
     int querylistByTime(@Param("roomCode") String roomCode,@Param("bookDate") String bookDate, @Param("bookTimes") String bookTimes,@Param("bookTimes2") String bookTimes2);
 
     /** 针对不含有9的记录 **/
-    @Query(value ="select count(1) from biz_booking where roomCode = :roomCode and book_date =:bookDate and (book_times like CONCAT('%',:bookTimes,'%')) and (book_status='1' or book_status='3') and status='-1'", nativeQuery = true)
+    @Query(value ="select count(1) from biz_booking where room_code = :roomCode and book_date =:bookDate and (book_times like CONCAT('%',:bookTimes,'%')) and (book_status='1' or book_status='3') and status='-1'", nativeQuery = true)
     int querylistByNormalTime(@Param("roomCode") String roomCode,@Param("bookDate") String bookDate,@Param("bookTimes") String bookTimes);
 
     /**
@@ -63,7 +91,7 @@ public interface BizBookingDao extends JpaRepository<BizBooking, Integer> {
      * @param bookDate
      * @return
      */
-    @Query(value ="select a.* from (select id,books_no,name,openid,nick_name,room_type,room_name,book_date,case when LOCATE(',',book_times) > 0 then REVERSE(LEFT(REVERSE(book_times),INSTR(REVERSE(book_times),',')-1)) else book_times end as book_times,room_code,book_status,create_by,create_time,update_by,update_time,status,book_times_text,account from biz_booking where book_date=:bookDate and (book_status ='1') and status='-1') a where a.book_times<:bookTimes", nativeQuery = true)
+    @Query(value ="select a.* from (select id,books_no,name,openid,nick_name,room_type,room_name,book_date,otherdel_state,case when LOCATE(',',book_times) > 0 then REVERSE(LEFT(REVERSE(book_times),INSTR(REVERSE(book_times),',')-1)) else book_times end as book_times,room_code,book_status,create_by,create_time,update_by,update_time,status,book_times_text,account from biz_booking where book_date=:bookDate and (book_status ='1') and status='-1') a where a.book_times<:bookTimes", nativeQuery = true)
     List<BizBooking> querylistbyexpireHour(@Param("bookDate") String bookDate,@Param("bookTimes") String bookTimes);
 
     @Transactional(rollbackFor = Exception.class)

@@ -24,6 +24,12 @@ public interface BizBookingService {
      * @return
      */
     List<BizBooking> getAllByBookAfterBookDate(String roomCode);
+
+    /**
+     * 根据预定号查询已预约的记录
+     * @return
+     */
+    BizBooking findByWxOrderByBooksNo(String bookSNo);
     /**
      * 判断是否可预约，可则保存预约记录
      * @param params

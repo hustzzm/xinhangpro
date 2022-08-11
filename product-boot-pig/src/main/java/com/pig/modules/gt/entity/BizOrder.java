@@ -58,11 +58,11 @@ public class BizOrder extends AbstractBaseTimeEntity implements Serializable {
     /**
      * 订单生效日期-开始
      */
-    private Date orderStart;
+    private String orderStart;
     /**
      * 订单生效日期-结束
      */
-    private Date orderEnd;
+    private String orderEnd;
     /**
      * 付款金额
      */

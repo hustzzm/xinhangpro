@@ -147,6 +147,7 @@ public class WxPayServiceImpl implements WxPayService {
 
                 log.info("orderQuery step 114 ...orderEnd:" + orderEnd);
                 member.setEndDate(sdf.format(orderEnd));
+                member.setUserLevel(order.getUserLevel());
                 memberDao.save(member);
 
                 log.info("orderQuery step 115 ...memberDao.save end");
@@ -213,8 +214,8 @@ public class WxPayServiceImpl implements WxPayService {
             bizOrder.setName(member.getName());
         }
         // 根据订单类型，算出订单结束日期
-        bizOrder.setOrderStart(new Date());
-        bizOrder.setOrderEnd(getOrderEnd(new Date(), orderType));
+        bizOrder.setOrderStart(sdf.format(new Date()));
+        bizOrder.setOrderEnd(sdf.format(getOrderEnd(new Date(), orderType)));
         orderDao.save(bizOrder);
     }
 

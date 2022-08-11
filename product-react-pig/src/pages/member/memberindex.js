@@ -368,7 +368,7 @@ class memberindex extends PureComponent {
     render() {
         const code = 'member';
         const currentUser = getCurrentUser();
-
+        const that = this;
         
         const {
             form,
