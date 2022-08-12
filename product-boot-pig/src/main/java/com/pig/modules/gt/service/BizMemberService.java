@@ -1,10 +1,12 @@
 package com.pig.modules.gt.service;
 
 import com.pig.basic.util.CommonResult;
+import com.pig.modules.gt.entity.BizBooking;
 import com.pig.modules.gt.entity.BizMember;
 import com.pig.modules.gt.entity.BizMemberVO;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,6 +21,12 @@ public interface BizMemberService {
     BizMember findByOpenidAndStatus(String openid, String status);
 
     Page<BizMember> page(Map<String, Object> params);
+
+    /**
+     * 根据openId查询个人生效期内的会员记录
+     * @return
+     */
+    BizMember findExistRecord(String openid, String endDate);
 
     CommonResult insertOrUpdate(Map<String, Object> params);
 

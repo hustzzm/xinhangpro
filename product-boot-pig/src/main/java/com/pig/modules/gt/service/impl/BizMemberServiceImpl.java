@@ -90,6 +90,16 @@ public class BizMemberServiceImpl implements BizMemberService {
         return memberDao.findAll(specification, pageable);
     }
 
+    /**
+     * 根据openId查询个人生效期内的会员记录
+     * @return
+     */
+    @Override
+    public BizMember findExistRecord(String openid, String endDate){
+
+        return memberDao.findExistRecord(openid,endDate);
+    }
+
     @Override
     public CommonResult insertOrUpdate(Map<String, Object> params) {
         log.info("bizMemberService.insertOrUpdate.params={}", params);

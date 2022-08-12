@@ -1,6 +1,5 @@
 package com.pig.modules.gt.dao;
 
-import com.pig.modules.gt.entity.BizCompany;
 import com.pig.modules.gt.entity.BizMember;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +9,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * 用户信息
@@ -23,6 +24,15 @@ public interface BizMemberDao extends JpaRepository<BizMember, Integer> {
     BizMember findByOpenidAndStatus(String openid, String status);
 
     Page<BizMember> findAll(Specification<BizMember> specification, Pageable pageable);
+
+    /**
+     * 根据openId查询个人生效期内的会员记录
+     * @param openid
+     * @param endDate 今天
+     * @return
+     */
+    @Query(value ="select * from biz_member where openid=:openid and user_level !='0' and end_date>=:endDate and status='-1' limit 0,1", nativeQuery = true)
+    BizMember findExistRecord(@Param("openid") String openid, @Param("endDate") String endDate);
 
     @Transactional(rollbackFor = Exception.class)
     @Modifying

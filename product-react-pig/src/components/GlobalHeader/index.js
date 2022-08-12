@@ -24,28 +24,38 @@ export default class GlobalHeader extends PureComponent {
   componentWillMount() {
       
     const { dispatch } = this.props;
+    const that = this;
     // 查询directory数据集，包括样本状态、样品进度、检测类型
+
+    let iIndex = 1;
+    //定时器，用于获取最新的订单
+    setInterval(function(){
+
+      console.log("获取最新订单-----" + iIndex)
+      dispatch(ORDERINFO_NEWRECORD({})).then(result =>{
+     
+        if(result.success && result.data && result.data.orderId){
+          
+          that.setState({playstate:'PLAYING',position:0},()=> {
+              
+              let subparams = {
+                orderId:result.data.orderId
+              }
+              console.log("获取最新订单--subparams.orderId ---" + subparams.orderId)
+              dispatch(ORDERINFO_UPDATESOUNDSTATE(subparams))
+    
+             });
+          
+        }else{
+       
+          console.log("没有最新订单-----")
+          that.setState({playstate:'STOPPED',position:0})
+        }
+      });
+      iIndex++;
+    },10000);
    
-    dispatch(ORDERINFO_NEWRECORD({})).then(result =>{
-     
-      if(result.success && result.data && result.data.orderId){
-        
-          this.setState({playstate:'PLAYING',position:0},()=> {
-         
-            
-            let subparams = {
-              orderId:result.data.orderId
-            }
-            
-            dispatch(ORDERINFO_UPDATESOUNDSTATE(subparams))
-  
-           });
-        
-      }else{
-     
-        this.setState({playstate:'STOPPED',position:0})
-      }
-    });
+    
    
 }
 
@@ -95,14 +105,14 @@ export default class GlobalHeader extends PureComponent {
   render() {
     const { collapsed, isMobile, logo } = this.props;
     const {playstate } = this.state;
-    debugger
+    
     return (
       <div className={styles.header}>
         {
           playstate == 'PLAYING' && (
             <Sound
             url="https://xinhang618.com/static/my/news.mp3"
-            playStatus='PLAYING'
+            playStatus={this.state.playStatus}
             playFromPosition={300 /* in milliseconds */}
             position={this.state.position}
             onLoading={this.handleSongLoading}

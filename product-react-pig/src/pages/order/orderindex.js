@@ -203,8 +203,7 @@ class orderindex extends PureComponent {
   
     const that = this;
    
-    window.open(`/api/order/export`);
-   
+    window.open(`/api/order/export`,'_self');    
 }
 
 

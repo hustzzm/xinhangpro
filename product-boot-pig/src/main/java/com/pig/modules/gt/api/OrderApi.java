@@ -49,11 +49,11 @@ public class OrderApi {
     public CommonResult myorder(@RequestParam Map<String, Object> params) {
         String openid = StringUtil.getCheckString(params.get("openid"));
         List<BizOrder> bizOrderList = orderDao.findByOpenId(openid);
-//        for(BizOrder bizOrder : bizOrderList){
+        for(BizOrder bizOrder : bizOrderList){
 //            String content = bizOrder.getOrderStart() == null ? "" : sdf.format(bizOrder.getOrderStart());
-//            //暂时使用nickname代替订单生成日期
-//            bizOrder.setNickName(content);
-//        }
+            //暂时使用nickname代替订单生成日期
+            bizOrder.setNickName(bizOrder.getOrderStart());
+        }
         return CommonResult.ok(bizOrderList);
     }
 

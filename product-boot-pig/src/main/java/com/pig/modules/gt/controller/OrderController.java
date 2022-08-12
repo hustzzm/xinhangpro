@@ -102,7 +102,7 @@ public class OrderController {
     }
 
     @GetMapping("/export")
-    public void export4(HttpServletResponse response) throws IOException {
+    public void export(HttpServletResponse response) throws IOException {
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
         String filenames = "订单列表";

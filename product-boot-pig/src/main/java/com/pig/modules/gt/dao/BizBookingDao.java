@@ -91,7 +91,7 @@ public interface BizBookingDao extends JpaRepository<BizBooking, Integer> {
      * @param bookDate
      * @return
      */
-    @Query(value ="select a.* from (select id,books_no,name,openid,nick_name,room_type,room_name,book_date,otherdel_state,case when LOCATE(',',book_times) > 0 then REVERSE(LEFT(REVERSE(book_times),INSTR(REVERSE(book_times),',')-1)) else book_times end as book_times,room_code,book_status,create_by,create_time,update_by,update_time,status,book_times_text,account from biz_booking where book_date=:bookDate and (book_status ='1') and status='-1') a where a.book_times<:bookTimes", nativeQuery = true)
+    @Query(value ="select a.* from (select id,books_no,name,openid,nick_name,room_type,room_name,book_date,room_logo,otherdel_state,case when LOCATE(',',book_times) > 0 then REVERSE(LEFT(REVERSE(book_times),INSTR(REVERSE(book_times),',')-1)) else book_times end as book_times,room_code,book_status,create_by,create_time,update_by,update_time,status,book_times_text,account from biz_booking where book_date=:bookDate and (book_status ='1') and status='-1') a where a.book_times<:bookTimes", nativeQuery = true)
     List<BizBooking> querylistbyexpireHour(@Param("bookDate") String bookDate,@Param("bookTimes") String bookTimes);
 
     @Transactional(rollbackFor = Exception.class)

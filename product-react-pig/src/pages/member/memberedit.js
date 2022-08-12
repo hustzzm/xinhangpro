@@ -86,6 +86,22 @@ class memberedit extends PureComponent {
 
                         <Row gutter={32}>
                             <Col span={24}>
+                                <FormItem {...formItemLayout} label="会员卡号" >
+                                    {getFieldDecorator('orderNo', {
+                                         initialValue: detail.orderNo,
+                                        rules: [
+                                            { 
+                                                max:30,
+                                                required: true,
+                                                message: '会员姓名不能为空，且不能超过100字符',
+                                            },
+                                        ],
+                                    })(<Input disabled={true} />)}
+                                </FormItem>
+                            </Col>                           
+                            </Row>      
+                        <Row gutter={32}>
+                            <Col span={24}>
                                 <FormItem {...formItemLayout} label="会员姓名" >
                                     {getFieldDecorator('name', {
                                          initialValue: detail.name,
@@ -96,7 +112,7 @@ class memberedit extends PureComponent {
                                                 message: '会员姓名不能为空，且不能超过100字符',
                                             },
                                         ],
-                                    })(<Input disabled={true} />)}
+                                    })(<Input />)}
                                 </FormItem>
                             </Col>                           
                             </Row>                            

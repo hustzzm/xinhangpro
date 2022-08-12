@@ -109,7 +109,7 @@ public class BizOrderServiceImpl implements BizOrderService {
         List<BizOrder> all = orderDao.findAll();
         all.stream().forEach((order) -> {
             String orderName =
-                    order.getRdRole().getRoleName() + " " + sdf.format(order.getOrderStart()) + "至" + sdf.format(order.getOrderEnd());
+                    order.getRdRole().getRoleName() + " " + order.getOrderStart() + "至" + order.getOrderEnd();
             String orderStatus = HomeEnum.CommonEnum.getValue(order.getOrderStatus());
             BizOrderExportVO orderExportVO = BizOrderExportVO.builder().orderNo(order.getOrderNo()).orderAccount(order.getOrderAccount()).createTime(order.getCreateTime()).orderName(orderName).orderPrice(String.valueOf(order.getOrderPrice())).orderStatus(orderStatus).build();
             scrollResultsHandler.handle(orderExportVO);
