@@ -73,6 +73,20 @@ public class WxPayApi {
     }
 
     /**
+     * 从我的订单，支付支付失败，立即支付事件，统一下单，成功后会返回prepay_id
+     *
+     * @return
+     */
+    @RequestMapping(value = "/quickunifiedOrder", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult quickunifiedOrder(@RequestBody Map<String, Object> params) throws Exception {
+
+        log.info("unifiedOrder.params={}", params);
+
+        return wxPayService.unifiedOrder(params);
+    }
+
+    /**
      * 续订，执行统一下单
      *
      * @return
