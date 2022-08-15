@@ -83,6 +83,14 @@ public class WxPayApi {
 
         log.info("unifiedOrder.params={}", params);
 
+
+        if(StringUtil.isNull(params.get("orderId"))){
+            return CommonResult.failed("订单号为空，请刷新页面重新进入系统！");
+        }
+        //将未支付成功的订单删除，重新统一下单
+        String orderId = params.get("orderId").toString();
+        orderDao.updateByOrderStatus(Integer.parseInt(orderId));
+
         return wxPayService.unifiedOrder(params);
     }
 

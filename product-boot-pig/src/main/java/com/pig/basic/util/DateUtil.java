@@ -21,6 +21,7 @@ public final class DateUtil {
     public static final TimeZone GMT8 = TimeZone.getTimeZone("GMT+8");
 
     protected static SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+    protected static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
 
     private DateUtil() {
     }
@@ -114,13 +115,39 @@ public final class DateUtil {
         String timeStr = "1650551622211";
         String newStr = df.format(formatDate(Long.parseLong(timeStr)));
         System.out.println("newStr: " + newStr);
-//        List<String> dateStrs1 = listDateStrs("2019-01-30", "2019-02-05", WEEK);
-//        for (String dateStr : dateStrs1) {
-//            System.out.println(dateStr);
-//        }
+
+        Date dateNow = new Date();
+        try {
+            Date testDate = sdf.parse("2022-08-12");
+            int daycount = daysOfTwo(dateNow,testDate);
+            System.out.println("tttt:" + daycount);
+        } catch (Exception ex){
+
+        }
+
     }
     public static String getNowDate() {
         return formatDate(new Date(), "yyyy-MM-dd HH:mm:ss");
+    }
+
+    /**
+     * 判断两个日期相差的天数
+     * @param fDate
+     * @param oDate
+     * @return
+     */
+    public static int daysOfTwo(Date fDate, Date oDate) {
+
+        if (null == fDate || null == oDate) {
+
+            return -1;
+
+        }
+
+        long intervalMilli = oDate.getTime() - fDate.getTime();
+
+        return (int) (intervalMilli / (24 * 60 * 60 * 1000));
+
     }
 
     static {
