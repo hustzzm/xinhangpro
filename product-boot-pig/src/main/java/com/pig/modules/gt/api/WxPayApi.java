@@ -116,14 +116,19 @@ public class WxPayApi {
         String openid = params.get("openid").toString();
 
         BizMember bizMember = bizMemberService.findExistRecord(openid,dateNow);
-        if(bizMember == null || StringUtil.isNull(bizMember.getOpenid())){
+        if(bizMember == null || StringUtil.isNull(bizMember.getOpenid())) {
             return CommonResult.failed("您的会员已失效，不可续订会员！");
+        }else if("1".equals(params.get("userLevel").toString()) && "2".equals(bizMember.getUserLevel())){
+            return CommonResult.failed("您只能续订普通会员！");
+        }else if("2".equals(params.get("userLevel").toString()) && "1".equals(bizMember.getUserLevel())){
+            return CommonResult.failed("您只能续订钻石会员！");
         }
 
         BizOrder bizOrder = orderDao.findByOpenIdAndNoPay(openid);
         if(bizOrder != null && !StringUtil.isNull(bizOrder.getOpenId())){
             return CommonResult.failed("您有待支付的订单，请在我的订单中完成支付！");
         }
+
 
         return wxPayService.unifiedOrder(params);
     }
@@ -136,6 +141,7 @@ public class WxPayApi {
     @RequestMapping(value = "/supperunifiedOrder", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult supperunifiedOrder(@RequestBody Map<String, Object> params) throws Exception {
+
         log.info("supperunifiedOrder.params={}", params);
         // 执行升级为钻石会员，统一下单前，进行判断，是否可以下单
         // 1 存在订单生效期内的记录
@@ -161,7 +167,9 @@ public class WxPayApi {
         if(bizOrder != null && !StringUtil.isNull(bizOrder.getOpenId())){
             return CommonResult.failed("您有待支付的订单，请在我的订单中完成支付！");
         }
-        return wxPayService.unifiedOrder(params);
+
+        return wxPayService.ugrunifiedOrder(params);
+
     }
 
     /**
@@ -174,6 +182,18 @@ public class WxPayApi {
     public CommonResult orderQuery(@RequestBody Map<String, Object> params) throws Exception {
         log.info("orderQuery.params={}", params);
         return wxPayService.orderQuery(params);
+    }
+
+    /**
+     * 升级统一下单，成功后会返回prepay_id
+     *
+     * @return
+     */
+    @RequestMapping(value = "/ugrorderQuery", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult ugrorderQuery(@RequestBody Map<String, Object> params) throws Exception {
+        log.info("orderQuery.params={}", params);
+        return wxPayService.ugrorderQuery(params);
     }
 
     /**

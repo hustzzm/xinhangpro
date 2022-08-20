@@ -20,11 +20,13 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -76,6 +78,40 @@ public class WxPayServiceImpl implements WxPayService {
             Map<String, String> resultMap = getResultMap(params, resp);
             // 下单成功，添加订单到order表
             saveToDb(params);
+            return CommonResult.ok(resultMap);
+        } catch (Exception e) {
+            log.error("unifiedOrder is exception,", e.getMessage(), e);
+            return CommonResult.failed("统一下单出现异常，" + e.getMessage());
+        }
+    }
+
+    @Override
+    public CommonResult ugrunifiedOrder(@RequestParam Map<String, Object> params) throws Exception{
+
+        // 参数检查
+        String msg = CheckCommon.checkParams(params);
+        if (!StringUtils.isEmpty(msg)) {
+            return CommonResult.failed(msg);
+        }
+        // 封装请求参数
+        Map<String, String> data = getData(params);
+        log.info("unifiedOrder.data={}", data);
+        // 发送请求Z
+        try {
+            // 初始化数据
+            MyConfig config = new MyConfig();
+            WXPay wxpay = new WXPay(config);
+            Map<String, String> resp = wxpay.unifiedOrder(data);
+            log.info("unifiedOrder.resp={}", resp);
+            if (resp.get("return_code").equalsIgnoreCase("FAIL")) {
+                return CommonResult.failed(resp.get("return_msg"));
+            }
+            if (resp.get("result_code").equalsIgnoreCase("FAIL")) {
+                return CommonResult.failed(resp.get("err_code"));
+            }
+            Map<String, String> resultMap = getResultMap(params, resp);
+            // 下单成功，添加订单到order表
+            saveUgrToDb(params);
             return CommonResult.ok(resultMap);
         } catch (Exception e) {
             log.error("unifiedOrder is exception,", e.getMessage(), e);
@@ -162,6 +198,73 @@ public class WxPayServiceImpl implements WxPayService {
         }
     }
 
+    @Override
+    public CommonResult ugrorderQuery(Map<String, Object> params) throws Exception {
+        // 参数检查
+        String msg = CheckCommon.checkParams(params);
+        if (!StringUtils.isEmpty(msg)) {
+            return CommonResult.failed(msg);
+        }
+        // 封装请求参数
+        Map<String, String> data = getOrderQueryData(params);
+        log.info("orderQuery.data={}", data);
+        // 发送请求
+        try {
+            // 初始化数据
+            MyConfig config = new MyConfig();
+            WXPay wxpay = new WXPay(config);
+            Map<String, String> resp = wxpay.orderQuery(data);
+            log.info("orderQuery.resp={}", resp);
+            if (resp.get("return_code").equalsIgnoreCase("FAIL")) {
+                return CommonResult.failed(resp.get("return_msg"));
+            }
+            if (resp.get("result_code").equalsIgnoreCase("FAIL")) {
+                return CommonResult.failed(resp.get("err_code_des"));
+            }
+            if (resp.get("trade_state").equals("SUCCESS")) {
+
+                log.info("ugrorderQuery step 111 ...");
+                String openid = resp.get("openid");
+                BizMember member = memberDao.findByOpenidAndStatus(openid, "-1");
+                if (ObjectUtils.isEmpty(member)) {
+                    return CommonResult.failed("会员不存在或失效！");
+                }
+                String outTradeNo = resp.get("out_trade_no");
+
+                BizOrder order = orderDao.findByOrderNo(outTradeNo);
+                if (ObjectUtils.isEmpty(order)) {
+                    return CommonResult.failed("订单不存在！");
+                }
+                String timeEnd = resp.get("time_end"); // 支付完成时间
+                // 当订单使用了免充值型优惠券后返回该参数，应结订单金额=订单金额-免充值优惠券金额。
+                String cashFee = resp.get("cash_fee");
+
+                // 保存order表
+                order.setPayPrice(Double.valueOf(cashFee));
+                order.setPayTime(getPayTime(timeEnd));
+                order.setOrderStatus(OrderEnum.PAYMENT_RECEIVED.getCode());
+                orderDao.save(order);
+                log.info("ugrorderQuery step 113 ...orderDao.save:");
+                // 保存member表
+                member.setOrderNo(outTradeNo);
+
+                //会员升级时采用订单的结束日期
+                member.setEndDate(order.getOrderEnd());
+                member.setUserLevel(order.getUserLevel());
+                memberDao.save(member);
+
+                log.info("ugrorderQuery step 115 ...memberDao.save end");
+
+                return CommonResult.ok(member);
+            } else {
+                return CommonResult.failed(resp.get("trade_state_desc"));
+            }
+        } catch (Exception e) {
+            log.error("ugrorderQuery is exception,", e.getMessage(), e);
+            return CommonResult.failed("查询订单出现异常，" + e.getMessage());
+        }
+    }
+
     private String getPayTime(String timeEnd) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         LocalDateTime ldt = LocalDateTime.parse(timeEnd, dtf);
@@ -219,6 +322,44 @@ public class WxPayServiceImpl implements WxPayService {
         orderDao.save(bizOrder);
     }
 
+    /**
+     * 升级会员操作的保存事件，
+     * 终止日期为一年，从开始日期计算
+     * @param params
+     */
+    private void saveUgrToDb(Map<String, Object> params) {
+        BizOrder bizOrder = new BizOrder();
+        String openid = StringUtil.getCheckString(params.get("openid"));
+        bizOrder.setOpenId(openid);
+        bizOrder.setOrderNo(StringUtil.getCheckString(params.get("out_trade_no")));
+        String orderType = StringUtil.getCheckString(params.get("orderType")); // 订单类型
+        bizOrder.setOrderType(orderType);
+        Double orderPrice = StringUtil.getCheckDouble(params.get("orderPrice")); // 订单金额
+        String orderPriceFormat = df.format(orderPrice / 100);
+        bizOrder.setOrderPrice(Double.parseDouble(orderPriceFormat));
+        log.info("saveUgrToDb start ------");
+        bizOrder.setUserLevel(StringUtil.getCheckString(params.get("userLevel")));
+        BizMember member = memberDao.findByOpenidAndStatus(openid, "-1");
+        if (null != member) {
+            bizOrder.setName(member.getName());
+
+            try {
+                // 根据订单类型，算出订单结束日期
+                bizOrder.setOrderStart(member.getStartDate());
+
+                String dtEnd = sdf.format(getOrderEnd(sdf.parse(member.getStartDate()),orderType));
+                log.info("saveUgrToDb dtEnd :" + dtEnd);
+                bizOrder.setOrderEnd(dtEnd);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            log.info("saveUgrToDb step 1 ------");
+            orderDao.save(bizOrder);
+            log.info("saveUgrToDb step 2 ------" + bizOrder);
+
+        }
+
+    }
     private Date getOrderEnd(Date sourceDate, String orderType) {
         Date end = null;
         switch (orderType) {
