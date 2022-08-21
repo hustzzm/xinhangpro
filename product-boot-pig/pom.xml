@@ -317,6 +317,12 @@
             <artifactId>querydsl-core</artifactId>
             <version>5.0.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.8.2</version>
+        </dependency>
     </dependencies>
 
 

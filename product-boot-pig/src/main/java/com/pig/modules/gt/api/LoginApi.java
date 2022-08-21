@@ -6,6 +6,9 @@ import com.pig.basic.config.ConfigurationConfig;
 import com.pig.basic.util.AesCbcUtil;
 import com.pig.basic.util.CommonResult;
 import com.pig.basic.util.StringUtil;
+import com.pig.basic.util.utils.StringUtils;
+import com.pig.modules.core.TokenUtils;
+import com.pig.modules.gt.dao.BizMemberDao;
 import com.pig.modules.gt.entity.BizMember;
 import com.pig.modules.gt.service.BizMemberService;
 import lombok.extern.log4j.Log4j2;
@@ -19,7 +22,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,10 +40,13 @@ public class LoginApi {
     @Resource
     private ConfigurationConfig configurationConfig;
 
+    @Resource
+    private BizMemberDao memberDao;
+
     RestTemplate restTemplate = new RestTemplate();
 
     @RequestMapping(value = "/WxOpenData")
-    public CommonResult getWxOpenData(@RequestParam(value = "js_code",required = true) String js_code){
+    public CommonResult getWxOpenData(@RequestParam(value = "js_code", required = true) String js_code) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
@@ -53,7 +58,7 @@ public class LoginApi {
         log.info("getWxOpenData:" + strbody);
         log.info("getWxOpenData test  end---------------");
         JSONObject jsonObject = JSONObject.parseObject(strbody);
-        jsonObject.put("wxval",jsonObject.get("session_key"));
+        jsonObject.put("wxval", jsonObject.get("session_key"));
 
         return CommonResult.ok(JSON.toJSONString(jsonObject));
     }
@@ -76,7 +81,7 @@ public class LoginApi {
      */
     @RequestMapping(value = "/getPhone", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult getPhone(@RequestBody Map<String,Object> params, HttpSession session) {
+    public CommonResult getPhone(@RequestBody Map<String, Object> params, HttpSession session) {
         log.info("微信登录");
 
         CommonResult commonResult = CommonResult.failed();
@@ -86,7 +91,7 @@ public class LoginApi {
         String sessionKey = StringUtil.getCheckString(params.get("wxval"));
         String openid = StringUtil.getCheckString(params.get("openid"));
 
-        if(StringUtil.isNull(encryptedData)){
+        if (StringUtil.isNull(encryptedData)) {
             return CommonResult.failed("数据异常，请联系系统管理员进行处理！");
         }
 
@@ -106,17 +111,17 @@ public class LoginApi {
 
 
                 //根据openid获取用户信息
-                memberMap.put("gender",gender);
-                memberMap.put("avatar",StringUtil.getCheckString(params.get("avatar")));
-                memberMap.put("nickname",StringUtil.getCheckString(params.get("nickname")));
-                memberMap.put("mobile",StringUtil.getCheckString(userInfoJSON.get("purePhoneNumber").toString()));
-                memberMap.put("openid",openid);
+                memberMap.put("gender", gender);
+                memberMap.put("avatar", StringUtil.getCheckString(params.get("avatar")));
+                memberMap.put("nickname", StringUtil.getCheckString(params.get("nickname")));
+                memberMap.put("mobile", StringUtil.getCheckString(userInfoJSON.get("purePhoneNumber").toString()));
+                memberMap.put("openid", openid);
                 System.out.println("openid:" + openid);
-                memberMap.put("token","test123");
-                BizMember bizMember = bizMemberService.findByOpenidAndStatus(openid,"-1");
-                if(bizMember != null && !StringUtil.isNull(bizMember.getOpenid())){
+                memberMap.put("token", "test123");
+                BizMember bizMember = bizMemberService.findByOpenidAndStatus(openid, "-1");
+                if (bizMember != null && !StringUtil.isNull(bizMember.getOpenid())) {
 
-                    memberMap.put("id",bizMember.getId());
+                    memberMap.put("id", bizMember.getId());
                 }
                 log.info("解密成功");
                 commonResult = bizMemberService.insertOrUpdate(memberMap);
@@ -131,5 +136,41 @@ public class LoginApi {
         }
 
         return commonResult;
+    }
+
+    /**
+     * 获取token
+     *
+     * @param params
+     * @return
+     */
+    @RequestMapping(value = "/getToken", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult getToken(@RequestBody Map<String, Object> params) {
+        log.info("获取token");
+        String openid = StringUtil.getCheckString(params.get("openid"));
+        String mobile = StringUtil.getCheckString(params.get("mobile"));
+
+        if (StringUtils.isEmpty(openid)) {
+            return CommonResult.failed("openid不能为空！");
+        }
+        if (StringUtils.isEmpty(mobile)) {
+            return CommonResult.failed("mobile不能为空！");
+        }
+        try {
+            BizMember member = memberDao.findByOpenidAndMobile(openid, mobile);
+            if (null == member) {
+                return CommonResult.failed("用户不存在！");
+            }
+            String token = TokenUtils.token(openid, mobile);
+            if (StringUtils.isEmpty(token)) {
+                return CommonResult.failed("token获取异常！");
+            }
+            return CommonResult.ok(token);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("错误：" + e.getMessage());
+            return CommonResult.failed("token获取异常，请联系系统管理员进行处理！");
+        }
     }
 }

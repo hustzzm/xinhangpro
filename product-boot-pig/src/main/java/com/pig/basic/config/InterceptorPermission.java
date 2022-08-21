@@ -2,6 +2,8 @@ package com.pig.basic.config;
 
 
 import com.pig.basic.exception.MessageException;
+import com.pig.basic.util.StringUtil;
+import com.pig.modules.core.TokenUtils;
 import com.pig.modules.system.entity.User;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -27,9 +29,22 @@ public class InterceptorPermission implements HandlerInterceptor {
             if (publicInterface != null) {
                 return true;
             }
-            // 过滤微信api接口的认证
-            if (request.getRequestURI().startsWith("/wx")) {
+            // 获取token的接口放开
+            if (request.getRequestURI().equals("/wx/login/getToken")) {
                 return true;
+            }
+            // 进行token认证
+            if (request.getRequestURI().startsWith("/wx")) {
+                // 从header里获取请求头token
+                String token = request.getHeader("token");
+                if (StringUtil.isEmpty(token)) {
+                    throw new MessageException("token不能为空，请检查.");
+                }
+                if (TokenUtils.verify(token)) {
+                    return true;
+                } else {
+                    throw new MessageException("token失效，请检查.");
+                }
             }
             // 过滤微信api接口的认证
             if (request.getRequestURI().startsWith("/static")) {
@@ -63,5 +78,4 @@ public class InterceptorPermission implements HandlerInterceptor {
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
 
     }
-
 }
