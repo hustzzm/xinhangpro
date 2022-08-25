@@ -245,10 +245,14 @@ public class BizBookingServiceImpl implements BizBookingService {
             String nowHour = df.format(new Date());
 
             //如果是当天，则判断是否过时，只判断第一个时间段是否过时
-            if(icompare == 0 && Integer.parseInt(bookTimes[0]) < Integer.parseInt(nowHour)){
 
-                return CommonResult.failed(bookTimes[0] + "点已过，不可预约,请重新选择时间段");
+            for(String bookTime : bookTimes){
+                if(icompare == 0 && Integer.parseInt(bookTime) < Integer.parseInt(nowHour)){
+
+                    return CommonResult.failed(bookTime + "点已过，不可预约,请重新选择时间段");
+                }
             }
+
             //如果当前房间是否已被预订
             for(String bookTime : bookTimes){
 

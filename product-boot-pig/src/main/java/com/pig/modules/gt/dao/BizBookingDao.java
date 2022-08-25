@@ -71,7 +71,7 @@ public interface BizBookingDao extends JpaRepository<BizBooking, Integer> {
 
 
     /** 针对含有9的记录 **/
-    @Query(value ="select count(1) from biz_booking where room_code =:roomCode and book_date =:bookDate and (book_times =:bookTimes or book_times like CONCAT(:bookTimes2,'%'))) and (book_status='1' or book_status='3') and status='-1'", nativeQuery = true)
+    @Query(value ="select count(1) from biz_booking where room_code =:roomCode and book_date =:bookDate and (book_times =:bookTimes or book_times like CONCAT(:bookTimes2,'%')) and (book_status='1' or book_status='3') and status='-1'", nativeQuery = true)
     int querylistByTime(@Param("roomCode") String roomCode,@Param("bookDate") String bookDate, @Param("bookTimes") String bookTimes,@Param("bookTimes2") String bookTimes2);
 
     /** 针对不含有9的记录 **/
