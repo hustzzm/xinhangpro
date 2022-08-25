@@ -3,6 +3,8 @@ package com.pig.modules.gt.api;
 import com.pig.basic.util.CommonResult;
 import com.pig.basic.util.DateUtil;
 import com.pig.basic.util.StringUtil;
+import com.pig.basic.util.utils.StringUtils;
+import com.pig.modules.core.TokenUtils;
 import com.pig.modules.gt.dao.BizMemberDao;
 import com.pig.modules.gt.entity.BizMember;
 import com.pig.modules.gt.service.BizMemberService;
@@ -37,7 +39,27 @@ public class MemberInfoApi {
         if(bizMember ==null){
             return CommonResult.failed();
         }
-        return CommonResult.ok(bizMember);
+
+        try {
+            if (StringUtils.isEmpty(bizMember.getMobile())) {
+                return CommonResult.failed("数据异常，登录失败！");
+            }
+            BizMember member = bizMemberDao.findByOpenidAndMobile(openid, bizMember.getMobile());
+            if (null == member) {
+                return CommonResult.failed("用户不存在！");
+            }
+            String token = TokenUtils.token(openid, bizMember.getMobile());
+            if (StringUtils.isEmpty(token)) {
+                return CommonResult.failed("token获取异常！");
+            }
+
+            bizMember.setToken(token);
+            return CommonResult.ok(bizMember);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return CommonResult.failed("token获取异常，请联系系统管理员进行处理！");
+        }
+
     }
 
     /**

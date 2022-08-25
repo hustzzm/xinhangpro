@@ -107,17 +107,36 @@ public class LoginApi {
                 JSONObject userInfoJSON = JSON.parseObject(result);
 
                 String gender = String.valueOf(StringUtil.getCheckDouble(params.get("gender")).intValue());
+
                 Map<String, Object> memberMap = new HashMap<String, Object>();
 
-
+                String mobile = StringUtil.getCheckString(userInfoJSON.get("purePhoneNumber").toString());
                 //根据openid获取用户信息
                 memberMap.put("gender", gender);
                 memberMap.put("avatar", StringUtil.getCheckString(params.get("avatar")));
                 memberMap.put("nickname", StringUtil.getCheckString(params.get("nickname")));
-                memberMap.put("mobile", StringUtil.getCheckString(userInfoJSON.get("purePhoneNumber").toString()));
+                memberMap.put("mobile", mobile);
                 memberMap.put("openid", openid);
-                System.out.println("openid:" + openid);
-                memberMap.put("token", "test123");
+
+
+                try {
+                    BizMember member = memberDao.findByOpenidAndMobile(openid, mobile);
+                    if (null == member) {
+                        return CommonResult.failed("用户不存在！");
+                    }
+                    String token = TokenUtils.token(openid, mobile);
+                    if (StringUtils.isEmpty(token)) {
+                        return CommonResult.failed("token获取异常！");
+                    }
+                    memberMap.put("token", token);
+//                    return CommonResult.ok(token);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.error("错误：" + e.getMessage());
+                    return CommonResult.failed("token获取异常，请联系系统管理员进行处理！");
+                }
+
+
                 BizMember bizMember = bizMemberService.findByOpenidAndStatus(openid, "-1");
                 if (bizMember != null && !StringUtil.isNull(bizMember.getOpenid())) {
 

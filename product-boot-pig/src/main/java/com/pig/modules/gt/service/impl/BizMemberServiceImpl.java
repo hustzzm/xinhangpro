@@ -113,6 +113,9 @@ public class BizMemberServiceImpl implements BizMemberService {
         if (!StringUtil.isNull(params.get("account"))) {
             bizMember.setAccount(StringUtil.getCheckString(params.get("account")));
         }
+        if (!StringUtil.isNull(params.get("age"))) {
+            bizMember.setAge(StringUtil.getCheckString(params.get("age")));
+        }
         if (!StringUtil.isNull(params.get("password"))) {
             bizMember.setPassword(StringUtil.getCheckString(params.get("password")));
         }

@@ -7,7 +7,7 @@ import java.io.InputStream;
 
 public class MyConfig extends WXPayConfig {
 
-//    private String certPath = "D:\\Program Files\\Downloads\\WXCertUtil\\cert\\1628655062_20220717_cert\\apiclient_cert.p12";
+//    private String certPath = "D:\\app\\1628655062_20220718_cert";
 
     // 生产环境用这个
     private String certPath = "/home/publish/cert/apiclient_cert.p12";

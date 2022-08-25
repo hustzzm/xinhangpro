@@ -30,20 +30,37 @@ public class InterceptorPermission implements HandlerInterceptor {
                 return true;
             }
             // 获取token的接口放开
-            if (request.getRequestURI().equals("/wx/login/getToken")) {
-                return true;
-            }
+//            if ("/wx/login/getToken".equals(request.getRequestURI())
+//                || request.getRequestURI().indexOf("/wx/login/getPhone") >-1
+//                || request.getRequestURI().indexOf("/wx/member/getbyaccount") >-1
+//                || request.getRequestURI().indexOf("/wx/login/WxOpenData") >-1) {
+//                return true;
+//            }
             // 进行token认证
             if (request.getRequestURI().startsWith("/wx")) {
-                // 从header里获取请求头token
-                String token = request.getHeader("token");
-                if (StringUtil.isEmpty(token)) {
-                    throw new MessageException("token不能为空，请检查.");
-                }
-                if (TokenUtils.verify(token)) {
+                if(
+                        request.getRequestURI().indexOf("/wx/pay/unifiedOrder") >-1
+                                || request.getRequestURI().indexOf("/wx/pay/reunifiedOrder") >-1
+                                || request.getRequestURI().indexOf("/wx/pay/orderQuery") >-1
+                                || request.getRequestURI().indexOf("/wx/pay/supperunifiedOrder") >-1
+                                || request.getRequestURI().indexOf("/wx/pay/ugrorderQuery") >-1
+                                || request.getRequestURI().indexOf("/wx/booking/submit") >-1
+                                || request.getRequestURI().indexOf("/wx/pay/quickunifiedOrder") >-1
+                                || request.getRequestURI().indexOf("/wx/base/uploadImageAndSave") >-1
+                                || request.getRequestURI().indexOf("/wx/member/insertOrUpdate") >-1
+                ){
+                    // 从header里获取请求头token
+                    String token = request.getHeader("token");
+                    if (StringUtil.isEmpty(token)) {
+                        throw new MessageException("token为空，请退出小程序重新进入.");
+                    }
+                    if (TokenUtils.verify(token)) {
+                        return true;
+                    } else {
+                        throw new MessageException("token失效，请退出小程序重新进入.");
+                    }
+                }else{
                     return true;
-                } else {
-                    throw new MessageException("token失效，请检查.");
                 }
             }
             // 过滤微信api接口的认证
@@ -53,7 +70,7 @@ public class InterceptorPermission implements HandlerInterceptor {
             User user = (User) request.getSession().getAttribute("currentUser");
             if (user == null) {
                 response.setStatus(999);
-                throw new MessageException("请求超时，请进入登录页面重新登录系统.");
+                throw new MessageException("请求超时，请返回登录窗口.");
             }
             if (user.getIsAdmin()) {
                 return true;

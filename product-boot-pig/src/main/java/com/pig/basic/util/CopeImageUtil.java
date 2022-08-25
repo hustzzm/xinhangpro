@@ -160,7 +160,7 @@ public class CopeImageUtil {
     }
 
     public static void main(String[] args) throws Exception {
-        cutHeadImages("http://39.101.203.127/static/202207/87b5b090-7b77-4b39-9a7c-9ff586289ee4.jpg");
+//        cutHeadImages("http://39.101.203.127/static/202207/87b5b090-7b77-4b39-9a7c-9ff586289ee4.jpg");
 //        cutHeadImages("https://mjmall.oss-cn-shanghai.aliyuncs.com/18/1/merchantIcon.png");
     }
 }

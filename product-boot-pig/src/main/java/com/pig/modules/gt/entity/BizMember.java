@@ -124,5 +124,7 @@ public class BizMember extends AbstractBaseTimeEntity implements Serializable {
     private String status = "-1";
 
     private String remark;
+
+    private String token;
 }
 
