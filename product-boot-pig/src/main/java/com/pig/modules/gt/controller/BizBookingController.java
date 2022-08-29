@@ -5,11 +5,10 @@ import com.pig.basic.util.StringUtil;
 import com.pig.modules.core.BusinessUtil;
 import com.pig.modules.gt.dao.BizBookingDao;
 import com.pig.modules.gt.entity.BizBooking;
+import com.pig.modules.gt.entity.BizOrder;
 import com.pig.modules.gt.service.BizBookingService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.repository.query.Param;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
+
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -52,12 +51,33 @@ public class BizBookingController {
            }
        }
 
-
-
         return CommonResult.ok(bookingPage);
     }
 
+    /**
+     * 查询新的一条未语音播报的新订单
+     * @return
+     */
+    @GetMapping(value = "/queryNewBooking")
+    public CommonResult queryNewBooking() {
 
+        BizBooking bizBooking = bizBookingDao.findBookByUnSoundState();
+        if(bizBooking == null || StringUtil.isNull(bizBooking.getBooksNo())){
+            CommonResult.failed();
+        }
+        return CommonResult.ok(bizBooking);
+    }
+
+    /**
+     * 声音播报完成后，更新该记录的声音状态未已播报
+     */
+    @GetMapping("/updateSoundState")
+    public CommonResult updateSoundState(@RequestParam String id) {
+
+//        orderDao.deleteById(id);
+        bizBookingDao.updateByUnSoundState(Integer.parseInt(id));
+        return CommonResult.ok("删除成功");
+    }
 
     @PostMapping(value = "/finished/{id}")
     public CommonResult finished(@PathVariable Integer id) {

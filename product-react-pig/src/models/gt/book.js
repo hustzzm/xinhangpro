@@ -2,7 +2,7 @@ import { message } from 'antd';
 import {routerRedux} from 'dva/router';
 import router from 'umi/router';
 import { BOOKINFO_NAMESPACE } from '@/actions/gt/book';
-import { list,submit,remove,update } from '@/services/gt/book';
+import { list,submit,remove,update,queryNewBooking,updateSoundState } from '@/services/gt/book';
 
 export default {
   namespace: BOOKINFO_NAMESPACE,
@@ -33,6 +33,15 @@ export default {
 
     *submit({ payload }, { call }) {
       return yield call(submit, payload);  
+    },
+
+    
+    *queryNewBooking({ payload }, { call }) {      
+      return yield call(queryNewBooking, payload);  
+    },
+    *updateSoundState({ payload }, { call }) {
+      //return yield call(remove, { ids: payload.ids });     
+      return yield call(updateSoundState, payload);
     },
    
     *update({ payload }, { call }) {      

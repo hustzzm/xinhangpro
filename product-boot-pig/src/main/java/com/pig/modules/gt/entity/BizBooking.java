@@ -88,6 +88,10 @@ public class BizBooking extends AbstractBaseTimeEntity implements Serializable {
      */
     private String roomName;
     /**
+     * 语音播报状态 -1未播报，1已播报
+     */
+    private String soundState = "-1";
+    /**
      * 会员会为微信端进行删除，状态 -1可用，0作废
      */
     private String otherdelState = "-1";

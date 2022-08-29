@@ -1,6 +1,7 @@
 package com.pig.modules.gt.dao;
 
 import com.pig.modules.gt.entity.BizBooking;
+import com.pig.modules.gt.entity.BizOrder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -77,6 +78,24 @@ public interface BizBookingDao extends JpaRepository<BizBooking, Integer> {
     /** 针对不含有9的记录 **/
     @Query(value ="select count(1) from biz_booking where room_code = :roomCode and book_date =:bookDate and (book_times like CONCAT('%',:bookTimes,'%')) and (book_status='1' or book_status='3') and status='-1'", nativeQuery = true)
     int querylistByNormalTime(@Param("roomCode") String roomCode,@Param("bookDate") String bookDate,@Param("bookTimes") String bookTimes);
+
+    /**
+     * 查询一条未语音播报的新订单
+     * 订单状态=10
+     * @return
+     */
+    @Query(value = "select * from biz_booking where book_status='1' and sound_state='-1' order by create_time desc limit 0,1", nativeQuery = true)
+    BizBooking findBookByUnSoundState();
+
+    /**
+     * 更新语音播报的记录为已播报
+     * 订单状态=10
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Modifying
+    @Query(value = "update biz_booking set sound_state='1' where id=:id", nativeQuery = true)
+    void updateByUnSoundState(@Param("id") Integer id);
 
     /**
      * 当前日期已过期的记录，用于自动将状态置为消费完成

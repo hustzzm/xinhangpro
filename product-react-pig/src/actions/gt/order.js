@@ -7,13 +7,6 @@ export function ORDERINFO_LIST(payload) {
   };
 }
 
-export function ORDERINFO_NEWRECORD(payload) {
-  return {
-    type: `${ORDERINFO_NAMESPACE}/queryNewRecord`,
-    payload,
-  };
-}
-
 export function ORDERINFO_EXPORT(payload) {
   return {
     type: `${ORDERINFO_NAMESPACE}/doexport`,
@@ -21,12 +14,6 @@ export function ORDERINFO_EXPORT(payload) {
   };
 }
 
-export function ORDERINFO_UPDATESOUNDSTATE(payload) {
-  return {
-    type: `${ORDERINFO_NAMESPACE}/updateSoundState`,
-    payload,
-  };
-}
 
 
 export function ORDERINFO_REMOVE(payload) {

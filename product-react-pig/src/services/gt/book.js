@@ -7,6 +7,23 @@ export async function list(params) {
   return request(`/api/booking/list?${stringify(params)}`);
 }
 
+/**
+ * 查询新的一条未语音播报的新订单
+ * @return
+ */
+ export async function queryNewBooking(params) {
+  return request(`/api/booking/queryNewBooking?${stringify(params)}`);
+}
+
+/**
+ * 声音播报完成后，更新该记录的声音状态未已播报
+ * @param {*} params 
+ * @returns 
+ */
+export async function updateSoundState(params) {
+  return request(`/api/booking/updateSoundState?${stringify(params)}`);
+}
+
 
 export async function remove(params) {
   return request(`/api/booking/remove/${params}`, {

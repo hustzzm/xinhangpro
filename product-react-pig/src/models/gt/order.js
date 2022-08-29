@@ -32,18 +32,12 @@ export default {
       }
     },  
 
-    *queryNewRecord({ payload }, { call }) {      
-      return yield call(queryNewRecord, payload);  
-    },
+
    
     *doexport({ payload }, { call }) {      
       return yield call(doexport, payload);  
     },
 
-    *updateSoundState({ payload }, { call }) {
-      //return yield call(remove, { ids: payload.ids });     
-      return yield call(updateSoundState, payload);
-    },
    
 
     *remove({ payload }, { call }) {

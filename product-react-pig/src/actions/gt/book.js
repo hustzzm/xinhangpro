@@ -14,6 +14,21 @@ export function BOOKINFO_SUBMIT(payload) {
   };
 }
 
+export function BOOKINFO_NEWBOOKING(payload) {
+  return {
+    type: `${BOOKINFO_NAMESPACE}/queryNewBooking`,
+    payload,
+  };
+}
+
+
+export function BOOKINFO_UPDATESOUNDSTATE(payload) {
+  return {
+    type: `${BOOKINFO_NAMESPACE}/updateSoundState`,
+    payload,
+  };
+}
+
 export function BOOKINFO_UPDATE(payload) {
   return {
     type: `${BOOKINFO_NAMESPACE}/update`,

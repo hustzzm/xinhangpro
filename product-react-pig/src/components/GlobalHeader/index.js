@@ -8,9 +8,9 @@ import styles from './index.less';
 import RightContent from './RightContent';
 
 import {
-  ORDERINFO_NEWRECORD,  
-  ORDERINFO_UPDATESOUNDSTATE
-} from '@/actions/gt/order';
+  BOOKINFO_NEWBOOKING,  
+  BOOKINFO_UPDATESOUNDSTATE
+} from '@/actions/gt/book';
 
 // @Form.create()
 
@@ -31,24 +31,24 @@ export default class GlobalHeader extends PureComponent {
     //定时器，用于获取最新的订单
     setInterval(function(){
 
-      console.log("获取最新订单-----" + iIndex)
-      dispatch(ORDERINFO_NEWRECORD({})).then(result =>{
+      console.log("获取最新预定-----" + iIndex)
+      dispatch(BOOKINFO_NEWBOOKING({})).then(result =>{
      
-        if(result.success && result.data && result.data.orderId){
+        if(result.success && result.data && result.data.id){
           
           that.setState({playstate:'PLAYING',position:0},()=> {
               
               let subparams = {
-                orderId:result.data.orderId
+                id:result.data.id
               }
-              console.log("获取最新订单--subparams.orderId ---" + subparams.orderId)
-              dispatch(ORDERINFO_UPDATESOUNDSTATE(subparams))
+              console.log("获取最新预定--subparams.orderId ---" + subparams.id)
+              dispatch(BOOKINFO_UPDATESOUNDSTATE(subparams))
     
              });
           
         }else{
        
-          console.log("没有最新订单-----")
+          console.log("没有最新预定-----")
           that.setState({playstate:'STOPPED',position:0})
         }
       });
