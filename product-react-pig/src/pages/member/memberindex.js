@@ -40,6 +40,7 @@ import { ROOMTYPE_DICT} from "../../actions/dictionary";
 import CommonGrid from "@/pages/gt/Grid/CommonGrid";
 import Memberedit from "@/pages/member/memberedit";
 import Memberview from "@/pages/member/memberview";
+import OrderHistory from "@/pages/order/orderhistory";
 import styles from '../../utils/utils.less';
 import Panel from "../../components/Panel";
 
@@ -459,7 +460,10 @@ class memberindex extends PureComponent {
                 if(text == '2'){
                     val = '钻石会员'
                 }
-                return val
+                return  <Space>
+                <span>{val}</span>
+                <a onClick={() => this.dodetail(record)} >会员购买详情</a>               
+            </Space>;
             }
           },
           
@@ -522,17 +526,17 @@ class memberindex extends PureComponent {
                 </Modal>
 
                 <Modal
-                    title="会员信息详情"
-                    width={1000}
+                    title="会员购买记录"
+                    width={1200}
                     visible={detailvisible}
                     confirmLoading={confirmLoading}
-                    bodyStyle={{ 'backgroundColor': '#f0f2f5' }}
+                    // bodyStyle={{ 'backgroundColor': '#f0f2f5' }}
                     destroyOnClose={true}                   
                     onCancel={() => that.setState({  detailvisible: false   })}
                     footer={null}
                     maskClosable={false}
                 >
-                    <Memberview detail={selectedRow}></Memberview>
+                    <OrderHistory detail={selectedRow}></OrderHistory>
 
                 </Modal>
             </Panel>

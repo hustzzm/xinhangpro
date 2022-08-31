@@ -112,11 +112,14 @@ export default class GlobalHeader extends PureComponent {
           playstate == 'PLAYING' && (
             <Sound
             url="https://xinhang618.com/static/my/news.mp3"
-            playStatus={this.state.playStatus}
+            playStatus={this.state.playstate}
             playFromPosition={300 /* in milliseconds */}
             position={this.state.position}
             onLoading={this.handleSongLoading}
-            onPlaying={this.handleSongPlaying}
+            // onPlaying={({ position }) => this.setState({ position })}
+            onPause={() => console.log('Paused')}
+            onResume={() => console.log('Resumed')}
+            onStop={() => console.log('Stopped')}
             onFinishedPlaying={this.handleSongFinishedPlaying}
         />
           )
