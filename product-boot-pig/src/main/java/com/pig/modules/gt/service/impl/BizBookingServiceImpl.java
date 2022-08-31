@@ -318,6 +318,7 @@ public class BizBookingServiceImpl implements BizBookingService {
             bizBooking.setBooksNo(CommonUtil.newRandomSNO("B"));
             bizBooking.setBookTimes(params.get("bookTimes").toString());
             bizBooking.setRoomCode(roomCode);
+            bizBooking.setName(member.getName());
             bizBooking.setRoomLogo(StringUtil.getCheckString(roomManage.getRoomLogo()));
             bizBooking.setBookDate(bookDate);
             bizBooking.setBookStatus("1");
