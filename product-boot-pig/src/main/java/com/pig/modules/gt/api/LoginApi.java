@@ -120,10 +120,10 @@ public class LoginApi {
 
 
                 try {
-                    BizMember member = memberDao.findByOpenidAndMobile(openid, mobile);
-                    if (null == member) {
-                        return CommonResult.failed("用户不存在！");
-                    }
+//                    BizMember member = memberDao.findByOpenidAndMobile(openid, mobile);
+//                    if (null == member) {
+//                        return CommonResult.failed("用户不存在！");
+//                    }
                     String token = TokenUtils.token(openid, mobile);
                     if (StringUtils.isEmpty(token)) {
                         return CommonResult.failed("token获取异常！");
