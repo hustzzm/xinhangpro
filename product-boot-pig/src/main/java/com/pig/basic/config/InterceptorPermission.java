@@ -46,7 +46,7 @@ public class InterceptorPermission implements HandlerInterceptor {
                                 || request.getRequestURI().indexOf("/wx/pay/ugrorderQuery") >-1
                                 || request.getRequestURI().indexOf("/wx/booking/submit") >-1
                                 || request.getRequestURI().indexOf("/wx/pay/quickunifiedOrder") >-1
-                                || request.getRequestURI().indexOf("/wx/base/uploadImageAndSave") >-1
+//                                || request.getRequestURI().indexOf("/wx/base/uploadImageAndSave") >-1
                                 || request.getRequestURI().indexOf("/wx/member/insertOrUpdate") >-1
                 ){
                     // 从header里获取请求头token
