@@ -35,7 +35,7 @@ public class BizOrderExportVO implements Serializable {
     @ExcelProperty(value = "下单时间")
     private Date createTime;
 
-    @ColumnWidth(20)
+    @ColumnWidth(60)
     @ExcelProperty(value = "商品")
     private String orderName;
 

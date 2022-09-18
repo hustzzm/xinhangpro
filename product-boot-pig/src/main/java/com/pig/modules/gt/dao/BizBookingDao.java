@@ -25,7 +25,7 @@ public interface BizBookingDao extends JpaRepository<BizBooking, Integer> {
 
     List<BizBooking> findAll(Specification<BizBooking> specification);
 
-    List<BizBooking> findByOpenidAndBookStatusOrderByCreateTimeDesc(String openid, String bookStatus);
+    List<BizBooking> findByOpenidAndBookStatusAndStatusOrderByCreateTimeDesc(String openid, String bookStatus, String status);
 
     /**
      * 微信端个人预定查询

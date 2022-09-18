@@ -190,7 +190,16 @@ public class BizMemberServiceImpl implements BizMemberService {
     @Transactional(readOnly = true)
     public void exportData(ScrollResultsHandler<BizMemberVO> scrollResultsHandler) {
 
-        List<BizMember> all = memberDao.findAll();
+        Specification<BizMember> specification = (root, criteriaQuery, criteriaBuilder) -> {
+            //增加筛选条件
+            // 房间名
+            Predicate predicate = criteriaBuilder.conjunction();
+
+            predicate.getExpressions().add(criteriaBuilder.equal(root.get("status"), "-1"));
+            predicate.getExpressions().add(criteriaBuilder.notEqual(root.get("userLevel"), "0"));
+            return predicate;
+        };
+        List<BizMember> all =  memberDao.findAll(specification);
         all.stream().forEach((entity) -> {
 
             BizMemberVO bizMember = BizMemberVO.builder()

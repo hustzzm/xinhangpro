@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * 用户信息
  * 不可编辑：account，openid，register_time，avatar，nickname，gender(BizMember)表数据库访问层
@@ -24,6 +26,8 @@ public interface BizMemberDao extends JpaRepository<BizMember, Integer> {
     BizMember findByOpenidAndMobile(String openid, String mobile);
 
     Page<BizMember> findAll(Specification<BizMember> specification, Pageable pageable);
+    List<BizMember> findAll(Specification<BizMember> specification);
+
 
     /**
      * 根据openId查询个人生效期内的会员记录

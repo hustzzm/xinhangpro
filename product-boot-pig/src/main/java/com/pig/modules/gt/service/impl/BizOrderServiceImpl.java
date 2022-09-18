@@ -7,6 +7,7 @@ import com.pig.basic.util.utils.DateUtils;
 import com.pig.modules.gt.constant.HomeEnum;
 import com.pig.modules.gt.dao.BizMemberDao;
 import com.pig.modules.gt.dao.BizOrderDao;
+import com.pig.modules.gt.entity.BizMember;
 import com.pig.modules.gt.entity.BizOrder;
 import com.pig.modules.gt.entity.BizOrderExportVO;
 import com.pig.modules.gt.service.BizOrderService;
@@ -106,12 +107,23 @@ public class BizOrderServiceImpl implements BizOrderService {
     @Override
     @Transactional(readOnly = true)
     public void exportData(ScrollResultsHandler<BizOrderExportVO> scrollResultsHandler) {
-        List<BizOrder> all = orderDao.findAll();
+
+        Specification<BizOrder> specification = (root, criteriaQuery, criteriaBuilder) -> {
+            //增加筛选条件
+            // 房间名
+            Predicate predicate = criteriaBuilder.conjunction();
+
+            predicate.getExpressions().add(criteriaBuilder.equal(root.get("status"), "-1"));
+//            predicate.getExpressions().add(criteriaBuilder.notEqual(root.get("userLevel"), "0"));
+            return predicate;
+        };
+
+        List<BizOrder> all = orderDao.findAll(specification);
         all.stream().forEach((order) -> {
             String orderName =
                     order.getRdRole().getRoleName() + " " + order.getOrderStart() + "至" + order.getOrderEnd();
             String orderStatus = HomeEnum.CommonEnum.getValue(order.getOrderStatus());
-            BizOrderExportVO orderExportVO = BizOrderExportVO.builder().orderNo(order.getOrderNo()).orderAccount(order.getOrderAccount()).createTime(order.getCreateTime()).orderName(orderName).orderPrice(String.valueOf(order.getOrderPrice())).orderStatus(orderStatus).build();
+            BizOrderExportVO orderExportVO = BizOrderExportVO.builder().orderNo(order.getOrderNo()).orderAccount(order.getName()).createTime(order.getCreateTime()).orderName(orderName).orderPrice(String.valueOf(order.getOrderPrice())).orderStatus(orderStatus).build();
             scrollResultsHandler.handle(orderExportVO);
 
             //对象被session持有，调用detach方法释放内存

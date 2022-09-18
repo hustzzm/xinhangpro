@@ -40,6 +40,10 @@ public class BizBooking extends AbstractBaseTimeEntity implements Serializable {
      */
     private String name;
     /**
+     * 姓名
+     */
+    private String userLevel;
+    /**
      * 微信昵称
      */
     private String nickName;

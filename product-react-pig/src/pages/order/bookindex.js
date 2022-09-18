@@ -69,7 +69,9 @@ class bookindex extends PureComponent {
         selectedRow: { account: '', id: -1 },//选中行
         selectedRowKeys: [],  //选中行主键
         params: {},             //查询条件参数       
-        sampleDetail: {},     
+        sampleDetail: {},   
+        beginDateTime: "",
+        endDateTime: "",  
         selectedRows: [],
         // selectedRowKeys: [],  //选中行主键
         onReset: () => {
@@ -122,13 +124,13 @@ class bookindex extends PureComponent {
         
         this.setState({ params: params });
         const payload = {
-            ...params
-            // getblood_date_start: this.state.beginDateTime,
-            // getblood_date_end: this.state.endDateTime,
+            ...params,
+            startTime: this.state.beginDateTime,
+            endTime: this.state.endDateTime,     
           
         };
         // delete payload.getbloodDate
-        // delete payload.startDate
+        delete payload.bookDate
       
         dispatch(BOOKINFO_LIST(payload)).then(() => this.resetSelectRow());
 
@@ -226,7 +228,13 @@ class bookindex extends PureComponent {
        
     }
 
-
+  //时间插件值变化
+  timeChange = (date, dateString) => {
+    console.log(dateString);
+    debugger
+    this.setState({ beginDateTime: dateString[0], endDateTime: dateString[1]});
+    // this.setState({ beginDateTime: getDateBeginStr(dateString[0]), endDateTime: getDateEndStr(dateString[1]) });
+}
 
 
      // 检测类型
@@ -262,8 +270,8 @@ class bookindex extends PureComponent {
                         <FormItem label="姓名">
                             {getFieldDecorator('name', { rules: [{ max: 30, message: '最多只能输入30个字符！' }] })(<Input />)}
                         </FormItem>
-                        <FormItem label="会员等级">
-                        {getFieldDecorator('userLevel')(this.renderSearchSelect())}
+                        <FormItem label="预约日期" >
+                            {getFieldDecorator('bookDate')(<RangePicker onChange={this.timeChange} className={styleTester.width230} />)}
                         </FormItem>
                     </Col>
 

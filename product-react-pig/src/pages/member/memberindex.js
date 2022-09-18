@@ -128,16 +128,18 @@ class memberindex extends PureComponent {
 
     // ============ 查询 ===============
     handleSearch = params => {
+        const that = this;
         // 清空选中状态
         this.childTable.clearSelect()
         const { dispatch } = this.props;
+     
         
         this.setState({ params: params });
         const payload = {
             ...params,
-            startDateStart: this.state.beginDateTime,
-            startDateEnd: this.state.endDateTime,           
-        };        
+            startDateStart: that.state.beginDateTime,
+            startDateEnd: that.state.endDateTime,           
+        };
         // delete payload.getbloodDate
         delete payload.startDate
     

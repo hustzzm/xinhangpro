@@ -161,7 +161,7 @@ public class BizBookingServiceImpl implements BizBookingService {
                 }
             }
             // 查询预约记录
-            List<BizBooking> bizBookingList = bookingDao.findByOpenidAndBookStatusOrderByCreateTimeDesc(openid, "1");
+            List<BizBooking> bizBookingList = bookingDao.findByOpenidAndBookStatusAndStatusOrderByCreateTimeDesc(openid, "1","-1");
             if (ObjectUtils.isEmpty(bizBookingList)) {
                 // 如果没有预约记录，按照会员级别来来控制预约的次数
                 if (appointmentTimes < bookTimes.length) {
@@ -291,7 +291,7 @@ public class BizBookingServiceImpl implements BizBookingService {
             }
 
             // 查询已经预约记录
-            List<BizBooking> bizBookingList = bookingDao.findByOpenidAndBookStatusOrderByCreateTimeDesc(openid, "1");
+            List<BizBooking> bizBookingList = bookingDao.findByOpenidAndBookStatusAndStatusOrderByCreateTimeDesc(openid, "1","-1");
             if (!ObjectUtils.isEmpty(bizBookingList) && bizBookingList.size() > 0) {
 
                 String bookTs = "";
@@ -322,6 +322,7 @@ public class BizBookingServiceImpl implements BizBookingService {
             bizBooking.setRoomLogo(StringUtil.getCheckString(roomManage.getRoomLogo()));
             bizBooking.setBookDate(bookDate);
             bizBooking.setBookStatus("1");
+            bizBooking.setUserLevel(userLevel);
             bizBooking.setRoomType(roomManage.getRoomType());
             bizBooking.setRoomName(roomManage.getName());
             bizBooking.setOpenid(openid);
